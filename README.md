@@ -94,6 +94,9 @@ RegisterDataDep(
  extra_message ="""This is an extra message to be shown before downloading file"""
 ```
 
+This information gets stored into a global const dictionary at runtime, in the DataDeps namespace, which we will call the Registry.
+(Alternatively it could be in a global dictionary in this modules namespace, but then we would need to create that variable. Which we could do with the global keyword. But idk how to make it const then)
+
 There should be a helper function that the use called from the REPL,
 that given some of the parameters, generates a stub.
 In particular it should generate the hash.
@@ -125,8 +128,33 @@ I think it is an extra feature not needed til someone raises an issue about it.
 ## Using A data dep.
 
 For the consumer,
-wr
+they write in their code `datadir"DataName"` as a string macro.
+They can treat this like it was the path to the datadir for the data registered under the name `"DataName"`.
+But it is actually, an expression that when evaluated checks to find the location of the data,
+and if it fails to find it **fetches** it, and either-way then returns the location of the data.
 
 
+A fairly standard example of use, tasking advantage of the fact that the [RHS of optional and keyword args](https://stackoverflow.com/a/40446356/179081) is not evaluated until that argument is not  provided is something like:
+
+```julia 
+function load_words(nwords, corpusfolder=datadir"WikiCorpus2017")
+    words = String[];
+    filelist = 
+    for (_,_, files) in walkdir(corpusfolder))
+        for file in files
+            push!(words, open(file, "r") do fh
+                split(readstring(fh), " ")
+            end)
+            length(words)>nwords && return words
+        end
+    end
+    words
+end
+```
+
+ - If the `corpusfolder` is provided by the user then nothing is downloaded.
+ - If there is a folder with the name `"WikiCorpus2017"` in one of the 4 locations that DataDeps checks,
+then also nothing is downloaded, and the path to the folder is returned and used as the value for `coprusfolder`
+ - if no such folder is found, then it is downloaded, according to the specification given in the Registery, and the resulting path is used as the value for `corpusfolder`
 
  
