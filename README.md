@@ -124,6 +124,11 @@ and then prompt the user to say the agree to not be a baddy.
 ## Mirrors
 Should mirrors be a thing?
 I think it is an extra feature not needed til someone raises an issue about it.
+It would in general be nice to support mirrors so the fastest/nearest ones can be used.
+But I don't really think that is required.
+
+Also having mirrors does allow for fallback when one goes offline.
+Which is nice.
 
 ## Using A data dep.
 
@@ -166,5 +171,9 @@ We have been throwing around the idea of some kind of DataDeps package for a whi
  - https://github.com/americast/DataDeps.jl/wiki 
    - @americast's plan combines some ideas of getting the data with ideas of processing the data
    - my plan here, does not worry about processing the data at all, leaving that to ProviderConsumer type packages, who actually know abou the format of the data they have downloaded.
- 
+   - discussion at
+       - https://discourse.julialang.org/t/interested-in-summer-of-code/2337/7 
+       - https://github.com/JuliaML/Roadmap.jl/issues/14#issuecomment-287253208
+
+   
  
