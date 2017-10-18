@@ -130,6 +130,17 @@ But I don't really think that is required.
 Also having mirrors does allow for fallback when one goes offline.
 Which is nice.
 
+## Dealling with really big downloads
+Really big files can cause issues with some means of downloading.
+It would be possible to build an optimised downloading program in julia using Requests.jl,
+and some asyncs.
+But I feel that is beyond the scope of this package.
+One can specify the transport mechanism of there choice using the `fetch_method`.
+This defaults to `download` which is a thin wrapper around battle hardenned linux commandline tools (`curl`, falling back to `wget`,falling back to `fetch`) or the windows standard [urlmon library](https://msdn.microsoft.com/en-us/library/ms775123(v=vs.85).aspx).
+
+If someone needed a better downloading tool they can create one, and plug its `fetch_method` in.
+(I suggest looking at wrapply [Axel](https://github.com/axel-download-accelerator/axel))
+
 ## Using A data dep.
 
 For the consumer,
