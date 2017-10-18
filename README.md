@@ -157,4 +157,11 @@ end
 then also nothing is downloaded, and the path to the folder is returned and used as the value for `coprusfolder`
  - if no such folder is found, then it is downloaded, according to the specification given in the Registery, and the resulting path is used as the value for `corpusfolder`
 
+
+
+## Past Iterations
+
+We have been throwing around the idea of some kind of DataDeps package for a while
+ - See some post GSOC entries
+ - https://github.com/americast/DataDeps.jl/wiki
  
