@@ -163,5 +163,8 @@ then also nothing is downloaded, and the path to the folder is returned and used
 
 We have been throwing around the idea of some kind of DataDeps package for a while
  - See some post GSOC entries
- - https://github.com/americast/DataDeps.jl/wiki
+ - https://github.com/americast/DataDeps.jl/wiki 
+   - @americast's plan combines some ideas of getting the data with ideas of processing the data
+   - my plan here, does not worry about processing the data at all, leaving that to ProviderConsumer type packages, who actually know abou the format of the data they have downloaded.
+ 
  
