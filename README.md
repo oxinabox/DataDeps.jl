@@ -119,6 +119,7 @@ So its contract is between `fetch_method` and `post_fetch_method`; DataDeps.jl i
 The `post_fetch_method` is responsible for any post processing, e.g uncompressing, like some form of `unzip` or `untar` etc.
 A common thing to do will be to run such uncompression operation, then delete the original compressed file after it is uncompressed.
 So maybe we should include some wrapper higher-order function as a helper.
+
 Like 
 ```function delete_original_after(f)
     function inner(fetch_result_path)
@@ -126,7 +127,7 @@ Like
          rm(fetch_result_path, force=true)
     end
 end
-```,
+```
 
 Anyway, the `post_fetch_method` isn't strictly required.
 It is basically just composed with the `fetch_method` to get the code that DataDeps actually executes.
