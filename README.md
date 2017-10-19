@@ -65,6 +65,7 @@ When **loading data**, the locations should be checked in the order:
  2. **PackageLoc** as packageloc can't have name collisions
  3. **UserLoc** (more specific over more general)
  4. **GlobalLoc**
+ 
  if it is found in any of the locations, then that data should be used.
  If it is not found in any of those locations it should be **fetched**
  
