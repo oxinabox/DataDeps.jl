@@ -131,7 +131,7 @@ end
 Anyway, the `post_fetch_method` isn't strictly required.
 It is basically just composed with the `fetch_method` to get the code that DataDeps actually executes.
 So it could be replaced with a more complicated fetch method.
-But doing it this way makes the most common case, eg `fetch_method=downloa,`post_fetch_method = unzip` really simple to write. No extra anon functions that the user has to declare.
+But doing it this way makes the most common case, eg `fetch_method=download,post_fetch_method = unzip` really simple to write. No extra anon functions that the user has to declare.
 
 
 ## Validating data
