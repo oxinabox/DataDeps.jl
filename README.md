@@ -54,7 +54,7 @@ There are 4 possible locations any piece of data might reasonably be located, on
     - How to determine PackageLoc.
        - Determining Package is a bit tricky
        - One needs to consider that packages could be in `Pkg.Dir()` or somewhere in `LOADPATH`, or it could fail if not in a package.
-       - @__FILE__ is useful for this, but it has to be called in the right file for it to work. Which may mean a macro must be used. I think a lot of this will be done via macro anyway, so it might not be a big deal         
+       - `@__FILE__` is useful for this, but it has to be called in the right file for it to work. Which may mean a macro must be used. I think a lot of this will be done via macro anyway, so it might not be a big deal         
  - **UserLoc**: Data that is usable by any package, but only by this user. Should be set-able by an environment variable. Good locations include: `~/.datadeps/datastore/` and `~/.julia/v0.6/DataDeps/datastore/`
  - **GlobalLoc**: Data that is usable by anyone. Important, because for very large data you might not want multiple copies of it on one computer. Location should also be settable by an environment variable. Good locations are `/usr/local/share/datadeps/datastore` for this computer, and `/usr/share/datadeps/datastore` for if it is shared across the network. arguably this could be two locations (networked and local) or even a list of locations.
  - **CwdLoc**: The current working directory. This is not a good location, but it is the location used by the **CasualUser**, and may be important for debugging etc.
