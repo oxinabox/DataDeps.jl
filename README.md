@@ -102,6 +102,38 @@ There should be a helper function that the use called from the REPL,
 that given some of the parameters, generates a stub.
 In particular it should generate the hash.
 
+### fetch_method and post_fetch_method.
+
+You may be wondering what the difference between the `fetch_method`, and the `post_fetch_method` is.
+The `fetch_method` is responsible for the transport.
+Whereas `post_fetch_method` is responsible for any post-processing.
+
+
+The `fetch_method` takes the `remote_path` as its first parameter (given during Registration),
+and a `local_path`, which is a path inside the datadir calculated by DataDeps.jl, from the **Loc**, and the `DataName`, for the file that is to be fetched.
+Its return result we will call the `fetch_result_path`, it is normally identical to the `local_path`,
+but which doesn't have to be. (if it is `nothing`, then it might be a good idea to autodefault ot to `local_path`)
+The value of `fetch_result_path` is given to `post_fetch_method` as its first and only input.
+So its contract is between `fetch_method` and `post_fetch_method`; DataDeps.jl isn't involved.
+
+The `post_fetch_method` is responsible for any post processing, e.g uncompressing, like some form of `unzip` or `untar` etc.
+A common thing to do will be to run such uncompression operation, then delete the original compressed file after it is uncompressed.
+So maybe we should include some wrapper higher-order function as a helper.
+Like 
+```function delete_original_after(f)
+    function inner(fetch_result_path)
+         f(fetch_result_path);
+         rm(fetch_result_path, force=true)
+    end
+end
+```,
+
+Anyway, the `post_fetch_method` isn't strictly required.
+It is basically just composed with the `fetch_method` to get the code that DataDeps actually executes.
+So it could be replaced with a more complicated fetch method.
+But doing it this way makes the most common case, eg `fetch_method=downloa,`post_fetch_method = unzip` really simple to write. No extra anon functions that the user has to declare.
+
+
 ## Validating data
 One of the parameters when regististering is the hash.
 This should be used after the download.
