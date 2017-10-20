@@ -221,4 +221,11 @@ We have been throwing around the idea of some kind of DataDeps package for a whi
        - https://github.com/JuliaML/Roadmap.jl/issues/14#issuecomment-287253208
 
    
- 
+## Related
+
+ - MLDatasets.jl
+    - currently has something similar to this, that insired this
+ - https://github.com/JackDunnNZ/uci-data
+    - As a script it is not currently ammeniable to working with this. 
+    - with some modification it become a ProviderConsumer
+    - and it would probably use a fairly complex postfetch method to standardise all the datasets before saving them to disk
