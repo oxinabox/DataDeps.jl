@@ -134,6 +134,11 @@ It is basically just composed with the `fetch_method` to get the code that DataD
 So it could be replaced with a more complicated fetch method.
 But doing it this way makes the most common case, eg `fetch_method=download,post_fetch_method = unzip` really simple to write. No extra anon functions that the user has to declare.
 
+There are useful `fetch_method` and `post_fetch_methods` in bindeps areadly. 
+This should be pointed out in the docs.
+I would like to not add bindeps (or anything else if possible) as a dependency.
+And I don't think I need to.
+
 
 ## Validating data
 One of the parameters when regististering is the hash.
