@@ -62,7 +62,7 @@ function Base.download(
         if !datadep.hash(fetched_path)
             warn("Hash failed")
             reply = choice_input("Do you wish to Abort, Retry download or Ignore", 'a','r','i')
-            if reply='a'
+            if reply=='a'
                 error("Hash Failed")
             elseif reply=='r'
                 @goto retry

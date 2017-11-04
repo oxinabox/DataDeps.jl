@@ -5,7 +5,7 @@ tests = [
     "main"
 ]
 for filename in tests
-    @testset "$name" begin
+    @testset "$filename" begin
         include(filename * ".jl")
     end
 end

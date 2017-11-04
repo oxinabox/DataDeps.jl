@@ -12,16 +12,16 @@ env_bool(key) = haskey(ENV, key) && lowercase(ENV[key]) ∉ ["0","","false", "no
 
 Prompted the user for a yes or no.
 """
-function bool_input(prompt="")::Bool
-    choise_input(prompt, 'y','n')=='y'
+function input_bool(prompt="")::Bool
+    input_choice(prompt, 'y','n')=='y'
 end
 
 """
-    choice_input
+    input_choice
 
 Prompted the user for one of a list of options
 """
-function choice_input(prompt="", options::Vararg{Char})::Bool
+function input_choice(prompt, options::Vararg{Char})::Char
     while(true)
         info(prompt)
         info("["*join(options, '/')*"]")

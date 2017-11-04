@@ -22,7 +22,6 @@ end
 
 check(checksum::AbstractString) = check(sha2_256, checksum)
 
-
 """
     checkhash(dd::DataDep, filepath)
 
