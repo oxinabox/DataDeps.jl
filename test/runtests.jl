@@ -2,7 +2,8 @@ using Base.Test
 
 tests = [
     "util",
-    "main"
+    "locations",
+    "main",
 ]
 for filename in tests
     @testset "$filename" begin

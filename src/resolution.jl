@@ -6,14 +6,10 @@ Even if that means downloading the dependancy and putting it in there.
 
 This is basically the function the lives behind the string macro `datadep"DepName`.
 """
-function resolve(datadep::DataDep)::String
-
-end
-
-function resolve(datadep::ManualDataDep)::String
+function resolve(datadep::AbstractDataDep)::String
     lp = try_determine_load_path(datadep.name)
     if isnull(lp)
-        error("Not Implemented resolving manual datadeps")
+        download(datadep)
     else
         lp[]
     end
@@ -56,12 +52,13 @@ function Base.download(
     always_accept_terms || accept_terms(datadep, localpath, remotepath)
 
     @label retry
+    mkpath(localpath)
     fetched_path = datadep.fetch_method(remotepath, localpath)
 
     if !skiphash
         if !datadep.hash(fetched_path)
             warn("Hash failed")
-            reply = choice_input("Do you wish to Abort, Retry download or Ignore", 'a','r','i')
+            reply = input_choice("Do you wish to Abort, Retry download or Ignore", 'a','r','i')
             if reply=='a'
                 error("Hash Failed")
             elseif reply=='r'
@@ -71,13 +68,14 @@ function Base.download(
     end
 
     datadep.post_fetch_method(fetched_path)
+    localpath
 end
 
 
 function accept_terms(dd::DataDep, localpath, remotepath)
     info(dd.extra_message)
     info("\n")
-    if !bool_input("Do you want to download the dataset from $localpath to \"$localpath\"?")
+    if !input_bool("Do you want to download the dataset from $localpath to \"$localpath\"?")
         error("User declined to download $(dd.name). Can not proceed without the data.")
     end
     true
