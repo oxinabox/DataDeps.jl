@@ -5,7 +5,7 @@ Determines the default location to save a datadep with the given name to.
 """
 function determine_save_path(name)
     cands = preferred_paths(calling_filepath)
-
+    first(cands)
 end
 
 """
@@ -40,8 +40,9 @@ function try_determine_package_datadeps_dir(filepath)::Nullable{String}
     package_roots = [LOAD_PATH; Pkg.dir()]
     for root in package_roots
         if startswith(filepath, root)
-            inner_path = filepath[1:length(root)]
-            pkgname = first(splitpath(inner_path))
+            inner_path = filepath[length(root) + 1:end]
+            first_pp, pkgname = (splitpath(inner_path))
+            @assert(first_pp == "/", "expected \"\/\", got \"$(first_pp)\"")
             datadeps_dir = joinpath(root, pkgname,"deps","data")
             return Nullable(datadeps_dir)
         end

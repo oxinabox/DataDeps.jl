@@ -7,10 +7,17 @@ splits a path unto each of its directories names / filename (for the last).
 """
 function splitpath(path::AbstractString)
    ret=String[]
+   prev_path = path
    while(true)
        path, lastpart = splitdir(path)
        length(lastpart)>0 && unshift!(ret, lastpart)
        length(path)==0 && break
+       if prev_path==path
+            # catch the casewhere path begins with a root
+            unshift!(ret, path)
+            break
+       end
+       prev_path = path
    end
    return ret
 end
