@@ -30,7 +30,15 @@ end
 
 Checks for an enviroment variable and fuzzy converts it to a bool
 """
-env_bool(key) = haskey(ENV, key) && lowercase(ENV[key]) ∉ ["0","","false", "no"]
+env_bool(key, default=false) = haskey(ENV, key) ? lowercase(ENV[key]) ∉ ["0","","false", "no"] : default
+
+"""
+    env_list(key)
+
+Checks for an enviroment variable and converts it to a list of strings, sperated with a colon
+"""
+env_list(key, default=String[]) = haskey(ENV, key) ? split(ENV[key], ":") : default
+
 
 
 
