@@ -1,13 +1,16 @@
 const registry = Dict{String, AbstractDataDep}()
 
-function RegisterDataDep(name::String, remotepath, hash;
+function RegisterDataDep(name::String,
+        message::String,
+        remotepath,
+        hash;
         fetch_method=download,
         post_fetch_method=identity,
-        extra_message="")
+    )
     if haskey(registry, name)
         warn("Over-writing registration of the datadep: $name")
     end
-    registry[name] = DataDep(name,remotepath,hash,fetch_method,post_fetch_method, extra_message)
+    registry[name] = DataDep(name,remotepath,hash,fetch_method,post_fetch_method, message)
 end
 
 function RegisterDataDep(name::String, message::String)

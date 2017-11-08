@@ -1,9 +1,10 @@
 ## Core path determining stuff
 
-@static const default_loadpath ::Vector{String} = joinpath.([
-    Pkg.Dir._pkgroot(), homedir(); # Common all systems
 
-    if is_windows()
+const default_loadpath = joinpath.([
+    Pkg.Dir._pkgroot(); homedir(); # Common all systems
+
+    @static if is_windows()
         vcat(get.(ENV,
            ["APPDATA", "LOCALAPPDATA",
             "ProgramData", "ALLUSERSPROFILE", # Probably the same, on all systems where both exist
@@ -11,7 +12,7 @@
            [String[]])...)
     else
         ["/scratch", "/staging", # HPC common folders
-         "/usr/share", "/usr/local/share"] # Unix Filestructure  
+         "/usr/share", "/usr/local/share"] # Unix Filestructure
     end], "datadeps")
 
 #ensure at least something in the loadpath exists.
@@ -19,20 +20,7 @@ mkpath(first(default_loadpath))
 
 
 
-"""
-    preferred_paths([calling_filepath])
-    
-returns the datadeps load_path
-plus if calling_filepath is provided,
-and is currently inside a package directory then it also includes the path to the dataseps in that folder. 
-"""
-function preferred_paths(calling_filepath="")
-    cands = String[]
-    pkg_deps_root = try_determine_package_datadeps_dir(calling_filepath)
-    !isnull(pkg_deps_root) && push!(cands, get(pkg_deps_root))
-    append!(cands, env_list("DATADEPS_LOAD_PATH", default_loadpath))
-    cands
-end
+
 
 ########################################################################################################################
 ## Package reletive path determining
@@ -66,18 +54,50 @@ end
 Fallback for if being run in some enviroment (eg the REPL),
 where @__FILE__ is nothing.
 Falls back to using the current directory.
-So that if you are prototyping in the REPL (etc) for a package, 
-and you are in the packages directory, then 
+So that if you are prototyping in the REPL (etc) for a package,
+and you are in the packages directory, then
 """
 function try_determine_package_datadeps_dir(::Void)
     try_determine_package_datadeps_dir(pwd())
 end
 
 
+
+"""
+    try_determine_package_datadeps_dir(module::Module)
+
+Takes a module, attempts to located the file for that module,
+and thus the deps/data dir for the package that declares it.
+Then this returns a path to the deps/data dir for that package (as a Nullable).
+Which may or may not exist.
+If not in a package returns null
+"""
+function try_determine_package_datadeps_dir(mm::Module)::Nullable{String}
+    module_file  = first(function_loc(mm.eval, (Symbol,))) # Hack
+    try_determine_package_datadeps_dir(module_file)
+end
+
+
+############################################
+
+"""
+    preferred_paths([calling_filepath|module|nothing])
+
+returns the datadeps load_path
+plus if calling_filepath is provided,
+and is currently inside a package directory then it also includes the path to the dataseps in that folder.
+"""
+function preferred_paths(rel=nothing)
+    cands = String[]
+    pkg_deps_root = try_determine_package_datadeps_dir(rel)
+    !isnull(pkg_deps_root) && push!(cands, get(pkg_deps_root))
+    append!(cands, env_list("DATADEPS_LOAD_PATH", default_loadpath))
+    cands
+end
+
 ####################################################################################################################
 ## Permission checking stuff
-
-@enum AccessMode[UInt] F_OK=0b0000, X_OK=0b0001, W_OK=0b0010, XW_OK=0b0011, R_OK=0b0100, XR_OK=0b0101, WX_OK=0b0110, XWR_OK=0b0111
+@enum AccessMode F_OK=0b0000 X_OK=0b0001 W_OK=0b0010 XW_OK=0b0011 R_OK=0b0100 XR_OK=0b0101 WX_OK=0b0110 XWR_OK=0b0111
 
 """
     uv_access(path, mode)
@@ -90,7 +110,9 @@ function uv_access(path, mode::AccessMode)
     local ret
     req = Libc.malloc(Base._sizeof_uv_fs)
     try
-        ret = ccall(:uv_fs_access, Int32, (Ptr{Void}, Ptr{Void}, Cstring, CInt, Ptr{Void}), Base.eventloop(), req, path, mode, C_NULL)
+        ret = ccall(:uv_fs_access, Cint,
+                (Ptr{Void}, Ptr{Void}, Cstring, Cint, Ptr{Void}),
+                Base.eventloop(), req, path, mode, C_NULL)
         ccall(:uv_fs_req_cleanup, Void, (Ptr{Void},), req)
     finally
         Libc.free(req)
@@ -107,12 +129,12 @@ end
 
 Determines the location to save a datadep with the given name to.
 """
-function determine_save_path(name, calling_filepath="")::String
-    cands = preferred_paths(calling_filepath)
-    path = findfirst(cands) do path
-        0 == first(uv_access(path, AccessMode.W_OK))
+function determine_save_path(name, rel=nothing)::String
+    cands = preferred_paths(rel)
+    path_ind = findfirst(cands) do path
+        0 == first(uv_access(path, W_OK))
     end
-    if path==0
+    if path_ind==0
         error("No possible save path")
     end
     return joinpath(cands[path_ind], name)
@@ -124,15 +146,22 @@ end
 Trys to find a local path to the datadep with the given name.
 If it fails then it returns nothing.
 """
-function try_determine_load_path(name, calling_filepath="")::Nullable{String}
-    cands = [pwd(); preferred_paths(calling_filepath)]
-    cands = joinpath.(cands, name)
-    path_ind = findfirst(cands) do path
-        0 == first(uv_access(path, AccessMode.R_OK))
-    end
-    if path==0
-        Nullable{String}()
-    else
-        Nullable(joinpath(cands[path_ind], name))
-    end
+function try_determine_load_path(name::String, rel=nothing)::Nullable{String}
+    paths = list_local_paths(name, rel)
+    length(paths)==0 ? Nullable{String}() : Nullable(first(paths))
 end
+
+"""
+    list_local_paths( name|datadep, [calling_filepath|module|nothing])
+
+Lists all the local paths to a given datadep.
+This may be an empty list
+"""
+function list_local_paths(name::String, rel=nothing)
+    cands = [pwd(); preferred_paths(rel)]
+    cands = joinpath.(cands, name)
+    #unlike `determine_save_path` we are looking for the directory, not it's parent
+    cands[first.(uv_access.(cands, R_OK)) .== 0] #0 means passes
+end
+
+list_local_paths(dd::AbstractDataDep, rel=nothing) = list_local_paths(dd.name, rel)
