@@ -18,6 +18,5 @@ It is likely to stay that way, as they are also easy to setup in CI tools.
     - Note that it remains your responsibility to understand and read any terms of the data use (this is remains true even if you don't turn on this bypass)
 	- default `false`
  - `DATADEPS_LOAD_PATH` -- The list of paths, other than the package directory (`PKGNAME/deps/data`) to save and load data from
- - `DATADEPS_PKGDIR_FIRST` -- check/attempt to save in  `PKGNAME/deps/data` before `DATADEPS_LOAD_PATH`, rather than after.
-    - default `false` 
-	
+ - `DATADEPS_PKGDIR_FIRST` -- check/attempt to save in  `PKGNAME/deps/data` before everything in `DATADEPS_LOAD_PATH`, rather than after.
+    - default `false`

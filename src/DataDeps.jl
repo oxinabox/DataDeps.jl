@@ -26,16 +26,16 @@ struct DataDep{H, R, F, P} <: AbstractDataDep
 end
 
 macro datadep_str(name)
-    :(DataDeps.resolve(DataDeps.registry[$(esc(name))]))
+    :(resolve(registry[$(esc(name))], @__FILE__))
 end
 
 include("util.jl")
 include("registration.jl")
-include("resolution.jl")
 
 include("locations.jl")
 include("verification.jl")
 
+include("resolution.jl")
 
 
 end # module
