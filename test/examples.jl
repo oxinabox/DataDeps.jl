@@ -12,12 +12,33 @@ ENV["DATADEPS_ALWAY_ACCEPT"]=true
      sha2_256
     )
 
-    @show datadep"Pi"
     pi_string = readstring(joinpath(datadep"Pi", "10000.txt"))
     @test parse(pi_string) ≈ π
     @test parse(BigFloat, pi_string) ≈ π
 
 end
+
+@testset "Primes" begin
+    RegisterDataDep(
+     "Primes",
+     "These are the first 65 thousand primes. Still faster to calculate locally.",
+     "http://staffhome.ecm.uwa.edu.au/~00061811/pub/primes.txt",
+
+     "http://staffhome.ecm.uwa.edu.au/~00061811/pub/primes.sha256" |> download |> readstring |> split |> first
+     #Important: this is a hash I didn't calculate, so is a test that our checksum methods actually align with the normal values.
+    )
+
+    data = readdlm(datadep"Primes"*"/primes.txt", ',')
+    primes = data[4:end, 2] #skip fist 3
+    
+    #If these really are prime then will not have factors
+    @test all(!isinteger.(primes./2))
+    @test all(!isinteger.(primes./3))
+    @test all(!isinteger.(primes./5))
+
+end
+
+
 
 
 @testset "MNIST" begin
@@ -98,3 +119,8 @@ end
     @test size(data) == (4521,17)
 
 end
+
+
+
+
+
