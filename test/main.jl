@@ -5,13 +5,12 @@ using Base.Test
 using ExpectationStubs
 
 # HACK: todo, work out how ExpectationStubs should be changed to make this make sense
-Base.open(stub::Stub, t::Any) = stub(t)
+Base.open(stub::Stub, t::Any, ::AbstractString) = stub(t)
 
 withenv("DATADEPS_ALWAY_ACCEPT"=>"true") do
     @testset "automatic download" begin
         @stub dummyhash
         @expect(dummyhash(::Any) = [0x12, 0x34])
-
 
         @stub dummydown
         @expect(dummydown("http://www.example.com/eg.zip", ::String) = "eg.zip")

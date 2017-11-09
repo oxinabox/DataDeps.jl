@@ -35,6 +35,8 @@ Which may or may not exist.
 If not in a package returns null
 """
 function try_determine_package_datadeps_dir(filepath)::Nullable{String}
+    # TODO: Consider rewriting this to just go up the directory tree
+    # checking for `deps/data`
     package_roots = [LOAD_PATH; Pkg.dir()]
     for root in package_roots
         if startswith(filepath, root)
@@ -73,7 +75,7 @@ Which may or may not exist.
 If not in a package returns null
 """
 function try_determine_package_datadeps_dir(mm::Module)::Nullable{String}
-    module_file  = first(function_loc(mm.eval, (Symbol,))) # Hack
+    module_file  = first(function_loc(mm.eval, (Any,))) # Hack
     try_determine_package_datadeps_dir(module_file)
 end
 
@@ -158,7 +160,7 @@ Lists all the local paths to a given datadep.
 This may be an empty list
 """
 function list_local_paths(name::String, rel=nothing)
-    cands = [pwd(); preferred_paths(rel)]
+    cands = preferred_paths(rel)
     cands = joinpath.(cands, name)
     #unlike `determine_save_path` we are looking for the directory, not it's parent
     cands[first.(uv_access.(cands, R_OK)) .== 0] #0 means passes

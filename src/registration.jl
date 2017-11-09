@@ -3,7 +3,7 @@ const registry = Dict{String, AbstractDataDep}()
 function RegisterDataDep(name::String,
         message::String,
         remotepath,
-        hash;
+        hash=nothing;
         fetch_method=download,
         post_fetch_method=identity,
     )

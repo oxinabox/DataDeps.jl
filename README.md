@@ -8,7 +8,7 @@ It might be a little outdated.
 
 
 
-## Confinuration
+## Configuration
 
 Currently configuration is done via Enviroment Variables.
 It is likely to stay that way, as they are also easy to setup in CI tools.
@@ -20,3 +20,6 @@ It is likely to stay that way, as they are also easy to setup in CI tools.
  - `DATADEPS_LOAD_PATH` -- The list of paths, other than the package directory (`PKGNAME/deps/data`) to save and load data from
  - `DATADEPS_PKGDIR_FIRST` -- check/attempt to save in  `PKGNAME/deps/data` before everything in `DATADEPS_LOAD_PATH`, rather than after.
     - default `false`
+ - `DATADEPS_DISABLE_DOWNLOAD` -- causes any action that would result in the download being triggered to throw an exception.
+   - useful e.g. if you are in an environment with metered data, where your datasets should have already been downloaded earlier, and if there were not you want to respond to the situation rather than let DataDeps download them for you.
+   - default `false`
