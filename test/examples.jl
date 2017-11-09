@@ -13,7 +13,10 @@ ENV["DATADEPS_ALWAY_ACCEPT"]=false
     )
 
     @show datadep"Pi"
-    pi_string = read(joinpath(datadep"Pi", "10000.txt"))
+    pi_string = readstring(joinpath(datadep"Pi", "10000.txt"))
+    @test parse(pi_string) ≈ π
+    @test parse(BigFloat, pi_string) ≈ π
+
 
 
     rm(datadep"Pi"; recursive=true)
