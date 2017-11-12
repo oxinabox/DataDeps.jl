@@ -20,10 +20,12 @@ end
     withenv("DATADEPS_LOAD_PATH"=>tempdir) do
         @testset "download and use" begin
             include("examples.jl")
+            include("manual_examples.jl")
         end
         withenv("DATADEPS_DISABLE_DOWNLOAD"=>"true") do
             @testset "use already downloaded" begin
                 include("examples.jl")
+                include("manual_examples.jl")
             end
         end
     end

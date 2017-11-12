@@ -32,9 +32,9 @@ end
     primes = data[4:end, 2] #skip fist 3
     
     #If these really are prime then will not have factors
-    @test all(!isinteger.(primes./2))
-    @test all(!isinteger.(primes./3))
-    @test all(!isinteger.(primes./5))
+    @test !any(isinteger.(primes./2))
+    @test !any(isinteger.(primes./3))
+    @test !any(isinteger.(primes./5))
 
 end
 
