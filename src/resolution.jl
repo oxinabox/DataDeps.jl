@@ -6,17 +6,17 @@ Even if that means downloading the dependancy and putting it in there.
 
 This is basically the function the lives behind the string macro `datadep"DepName`.
 """
-function resolve(datadep::AbstractDataDep, calling_filepath)::String
+function resolve(datadep::DataDep, calling_filepath)::String
     lp = try_determine_load_path(datadep.name, calling_filepath)
     if isnull(lp)
         save_dir = determine_save_path(datadep.name, calling_filepath)
+        !env_bool("DATADEPS_DISABLE_DOWNLOAD") || error("DATADEPS_DISABLE_DOWNLOAD enviroment variable set. Can not trigger download.")
         download(datadep, save_dir)
         save_dir
     else
         get(lp)
     end
 end
-
 
 
 """
@@ -51,7 +51,6 @@ function Base.download(
     always_accept_terms=env_bool("DATADEPS_ALWAY_ACCEPT"),
     skiphash=false)
 
-    !env_bool("DATADEPS_DISABLE_DOWNLOAD") || error("DATADEPS_DISABLE_DOWNLOAD enviroment variable set. Can not trigger download.")
     always_accept_terms || accept_terms(datadep, localdir, remotepath)
 
     local fetched_path
