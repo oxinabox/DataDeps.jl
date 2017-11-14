@@ -150,6 +150,7 @@ If it fails then it returns nothing.
 """
 function try_determine_load_path(name::String, rel=nothing)::Nullable{String}
     paths = list_local_paths(name, rel)
+    paths = paths[first.(uv_access.(paths, R_OK)) .== 0] #0 means passes
     length(paths)==0 ? Nullable{String}() : Nullable(first(paths))
 end
 
@@ -161,9 +162,7 @@ This may be an empty list
 """
 function list_local_paths(name::String, rel=nothing)
     cands = preferred_paths(rel)
-    cands = joinpath.(cands, name)
-    #unlike `determine_save_path` we are looking for the directory, not it's parent
-    cands[first.(uv_access.(cands, R_OK)) .== 0] #0 means passes
+    joinpath.(cands, name)
 end
 
 list_local_paths(dd::AbstractDataDep, rel=nothing) = list_local_paths(dd.name, rel)
