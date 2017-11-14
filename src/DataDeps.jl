@@ -1,4 +1,5 @@
 module DataDeps
+using Mocking
 
 using Reexport
 @reexport using SHA
@@ -29,13 +30,31 @@ macro datadep_str(name)
     :(resolve(registry[$(esc(name))], @__FILE__))
 end
 
+"""
+    resolve(datadep)
+
+Returns a path to the folder containing the datadep.
+Even if that means downloading the dependancy and putting it in there.
+
+This is basically the function the lives behind the string macro `datadep"DepName`.
+"""
+function resolve(datadep::AbstractDataDep, calling_filepath)::String
+    lp = try_determine_load_path(datadep.name, calling_filepath)
+    if isnull(lp)
+        handle_missing(datadep, calling_filepath)
+    else
+        get(lp)
+    end
+end
+
 include("util.jl")
 include("registration.jl")
 
 include("locations.jl")
 include("verification.jl")
 
-include("resolution.jl")
+include("resolution_automatic.jl")
+include("resolution_manual.jl")
 
 
 end # module
