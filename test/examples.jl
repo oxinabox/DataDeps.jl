@@ -30,7 +30,7 @@ end
 
     data = readdlm(datadep"Primes"*"/primes.txt", ',')
     primes = data[4:end, 2] #skip fist 3
-    
+
     #If these really are prime then will not have factors
     @test !any(isinteger.(primes./2))
     @test !any(isinteger.(primes./3))
@@ -121,6 +121,47 @@ end
 end
 
 
+@testset "UCI Adult, Hierarchical checksums" begin
+    # This is an example of using hierachacy in the remote URLs,
+    # and similar (partially matching up to depth) hierachacy in the checksums
+    # for processing some groups of elements differently to others.
+    # Doing this with checksums is not particularly useful
+    # But the same thing applies to `fetch_method` and `post_fetch_method`.
+    # So for example the
+    RegisterDataDep(
+        "UCI Adult",
+        """
+    	Dataset: Adult Data Set UCI ML Repository
+    	Website: https://archive.ics.uci.edu/ml/datasets/Adult
+    	Abstract : Predict whether income exceeds \$50K/yr based on census data.  Also known as "Census Income" dataset.
+
+    	If you make use of this data it is requested that you cite:
+    	- Lichman, M. (2013). UCI Machine Learning Repository [http://archive.ics.uci.edu/ml]. Irvine, CA: University of California, School of Information and Computer Science.
+    	""",
+        [
+            [
+                "https://archive.ics.uci.edu/ml/datasets/../machine-learning-databases/adult/adult.data",
+                "https://archive.ics.uci.edu/ml/datasets/../machine-learning-databases/adult/adult.test"
+            ],
+
+            [
+                "https://archive.ics.uci.edu/ml/datasets/../machine-learning-databases/adult/Index",
+                [
+                    "https://archive.ics.uci.edu/ml/datasets/../machine-learning-databases/adult/adult.names"
+                    "https://archive.ics.uci.edu/ml/datasets/../machine-learning-databases/adult/old.adult.names"
+                ]
+             ]
+        ],
+        [
+            "f9a9220df6bc5d9848bf450fd9ad45b9496503551af387d4a1bbe38ce1f8fc38", #adult.data ⊻ adult.test
+            [
+             "c53c35ce8a0eb10c12dd4b73830f3c94ae212bb388389d3763bce63e8d6bc684", #Index
+             "818481d320861c4b623626ff6fab3426ad93dae4434b7f54ca5a0f357169c362" # adult.names ⊻ old.adult.names
+            ]
+        ]
+    )
+
+    @test length(collect(eachline(datadep"UCI Adult"*"/adult.names"))) == 110
 
 
-
+end
