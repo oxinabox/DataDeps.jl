@@ -57,11 +57,42 @@ but DataDeps.jl will still provide the convient `datadep"MyData"` string macro f
 As mentions above, if you put the data in your git repo for your package under `deps/data/NAME` then it will be managed by julia package manager.
 
 
-## Configuration
+### DataDepsGenerators
+[DataDepsGenerators.jl](https://github.com/oxinabox/DataDepsGenerators.jl) is a julia package to help generate DataDeps registration blocks from well known data sources.
+It attempts to use webscraping and such to workout what should be in the registration block.
+
+
+
+
+## Usage for users
+The mail goal of DataDeps.jl is to simplify life for the user.
+They should just plain not be thinking about the data the package needs so much anymore.
+
+### Moving Data
+Moving data is a great idea.
+DataDeps.jl is pro moving data
+When data is automatically downloaded it will almost always go to the same location.
+The first (existant, writable) directory on your `DATADEPS_LOADPATH`.
+Which by default is `~/.julia/datadeps/`.
+But you can move them from there to anywhere in the `DATADEPS_LOADPATH`.
+If you have some data that everyone in your lab is using, and it is like 200GB large,
+you probably want to shift it to a shared area, like `/usr/share/datadeps`.
+Even if you don't have write permission, you can have a sysadmin move it, and so long as you still have read permission DataDeps.jl will find it and use it for you.
+
+
+### Having multiple copies of the same DataDir
+You probably don't want to have multiple copies of a DataDir with the same name.
+DataDeps.jl tried to handle it as gracefuly as it can.
+But having different DataDep under the same name, is probably going to lead to packages loading the wrong one.
+Possibly except if they are (both) located in their packages `deps/data` folder.
+
+### Configuration
 
 Currently configuration is done via Enviroment Variables.
 It is likely to stay that way, as they are also easy to setup in CI tools.
-You can set these in 
+You can set these in the `.juliarc` file using the `ENV` dictionary if you don't want to mess up your `.profile`.
+However, you shouldn't need to.
+DataDeps.jl tries to have very sensible defaults.
 
  - `DATADEPS_ALWAY_ACCEPT` -- bypasses the confirmation before downloading data. Set to `true` (or similar string)
     - This is provided for scripting (in particular CI) use
@@ -74,13 +105,3 @@ You can set these in
  - `DATADEPS_DISABLE_DOWNLOAD` -- causes any action that would result in the download being triggered to throw an exception.
    - useful e.g. if you are in an environment with metered data, where your datasets should have already been downloaded earlier, and if there were not you want to respond to the situation rather than let DataDeps download them for you.
    - default `false`
-
-
-## DataDepsGenerators
-[DataDepsGenerators.jl](https://github.com/oxinabox/DataDepsGenerators.jl) is a julia package to help generate DataDeps registration blocks from well known data sources.
-It attempts to use webscraping and such to workout what should be in the registration block.
-
-
-
-
-## Usage for users
