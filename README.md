@@ -1,9 +1,4 @@
 # DataDeps
-Please provide feedback by raising issues, or making PRs.
-
-The plan can be found at [plan](plan.jl).
-It might be a little outdated.
-
 
 
 ## What is DataDeps?
@@ -50,11 +45,24 @@ The other option is that if your data a good fit for git, then you could add it 
 
 ## Usage for package developers
 
-### ManualDataDep
+### Registering a DataDep
+A DataDeps registration is a 
+It is pretty flexible.
+Perhaps easiest is to look at the [examples](test/examples.jl).
 
+
+
+
+
+#### ManualDataDep
 ManualDataDeps are datadeps that have to be managed by some means outside of DataDeps.jl,
 but DataDeps.jl will still provide the convient `datadep"MyData"` string macro for finding them.
 As mentions above, if you put the data in your git repo for your package under `deps/data/NAME` then it will be managed by julia package manager.
+
+A manaul DataDep registration is just like a normal `DataDep` registration,
+except that only a Name and message are provided. 
+
+
 
 
 ### DataDepsGenerators
