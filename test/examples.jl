@@ -1,4 +1,3 @@
-using Revise
 using DataDeps
 using Base.Test
 
