@@ -1,5 +1,5 @@
 # DataDeps
-
+Master: [![Build Status](https://travis-ci.org/oxinabox/DataDeps.jl.svg?branch=master)](https://travis-ci.org/oxinabox/DataDeps.jl)
 
 ## What is DataDeps?
 DataDeps is a package for simplifying the management of data in your julia application.
