@@ -42,7 +42,7 @@ function try_determine_package_datadeps_dir(filepath)::Nullable{String}
         if startswith(filepath, root)
             inner_path = filepath[length(root) + 1:end]
             first_pp, pkgname = (splitpath(inner_path))
-            @assert(first_pp == "/", "expected \"\/\", got \"$(first_pp)\"")
+            @assert(first_pp ∈ ["/", "\\"], "expected \"/\", got \"$(first_pp)\"")
             datadeps_dir = joinpath(root, pkgname,"deps","data")
             return Nullable(datadeps_dir)
         end
