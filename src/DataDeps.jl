@@ -56,5 +56,6 @@ include("verification.jl")
 include("resolution_automatic.jl")
 include("resolution_manual.jl")
 
+include("helpers.jl")
 
 end # module
