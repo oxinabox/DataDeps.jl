@@ -93,7 +93,7 @@ function run_post_fetch(post_fetch_method, fetched_paths::Vector)
 end
 
 function run_post_fetch(post_fetch_methods::Vector, fetched_paths::Vector)
-    asyncmap((meth, fp)->run_post_fetch(post_fetch_method, fp),  fetched_paths, post_fetch_method)
+    asyncmap((meth, fp)->run_post_fetch(meth, fp),  post_fetch_methods, fetched_paths)
 end
 
 
