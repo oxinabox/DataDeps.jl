@@ -1,4 +1,4 @@
-if isunix() && Sys.KERNEL != :FreeBSD
+if is_unix() && Sys.KERNEL != :FreeBSD
     function unpack(file,directory,extension,secondary_extension)
         if ((extension == ".gz" || extension == ".Z") && secondary_extension == ".tar") || extension == ".tgz"
             return (`tar xzf $file --directory=$directory`)
