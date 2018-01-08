@@ -47,7 +47,10 @@ The other option is that if your data a good fit for git, then you could add it 
 ## Usage for package developers
 
 ### Registering a DataDep
-A DataDeps registration is a 
+A DataDeps registration is a block of code delaring a dependency.
+You should put it somewhere that it will be executed before any other code in your script that depends on that data.
+In most cases it is best to put it inside the  [modules's `__init__()` function](https://docs.julialang.org/en/stable/manual/modules/#Module-initialization-and-precompilation-1).
+
 It is pretty flexible.
 Perhaps easiest is to look at the [examples](test/examples.jl).
 
@@ -161,13 +164,14 @@ So the data will not be sourced via DataDeps.jl
 
 #### Installing Data Eagerly
 If you want the data to be installed when the package is first loaded,
-just put the datadep string `datadep"Name"` anywhere at global scope, after the registration block.
+just put the datadep string `datadep"Name"` anywhere it will immediately run.
+For example, in the `__init__` function immediately after the registration block.
 
 If you want it to be installed at `Pkg.build` time.
 The best thing to do is to put your data dep registration block in a file (eg `src/dataregistrations.jl`),
 and then `include` it into `deps/build.jl` followed by putting in the datadep string somewhere at global scope.
 (Including would be done by `include(pathjoin(@__DIR__,"..","src","dataregistrations.jl"`).
-One would also `include` that registrations file into the main source of the package as well.
+One would also `include` that registrations file into the `__init__` function in the  main source of the package as well.
 
 
 ### DataDepsGenerators
@@ -197,7 +201,12 @@ Even if you don't have write permission, you can have a sysadmin move it, and so
 You probably don't want to have multiple copies of a DataDir with the same name.
 DataDeps.jl tried to handle it as gracefuly as it can.
 But having different DataDep under the same name, is probably going to lead to packages loading the wrong one.
-Possibly except if they are (both) located in their packages `deps/data` folder.
+Except if they are (both) located in their packages `deps/data` folder.
+
+By moving a package's data dependency into its package directory under `deps/data`, it becomes invisible except to that package.
+For example `~/.julia/v0.6/EXAMPLEPKG/deps/data/EXAMPLEDATADEP/`,
+for the package `EXAMPLEPKG`, and the datadep `EXAMPLEDATADEP`.
+
 
 ## Configuration
 
