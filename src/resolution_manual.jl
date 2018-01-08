@@ -2,8 +2,8 @@
 function handle_missing(datadep::ManualDataDep, calling_filepath)::String
     localpaths = list_local_paths(datadep, calling_filepath)
     @assert(length(localpaths) > 0)
-    info("Failed to find $(datadep.name)")
-    info("$(datadep.name) requires manual installation.")
+    info("This program requested access to the data dependency $(datadep.name)")
+    info("It could not be found on your system. It requires manual installation.")
     info("Please install it to one of the directories in the DataDeps load path: " *
           join(localpaths,", \n", ",\nor "))
     info("by following the instructions:")

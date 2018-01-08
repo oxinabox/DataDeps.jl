@@ -117,6 +117,8 @@ function checksum_pass(hash, fetched_path)
 end
 
 function accept_terms(dd::DataDep, localpath, remotepath)
+    info("This program has requested access to the data dependency $(dd.name).")
+    info("which is not currently installed. It can be installed automatically, and you will not see this message again.")
     info(dd.extra_message)
     info("\n")
     if !input_bool("Do you want to download the dataset from $remotepath to \"$localpath\"?")
