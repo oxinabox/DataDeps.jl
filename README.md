@@ -88,16 +88,16 @@ This is the bare minium to setup a datadep.
 
  -  `fetch_method=download` a function to run to download the files.
     - Function should take 2 parameters (remote_fikepath, local_filepath), and can return anything
-    - Defaults to `Base.download` which invokes commandline download tools. `BinDeps.download_cmd` is another good option
+    - Defaults to `Base.download` which invokes commandline download tools. 
     - Can take a vector of methods, being one for each file, or a single method, in which case that method is used to download all of them. (See [Recursive Structure](Recursive Structure) below)
     
  - `post_fetch_method` a function to run after the files have download
     - Should take the local filepath as its first and only argument. Can return anything.
     - Default is to do nothing.
     - Can do what it wants from there, but most likes wants to extract the file into the data directory.
-    - A simple way to do this for zip files is ```file->run(`unzip $file`)``` if you trust the commandline `unzip` tool to be installed. Other wise you can use one of the surprising number of julia Zip packages.
-    - It should be noted that it runs from within the data directory
-       - which means operations that just write to the current working directory (like `unzip`) just work.
+		- towards this end DataDeps includes a command: `unpack` which will extract an compressed folder, deleting the original.
+    - It should be noted that it `post_fetch_method` runs from within the data directory
+       - which means operations that just write to the current working directory (like `rm` or `mv` or ```run(`SOMECMD`))``` just work.
        - You can call `cwd()` to get the the data directory for your own functions. (Or `dirname(local_filepath)`)
     - Can take a vector of methods, being one for each file, or a single method, in which case that ame method is applied to all of the files. (See [Recursive Structure](Recursive Structure) below)
     

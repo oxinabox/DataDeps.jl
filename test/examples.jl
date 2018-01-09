@@ -164,3 +164,26 @@ end
 
 
 end
+
+
+
+@testset "Data.Gov Babynames, unpack" begin
+    RegisterDataDep(
+        "Baby Names",
+        """
+        Dataset: Baby Names from Social Security Card Applications-National Level Data
+        Website: https://catalog.data.gov/dataset/baby-names-from-social-security-card-applications-national-level-data
+        License: CC0
+
+        The data (name, year of birth, sex and number) are from a 100 percent sample of Social Security card applications after 1879.
+        """,
+        ["https://www.ssa.gov/oact/babynames/names.zip","https://catalog.data.gov/harvest/object/f8ab4d49-b6b4-47d8-b1bb-b18187094f35"
+        ];
+        post_fetch_method = [unpack, f->mv(f, "metadata.json")]
+    )
+
+    @test !any(endswith.(readdir(datadep"Baby Names"), "zip"))
+    @test first(eachline(joinpath(datadep"Baby Names", "yob2016.txt")))=="Emma,F,19414"
+    @test filemode(joinpath(datadep"Baby Names", "metadata.json")) > 0
+end
+

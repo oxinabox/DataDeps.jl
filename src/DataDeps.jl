@@ -4,7 +4,7 @@ module DataDeps
 using Reexport
 @reexport using SHA
 
-export RegisterDataDep, @datadep_str
+export RegisterDataDep, @datadep_str, unpack
 
 abstract type AbstractDataDep end
 
