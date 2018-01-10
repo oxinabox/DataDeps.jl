@@ -124,6 +124,8 @@ function uv_access(path, mode::AccessMode)
     return ret, ret==0 ? "OK" : Base.struverror(ret)
 end
 
+can_read_file(path) = uv_access(path, R_OK)[1] == 0
+
 ##########################################################################################################################
 ## Actually determining path being used (/going to be used) by a given datadep
 
