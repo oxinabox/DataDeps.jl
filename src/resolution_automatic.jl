@@ -10,8 +10,8 @@ end
         datadep::DataDep,
         localpath;
         remotepath=datadep.remotepath,
-        skiphash=false,
-        always_accept_terms=false)
+        skip_checksum=false,
+        i_accept_the_terms_of_use=nothing)
 
 A method to download a datadep.
 Normally, you do not have to download a data dependancy manually.
@@ -23,26 +23,27 @@ As such it include a number of parameters that most people will not want to use.
 
  - `localpath`: this is the local path to save to.
  - `remotepath`: the remote path to fetch the data from, use this e.g. if you can't access the normal path where the data should be, but have an alternative.
- - `skiphash`: setting this to true causes the hash to not be checked. Use this if the data has changed since the hash was set in the registery, or for some reason you want to download different data.
- - `always_accept_terms`: use this to bypass the I agree to terms screen. Useful if you are scripting the whole process.
-     - `for automation perposes you can set the enviroment variable`
+ - `skip_checksum`: setting this to true causes the checksum to not be checked. Use this if the data has changed since the checksum was set in the registry, or for some reason you want to download different data.
+ - `i_accept_the_terms_of_use`: use this to bypass the I agree to terms screen. Useful if you are scripting the whole process.
+     - for automation perposes you can set the enviroment variable `DATADEPS_ALWAYS_ACCEPT`
+     - If not set, and if `DATADEPS_ALWAYS_ACCEPT` is not set then the user will be prompted
 
  If you need more control than this, then your best bet is to construct a new DataDep object, based on the original,
  and then invoke download on that.
 """
 function Base.download(
     datadep::DataDep,
-    localdir,
+    localdir;
     remotepath=datadep.remotepath,
-    always_accept_terms=env_bool("DATADEPS_ALWAY_ACCEPT"),
-    skiphash=false)
+    i_accept_the_terms_of_use = nothing,
+    skip_checksum=false)
 
-    always_accept_terms || accept_terms(datadep, localdir, remotepath)
+    accept_terms(datadep, localdir, remotepath, i_accept_the_terms_of_use)
 
     local fetched_path
     while true
         fetched_path = run_fetch(datadep.fetch_method, remotepath, localdir)
-        if skiphash || checksum_pass(datadep.hash, fetched_path)
+        if skip_checksum || checksum_pass(datadep.hash, fetched_path)
             break
         end
     end
@@ -116,13 +117,33 @@ function checksum_pass(hash, fetched_path)
     true
 end
 
-function accept_terms(dd::DataDep, localpath, remotepath)
+##############################
+# Term acceptance checking
+
+"""
+    accept_terms(dd, localpath, remotepath, i_accept_the_terms_of_use)
+
+Ensurses the user accepts the terms of use; otherwise errors out.
+"""
+function accept_terms(dd::DataDep, localpath, remotepath, ::Void)
+    if !env_bool("DATADEPS_ALWAY_ACCEPT")
+        response = check_if_accept_terms(dd, localpath, remotepath)
+        accept_terms(dd, localpath, remotepath, response)
+    else
+        true
+    end
+end
+function accept_terms(dd::DataDep, localpath, remotepath, i_accept_the_terms_of_use::Bool)
+    if !i_accept_the_terms_of_use
+        error("User declined to download $(dd.name). Can not proceed without the data.")
+    end
+    true
+end
+
+function check_if_accept_terms(dd::DataDep, localpath, remotepath)
     info("This program has requested access to the data dependency $(dd.name).")
     info("which is not currently installed. It can be installed automatically, and you will not see this message again.")
     info(dd.extra_message)
     info("\n")
-    if !input_bool("Do you want to download the dataset from $remotepath to \"$localpath\"?")
-        error("User declined to download $(dd.name). Can not proceed without the data.")
-    end
-    true
+    input_bool("Do you want to download the dataset from $remotepath to \"$localpath\"?")
 end
