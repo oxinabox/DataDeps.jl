@@ -83,16 +83,18 @@ end
 ############################################
 
 """
-    preferred_paths([calling_filepath|module|nothing])
+    preferred_paths([calling_filepath|module|nothing]; use_package_dir=true)
 
 returns the datadeps load_path
-plus if calling_filepath is provided,
+plus if calling_filepath is provided and `use_package_dir=true`
 and is currently inside a package directory then it also includes the path to the dataseps in that folder.
 """
-function preferred_paths(rel=nothing)
+function preferred_paths(rel=nothing; use_package_dir=true)
     cands = String[]
-    pkg_deps_root = try_determine_package_datadeps_dir(rel)
-    !isnull(pkg_deps_root) && push!(cands, get(pkg_deps_root))
+    if use_package_dir
+        pkg_deps_root = try_determine_package_datadeps_dir(rel)
+        !isnull(pkg_deps_root) && push!(cands, get(pkg_deps_root))
+    end
     append!(cands, env_list("DATADEPS_LOAD_PATH", default_loadpath))
     cands
 end
@@ -132,7 +134,7 @@ end
 Determines the location to save a datadep with the given name to.
 """
 function determine_save_path(name, rel=nothing)::String
-    cands = preferred_paths(rel)
+    cands = preferred_paths(rel; use_package_dir=false) #TODO Consider removing `rel` argument, it is not used
     path_ind = findfirst(cands) do path
         0 == first(uv_access(path, W_OK))
     end

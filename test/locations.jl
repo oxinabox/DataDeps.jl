@@ -11,3 +11,8 @@ using DataDeps: try_determine_load_path, determine_save_path, try_determine_pack
     end
 
 end
+
+
+@testset "determine_save_path" begin
+    @test !contains(determine_save_path("EG"), "/DataDeps/") # Ensure package path is not included
+end
