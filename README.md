@@ -32,11 +32,12 @@ If you are willing to tag a new relase of your package each time the data change
 DataDeps.jl likes it if you provide a checksum for your data.
 If you don't warnings will be displayed to the user.
 (or if your checksum doesn't match, big warnings will be displayed, with an option to ignore).
+You can suppress this by giving `Any` instead of a checksum.
 
-You can work around this if you try (e.g. by defining it do that the checksum is downloaded from the server when it is checked).
 But the real question is are you managing your data properly in the first place.
 DataDeps.jl does not provide for versioning of data -- you can't force users to download new copies of your data using DataDeps.
-(Again there are work arounds, such as using DataDeps.jl + `deps/build.jl` to `rm(datadep"MyData", recursive=true, force=true` every package update. Or considering each version of the data as a different datadep with a different name).
+There are work arounds, such as using DataDeps.jl + `deps/build.jl` to `rm(datadep"MyData", recursive=true, force=true` every package update. Or considering each version of the data as a different datadep with a different name.
+But maybe DataDeps isn't the solution for you.
 DataDeps.jl may form part of your overall solution or it may not.
 That is a discussion to have on Slack or Discourse maybe. Or in the issues for this repo.
 See also the list of related packages at the bottom
@@ -83,6 +84,7 @@ This is the bare minium to setup a datadep.
     - If you want to use a different hashing algorithm, then you can provide a tuple `(hashfun, targethex)`
         - `hashfun` should be a function which takes an IOStream, and returns a `Vector{UInt8}`. Such as any of the functions from [SHA.jl](https://github.com/staticfloat/SHA.jl), eg `sha3_384`, `sha1_512`
     - If you want ot use a different hashing algorithm, but don't know the sum, you can provide just the `hashfun` and a warning message will be displayed, giving the correct tuple of `(hashfun, targethex)` that should be added to the registration block.
+	- If you don't want to provide a checksum,  because your data can change pass in the type `Any`. (But see above warnings about "what if my data is dynamic")
     - Can take a vector of checksums, being one for each file, or a single checksum in which case the per file hashes are `xor`ed to get the target hash. (See [Recursive Structure](Recursive Structure) below)
 
 

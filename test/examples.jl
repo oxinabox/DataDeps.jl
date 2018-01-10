@@ -3,6 +3,7 @@ using Base.Test
 
 ENV["DATADEPS_ALWAY_ACCEPT"]=true
 
+#=
 @testset "Pi" begin
     RegisterDataDep(
      "Pi",
@@ -62,6 +63,7 @@ end
         """,
         "http://yann.lecun.com/exdb/mnist/".*["train-images-idx3-ubyte.gz", "train-labels-idx1-ubyte.gz"];
         # Not providing a checksum at all so can check it gives output
+        # TODO : automate this test with new 0.7 stuff
     )
 
 
@@ -165,7 +167,7 @@ end
 
 end
 
-
+=#
 
 @testset "Data.Gov Babynames, unpack" begin
     RegisterDataDep(
@@ -178,7 +180,10 @@ end
         The data (name, year of birth, sex and number) are from a 100 percent sample of Social Security card applications after 1879.
         """,
         ["https://www.ssa.gov/oact/babynames/names.zip","https://catalog.data.gov/harvest/object/f8ab4d49-b6b4-47d8-b1bb-b18187094f35"
-        ];
+        ],
+        Any, # Test that there is no warning about checksum. This data is updated annually
+        #TODO : Automate this test with new 0.7 test_warn stuff
+        ;
         post_fetch_method = [unpack, f->mv(f, "metadata.json")]
     )
 

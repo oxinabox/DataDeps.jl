@@ -23,6 +23,12 @@ end
 
 
 """
+Use `Any` to mark as not caring about the hash.
+Use this for data that can change
+"""
+run_checksum(::Type{Any}, path) =  true
+
+"""
 If only a function is provided then assume the user is a developer,
 wanting to know what hash-line to add to the Registration line.
 """
@@ -36,6 +42,7 @@ function run_checksum(hasher, path)
     end
     return true
 end
+
 ##############
 # Non terminal methods
 # These evetually redirect to one of the terminal methods
