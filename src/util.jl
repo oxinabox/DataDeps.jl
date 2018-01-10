@@ -64,8 +64,22 @@ function input_choice(prompt, options::Vararg{Char})::Char
         info(prompt)
         info("["*join(options, '/')*"]")
         reply = lowercase(first(readline()))
-        for opt in options
+        for opt in lowercase.(options)
             reply==opt && return opt
         end
     end
+end
+
+function input_choice(options::Vararg{Tuple{Char, <:AbstractString, Any}})
+    acts = Dict{Char, Any}()
+    prompt = ""
+    chars = Char[]
+    for (cc, prmt, act) in options
+        prompt*="\n [$cc] $prmt"
+        push!(chars, cc)
+        acts[lowercase(cc)] = act
+    end
+    prompt*="\n"
+
+    acts[input_choice(prompt, chars...)]()
 end
