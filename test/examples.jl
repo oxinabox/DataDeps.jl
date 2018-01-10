@@ -3,7 +3,6 @@ using Base.Test
 
 ENV["DATADEPS_ALWAY_ACCEPT"]=true
 
-#=
 @testset "Pi" begin
     RegisterDataDep(
      "Pi",
@@ -167,7 +166,6 @@ end
 
 end
 
-=#
 
 @testset "Data.Gov Babynames, unpack" begin
     RegisterDataDep(
