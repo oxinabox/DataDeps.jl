@@ -18,15 +18,16 @@ Normally, you do not have to download a data dependancy manually.
 If you simply cause the string macro `datadep"DepName"`,
 to be exectuted it will be downloaded if not already present.
 
-Invoking this `download` method manually is normally for purposes of debugging.
+Invoking this `download` method manually is normally for purposes of debugging,
 As such it include a number of parameters that most people will not want to use.
 
  - `localpath`: this is the local path to save to.
  - `remotepath`: the remote path to fetch the data from, use this e.g. if you can't access the normal path where the data should be, but have an alternative.
  - `skip_checksum`: setting this to true causes the checksum to not be checked. Use this if the data has changed since the checksum was set in the registry, or for some reason you want to download different data.
- - `i_accept_the_terms_of_use`: use this to bypass the I agree to terms screen. Useful if you are scripting the whole process.
-     - for automation perposes you can set the enviroment variable `DATADEPS_ALWAYS_ACCEPT`
-     - If not set, and if `DATADEPS_ALWAYS_ACCEPT` is not set then the user will be prompted
+ - `i_accept_the_terms_of_use`: use this to bypass the I agree to terms screen. Useful if you are scripting the whole process, or using annother system to get confirmation of acceptance.
+     - For automation perposes you can set the enviroment variable `DATADEPS_ALWAYS_ACCEPT`
+     - If not set, and if `DATADEPS_ALWAYS_ACCEPT` is not set, then the user will be prompted
+     - Strictly speaking these are not always terms of use, it just refers to the message and permission to download.
 
  If you need more control than this, then your best bet is to construct a new DataDep object, based on the original,
  and then invoke download on that.
