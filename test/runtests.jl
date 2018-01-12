@@ -31,7 +31,12 @@ end
             end
         end
     finally
-        info("removing $tempdir")
-        rm(tempdir, recursive=true, force=true)
+		try
+			info("removing $tempdir")
+			rm(tempdir, recursive=true, force=true)
+		catch err
+			warn("Something went wrong with removing $tempdir")
+			warn(err)
+		end
     end
 end
