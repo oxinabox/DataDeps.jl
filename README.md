@@ -28,21 +28,19 @@ It lives on some website somewhere.
 
 #### But my data is dynamic
 Well how dynamic?
-If you are willing to tag a new relase of your package each time the data changes, then maybe this is no worry.
-DataDeps.jl likes it if you provide a checksum for your data.
-If you don't warnings will be displayed to the user.
-(or if your checksum doesn't match, big warnings will be displayed, with an option to ignore).
-You can suppress this by giving `Any` instead of a checksum.
+If you are willing to tag a new relase of your package each time the data changes, then maybe this is no worry, but maybe it is.
 
 But the real question is are you managing your data properly in the first place.
 DataDeps.jl does not provide for versioning of data -- you can't force users to download new copies of your data using DataDeps.
 There are work arounds, such as using DataDeps.jl + `deps/build.jl` to `rm(datadep"MyData", recursive=true, force=true` every package update. Or considering each version of the data as a different datadep with a different name.
+
 But maybe DataDeps isn't the solution for you.
 DataDeps.jl may form part of your overall solution or it may not.
 That is a discussion to have on Slack or Discourse maybe. Or in the issues for this repo.
 See also the list of related packages at the bottom
 
-The other option is that if your data a good fit for git, then you could add it as a `ManualDataDep` in `deps/data/MyData`.
+The other option is that if your data a good fit for git (being in the overlapping area of plaintext & small (or close enough to those things)),
+then you could add it as a `ManualDataDep` in `deps/data/MyData`.
 
 
 ## Usage for package developers
@@ -224,8 +222,6 @@ DataDeps.jl tries to have very sensible defaults.
 	- default `false`
  - `DATADEPS_LOAD_PATH` -- The list of paths, other than the package directory (`PKGNAME/deps/data`) to save and load data from
     - default values is complex. On all systems it includes the equivalent of `~/.julia/datadeps`. It also includes a large number of other locations such as `/usr/share/datadeps` on linux, and `C:/ProgramData` on Windows.
- - `DATADEPS_PKGDIR_FIRST` -- check/attempt to save in  `PKGNAME/deps/data` before everything in `DATADEPS_LOAD_PATH`, rather than after.
-    - default `false`
  - `DATADEPS_DISABLE_DOWNLOAD` -- causes any action that would result in the download being triggered to throw an exception.
    - useful e.g. if you are in an environment with metered data, where your datasets should have already been downloaded earlier, and if there were not you want to respond to the situation rather than let DataDeps download them for you.
    - default `false`
