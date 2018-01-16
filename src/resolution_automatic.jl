@@ -122,29 +122,29 @@ end
 # Term acceptance checking
 
 """
-    accept_terms(dd, localpath, remotepath, i_accept_the_terms_of_use)
+    accept_terms(datadep, localpath, remotepath, i_accept_the_terms_of_use)
 
 Ensurses the user accepts the terms of use; otherwise errors out.
 """
-function accept_terms(dd::DataDep, localpath, remotepath, ::Void)
+function accept_terms(datadep::DataDep, localpath, remotepath, ::Void)
     if !env_bool("DATADEPS_ALWAY_ACCEPT")
-        response = check_if_accept_terms(dd, localpath, remotepath)
-        accept_terms(dd, localpath, remotepath, response)
+        response = check_if_accept_terms(datadep, localpath, remotepath)
+        accept_terms(datadep, localpath, remotepath, response)
     else
         true
     end
 end
-function accept_terms(dd::DataDep, localpath, remotepath, i_accept_the_terms_of_use::Bool)
+function accept_terms(datadep::DataDep, localpath, remotepath, i_accept_the_terms_of_use::Bool)
     if !i_accept_the_terms_of_use
         error("User declined to download $(dd.name). Can not proceed without the data.")
     end
     true
 end
 
-function check_if_accept_terms(dd::DataDep, localpath, remotepath)
-    info("This program has requested access to the data dependency $(dd.name).")
+function check_if_accept_terms(datadep::DataDep, localpath, remotepath)
+    info("This program has requested access to the data dependency $(datadep.name).")
     info("which is not currently installed. It can be installed automatically, and you will not see this message again.")
-    info(dd.extra_message)
+    info(datadep.extra_message)
     info("\n")
     input_bool("Do you want to download the dataset from $remotepath to \"$localpath\"?")
 end
