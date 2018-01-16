@@ -61,7 +61,8 @@ Performs in (async) parallel if multiple paths are given
 """
 function run_fetch(fetch_method, remotepath, localdir)
     mkpath(localdir)
-    localpath = joinpath(localdir, basename(remotepath))
+    filename = get_filename(remotepath)
+    localpath = joinpath(localdir, filename)
     #use the local folder and the remote filename
     fetch_method(remotepath, localpath)
     localpath

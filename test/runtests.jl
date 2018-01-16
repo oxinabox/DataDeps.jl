@@ -4,6 +4,7 @@ tests = [
     "util",
     "locations",
     "main",
+    "filename_solving"
 ]
 
 for filename in tests

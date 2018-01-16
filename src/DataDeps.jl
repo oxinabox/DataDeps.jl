@@ -50,8 +50,10 @@ end
 include("util.jl")
 include("registration.jl")
 
+include("filename_solving.jl")
 include("locations.jl")
 include("verification.jl")
+
 
 include("resolution_automatic.jl")
 include("resolution_manual.jl")
