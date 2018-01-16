@@ -5,7 +5,6 @@
 Given a remotepath (URL) returns the filename that it should be saved to locally.
 """
 function get_filename(remotepath)
-    headers = get_headers(remotepath)
     filename_match = try_get_filename(remotepath)
     ret = if filename_match == nothing
         # couldn't get it from the headers
@@ -59,7 +58,17 @@ else
         if downloadcmd == :curl
             readstring(`curl -sI -L $url`)
         elseif downloadcmd == :wget
-            readstring(`wget --server-response --spider $url`)
+            cmd = `wget --server-response --spider $url`
+            # this is overly complex but I don't know a better way to read stderr from julia
+            outs = Pipe()
+            try
+                run(pipeline(cmd, stderr=outs))
+                close(outs.in) # closing the input makes the output readable
+                return readstring(outs.out)
+            finally
+                close(outs)
+            end
+
         else
             error("no download agent available; install curl, or wget")
         end
