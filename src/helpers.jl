@@ -53,7 +53,7 @@ Extracts the content of an archive in the current directory;
 deleting the original archieve, unless the `keep_originals` flag is set.
 """
 function unpack(f; keep_originals=false) 
-    run(unpack_cmd(f, pwd(), last(splitext(f)), last(first(splitext(f)))))
+    run(unpack_cmd(f, pwd(), last(splitext(f)), last(splitext(first(splitext(f))))))
     !keep_originals && rm(f)
 end
 
