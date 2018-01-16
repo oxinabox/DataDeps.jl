@@ -20,7 +20,6 @@ function get_filename(remotepath)
     else
         strip(filename_match[1])
     end
-    @show ret
     ret
 end
 
@@ -30,7 +29,9 @@ downloadcmd = nothing
 @static if is_windows()
     "Returns a regex Match or nothing"
     function try_get_filename(url)
+
         ps = "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+
         prog ="""
             \$request = [System.Net.WebRequest]::Create('$url')
             \$request.UserAgent = "Julia DataDeps.jl"
@@ -82,4 +83,3 @@ else
         end
     end
 end
-

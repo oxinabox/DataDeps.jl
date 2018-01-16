@@ -177,7 +177,10 @@ end
 
         The data (name, year of birth, sex and number) are from a 100 percent sample of Social Security card applications after 1879.
         """,
-        ["https://www.ssa.gov/oact/babynames/names.zip","https://catalog.data.gov/harvest/object/f8ab4d49-b6b4-47d8-b1bb-b18187094f35"
+        ["https://www.ssa.gov/oact/babynames/names.zip",
+        "https://catalog.data.gov/harvest/object/f8ab4d49-b6b4-47d8-b1bb-b18187094f35"
+         # Interestingly this metadata file fails on windows to resolve to filename to save to
+         # See warnings, The `mv` in post_fetch_method is the work-around.
         ],
         Any, # Test that there is no warning about checksum. This data is updated annually
         #TODO : Automate this test with new 0.7 test_warn stuff

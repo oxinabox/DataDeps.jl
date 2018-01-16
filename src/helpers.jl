@@ -52,9 +52,8 @@ end
 Extracts the content of an archive in the current directory;
 deleting the original archieve, unless the `keep_originals` flag is set.
 """
-function unpack(f; keep_originals=false) 
+function unpack(f; keep_originals=false)
     run(unpack_cmd(f, pwd(), last(splitext(f)), last(splitext(first(splitext(f))))))
+    rm("pax_global_header"; force=true)# Non-compliant tarball extractors dump out this file. It is meaningly (google it's filename for more)
     !keep_originals && rm(f)
 end
-
-
