@@ -28,21 +28,19 @@ It lives on some website somewhere.
 
 #### But my data is dynamic
 Well how dynamic?
-If you are willing to tag a new relase of your package each time the data changes, then maybe this is no worry.
-DataDeps.jl likes it if you provide a checksum for your data.
-If you don't warnings will be displayed to the user.
-(or if your checksum doesn't match, big warnings will be displayed, with an option to ignore).
-You can suppress this by giving `Any` instead of a checksum.
+If you are willing to tag a new relase of your package each time the data changes, then maybe this is no worry, but maybe it is.
 
 But the real question is are you managing your data properly in the first place.
 DataDeps.jl does not provide for versioning of data -- you can't force users to download new copies of your data using DataDeps.
 There are work arounds, such as using DataDeps.jl + `deps/build.jl` to `rm(datadep"MyData", recursive=true, force=true` every package update. Or considering each version of the data as a different datadep with a different name.
+
 But maybe DataDeps isn't the solution for you.
 DataDeps.jl may form part of your overall solution or it may not.
 That is a discussion to have on Slack or Discourse maybe. Or in the issues for this repo.
 See also the list of related packages at the bottom
 
-The other option is that if your data a good fit for git, then you could add it as a `ManualDataDep` in `deps/data/MyData`.
+The other option is that if your data a good fit for git (being in the overlapping area of plaintext & small (or close enough to those things)),
+then you could add it as a `ManualDataDep` in `deps/data/MyData`.
 
 
 ## Usage for package developers
@@ -82,8 +80,11 @@ This is the bare minium to setup a datadep.
     - By far the most common use is to just provide a SHA256 sum as a hex-string for the files
     - If not provided, then a warning message with the  SHA256 sum is displayed; this is to help package devs workout the sum for there files.
     - If you want to use a different hashing algorithm, then you can provide a tuple `(hashfun, targethex)`
-        - `hashfun` should be a function which takes an IOStream, and returns a `Vector{UInt8}`. Such as any of the functions from [SHA.jl](https://github.com/staticfloat/SHA.jl), eg `sha3_384`, `sha1_512`
-    - If you want to use a different hashing algorithm, but don't know the sum, you can provide just the `hashfun` and a warning message will be displayed, giving the correct tuple of `(hashfun, targethex)` that should be added to the registration block.
+        - `hashfun` should be a function which takes an IOStream, and returns a `Vector{UInt8}`. 
+	      - Such as any of the functions from [SHA.jl](https://github.com/staticfloat/SHA.jl), eg `sha3_384`, `sha1_512`
+	      - or `md5` from [MD5.jl](https://github.com/oxinabox/MD5.jl)
+  - If you want to use a different hashing algorithm, but don't know the sum, you can provide just the `hashfun` and a warning message will be displayed, giving the correct tuple of `(hashfun, targethex)` that should be added to the registration block.
+
 	- If you don't want to provide a checksum,  because your data can change pass in the type `Any`. (But see above warnings about "what if my data is dynamic")
     - Can take a vector of checksums, being one for each file, or a single checksum in which case the per file hashes are `xor`ed to get the target hash. (See [Recursive Structure](Recursive Structure) below)
 
@@ -192,11 +193,26 @@ One would also `include` that registrations file into the `__init__` function in
 [DataDepsGenerators.jl](https://github.com/oxinabox/DataDepsGenerators.jl) is a julia package to help generate DataDeps registration blocks from well known data sources.
 It attempts to use webscraping and such to workout what should be in the registration block.
 
+
 ### Assuming direct control
 For more hardcore devs customising the user experience,
 and people needing to do debugging you may assume (nearly) full control over the download operation
 by directly invoking the method `Base.download(::DataDep, localpath; kwargs...)`.
 It is fully documented in its docstring.
+
+
+### Extending DataDeps with custom `AbstractDataDep` types
+One of the intended point of extension for DataDeps.jl is in developers defining their own DataDep types.
+99% of developers won't need to do this, a `ManualDataDep` or a normal (automatic) `DataDep` covers most use cases.
+However, if for example you want to have a DataDep that after the download is complete and after the `post_fetch_method` is run, does an additional validation, or some data synthesis step that requires working with multiple of the files simultaneously (which `post_fetch_method` can not do), or a `SemiManualDataDep` where the user does some things and then other things happen automatically, then this can be done by creating your own `AbstractDataDep` type.
+
+The code for `ManualDataDep` is a good place to start looking to see how that is done.
+You can also encapsulate an `DataDep` as one of the elements of your new type.
+
+If you do this you might like to contribute the type back up to this repository, so others can use it also.
+
+
+
 
 ## Usage for users
 The mail goal of DataDeps.jl is to simplify life for the user.
@@ -248,8 +264,6 @@ DataDeps.jl tries to have very sensible defaults.
 	- default `false`
  - `DATADEPS_LOAD_PATH` -- The list of paths, other than the package directory (`PKGNAME/deps/data`) to save and load data from
     - default values is complex. On all systems it includes the equivalent of `~/.julia/datadeps`. It also includes a large number of other locations such as `/usr/share/datadeps` on linux, and `C:/ProgramData` on Windows.
- - `DATADEPS_PKGDIR_FIRST` -- check/attempt to save in  `PKGNAME/deps/data` before everything in `DATADEPS_LOAD_PATH`, rather than after.
-    - default `false`
  - `DATADEPS_DISABLE_DOWNLOAD` -- causes any action that would result in the download being triggered to throw an exception.
    - useful e.g. if you are in an environment with metered data, where your datasets should have already been downloaded earlier, and if there were not you want to respond to the situation rather than let DataDeps download them for you.
    - default `false`
