@@ -27,4 +27,11 @@ withenv("DATADEPS_ALWAY_ACCEPT"=>"true") do
 
         rm(datadep"Test1"; recursive=true) # delete the directory
     end
+
+    @testset "sanity check the macro's behaviour with variables" begin
+        var = "foo/bar"
+        macroexpand(:(@datadep_str var)) # this line would throw an error if the varibles were being handle wrong
+        @test true
+    end
+
 end

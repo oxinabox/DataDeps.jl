@@ -27,22 +27,26 @@ struct DataDep{H, R, F, P} <: AbstractDataDep
 end
 
 macro datadep_str(path)
-    parts = splitpath(path)
-    name = first(parts)
-    inner_path = length(parts) > 1 ? joinpath(Iterators.drop(parts, 1)...) : ""
-
-    :(resolve(registry[$(esc(name))], @__FILE__, $(esc(inner_path))))
+    quote
+        parts = splitpath($(esc(path)))
+        name = first(parts)
+        inner_path = length(parts) > 1 ? joinpath(Iterators.drop(parts, 1)...) : ""
+        resolve(registry[name], inner_path, @__FILE__)
+    end
 end
 
 """
-    resolve(datadep)
+    resolve(datadep, inner_filepath, calling_filepath)
 
 Returns a path to the folder containing the datadep.
 Even if that means downloading the dependancy and putting it in there.
 
-This is basically the function the lives behind the string macro `datadep"DepName`.
+     - `inner_filepath` is the path to the file within the data dir
+     - `calling_filepath` is a path to the file where this is being invoked from
+
+This is basically the function the lives behind the string macro `datadep"DepName/inner_filepath"`.
 """
-function resolve(datadep::AbstractDataDep, calling_filepath, inner_filepath)::String
+function resolve(datadep::AbstractDataDep, inner_filepath, calling_filepath)::String
     while true
         dirpath = _resolve(datadep, calling_filepath)
         filepath = joinpath(dirpath, inner_filepath)
