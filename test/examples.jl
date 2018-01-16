@@ -11,7 +11,7 @@ ENV["DATADEPS_ALWAY_ACCEPT"]=true
      sha2_256
     )
 
-    pi_string = readstring(joinpath(datadep"Pi", "10000.txt"))
+    pi_string = readstring(datadep"Pi/10000.txt")
     @test parse(pi_string) ≈ π
     @test parse(BigFloat, pi_string) ≈ π
 
@@ -27,7 +27,7 @@ end
      #Important: this is a hash I didn't calculate, so is a test that our checksum methods actually align with the normal values.
     )
 
-    data = readdlm(datadep"Primes"*"/primes.txt", ',')
+    data = readdlm(datadep"Primes/primes.txt", ',')
     primes = data[4:end, 2] #skip fist 3
 
     #If these really are prime then will not have factors
@@ -114,7 +114,7 @@ end
          post_fetch_method = file->run(`unzip $file`)
     )
 
-    data, header = readdlm(datadep"UCI Banking"*"/bank.csv", ';', header=true)
+    data, header = readdlm(datadep"UCI Banking/bank.csv", ';', header=true)
     @test size(header) == (1,17)
     @test size(data) == (4521,17)
 
@@ -161,7 +161,7 @@ end
         ]
     )
 
-    @test length(collect(eachline(datadep"UCI Adult"*"/adult.names"))) == 110
+    @test length(collect(eachline(datadep"UCI Adult/adult.names"))) == 110
 
 
 end

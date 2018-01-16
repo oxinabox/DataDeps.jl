@@ -77,13 +77,14 @@ This is the bare minium to setup a datadep.
     
 
  - *checksum* this is very flexible, it is used to check the files downloaded correctly
-    - By far the most common use is to just provide a string being the SHA256 sum for the files
+    - By far the most common use is to just provide a SHA256 sum as a hex-string for the files
     - If not provided, then a warning message with the  SHA256 sum is displayed; this is to help package devs workout the sum for there files.
     - If you want to use a different hashing algorithm, then you can provide a tuple `(hashfun, targethex)`
         - `hashfun` should be a function which takes an IOStream, and returns a `Vector{UInt8}`. 
-	- Such as any of the functions from [SHA.jl](https://github.com/staticfloat/SHA.jl), eg `sha3_384`, `sha1_512`
-	- or `md5` from [MD5.jl](https://github.com/oxinabox/MD5.jl)
-    - If you want ot use a different hashing algorithm, but don't know the sum, you can provide just the `hashfun` and a warning message will be displayed, giving the correct tuple of `(hashfun, targethex)` that should be added to the registration block.
+	      - Such as any of the functions from [SHA.jl](https://github.com/staticfloat/SHA.jl), eg `sha3_384`, `sha1_512`
+	      - or `md5` from [MD5.jl](https://github.com/oxinabox/MD5.jl)
+  - If you want to use a different hashing algorithm, but don't know the sum, you can provide just the `hashfun` and a warning message will be displayed, giving the correct tuple of `(hashfun, targethex)` that should be added to the registration block.
+
 	- If you don't want to provide a checksum,  because your data can change pass in the type `Any`. (But see above warnings about "what if my data is dynamic")
     - Can take a vector of checksums, being one for each file, or a single checksum in which case the per file hashes are `xor`ed to get the target hash. (See [Recursive Structure](Recursive Structure) below)
 
@@ -97,7 +98,7 @@ This is the bare minium to setup a datadep.
     - Should take the local filepath as its first and only argument. Can return anything.
     - Default is to do nothing.
     - Can do what it wants from there, but most likes wants to extract the file into the data directory.
-		- towards this end DataDeps includes a command: `unpack` which will extract an compressed folder, deleting the original.
+    - towards this end DataDeps includes a command: `unpack` which will extract an compressed folder, deleting the original.
     - It should be noted that it `post_fetch_method` runs from within the data directory
        - which means operations that just write to the current working directory (like `rm` or `mv` or ```run(`SOMECMD`))``` just work.
        - You can call `cwd()` to get the the data directory for your own functions. (Or `dirname(local_filepath)`)
@@ -138,11 +139,23 @@ but DataDeps.jl will still provide the convient `datadep"MyData"` string macro f
 As mentions above, if you put the data in your git repo for your package under `deps/data/NAME` then it will be managed by julia package manager.
 
 A manaul DataDep registration is just like a normal `DataDep` registration,
-except that only a Name and message are provided. 
+except that only a `name` and `message` are provided. 
+
+Inside the message you should give instructions on how to acquire the data.
+
 
 ### Using a datadep string to get hold of the data.
 For any registered DataDep, `datadep"Name"` returns a path to a folder containing the data.
 If when that string macro is evaluated no such folder exists, then DataDeps will swing into action and coordiante the acquisition of the data into a folder, then return the path that now contains the data.
+
+You can also use `datadep"Name/subfolder/file.txt"` (and similar) to get a path to the file at  `subfolder/file.txt` within the data directory for `Name`.
+Just like when using the plain `datadep"Name"` this will if required downloadload the whole datadep (**not** just the file).
+However, it will also engage additional features to verify that that file exists (and is readable),
+and if not will attempt to help the user resolve the situation.
+This is useful if files may have been deleted by mistake, or if a ManualDataDep might have been incorrectly installed.
+
+
+
 
 ### Installing Data Lazily.
 Most packages using more than one data source, will want to download them only when the user requires them.
@@ -180,6 +193,14 @@ One would also `include` that registrations file into the `__init__` function in
 [DataDepsGenerators.jl](https://github.com/oxinabox/DataDepsGenerators.jl) is a julia package to help generate DataDeps registration blocks from well known data sources.
 It attempts to use webscraping and such to workout what should be in the registration block.
 
+
+### Assuming direct control
+For more hardcore devs customising the user experience,
+and people needing to do debugging you may assume (nearly) full control over the download operation
+by directly invoking the method `Base.download(::DataDep, localpath; kwargs...)`.
+It is fully documented in its docstring.
+
+
 ### Extending DataDeps with custom `AbstractDataDep` types
 One of the intended point of extension for DataDeps.jl is in developers defining their own DataDep types.
 99% of developers won't need to do this, a `ManualDataDep` or a normal (automatic) `DataDep` covers most use cases.
@@ -189,6 +210,7 @@ The code for `ManualDataDep` is a good place to start looking to see how that is
 You can also encapsulate an `DataDep` as one of the elements of your new type.
 
 If you do this you might like to contribute the type back up to this repository, so others can use it also.
+
 
 
 
@@ -217,6 +239,15 @@ Except if they are (both) located in their packages `deps/data` folder.
 By moving a package's data dependency into its package directory under `deps/data`, it becomes invisible except to that package.
 For example `~/.julia/v0.6/EXAMPLEPKG/deps/data/EXAMPLEDATADEP/`,
 for the package `EXAMPLEPKG`, and the datadep `EXAMPLEDATADEP`.
+
+Ideally though you should probably raise an issue with the package maintainers and see if one (or both) of them want to change the DataDep name.
+
+Note also when it comes to file level loading, e.g. `datadep"Name/subfolder/file.txt"`,
+DataDeps does not check all folders with that `Name` (if you do have multiple).
+If the file is not in the first folder it finds you will be presented with the recovery dialog.
+From which the easiest option is to select the option to delete the folder and retry,
+since that will result in it checked the second folder (as the first will not exist).
+
 
 
 ## Configuration

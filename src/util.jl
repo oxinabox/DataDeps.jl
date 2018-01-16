@@ -63,9 +63,41 @@ function input_choice(prompt, options::Vararg{Char})::Char
     while(true)
         info(prompt)
         info("["*join(options, '/')*"]")
-        reply = lowercase(first(readline()))
-        for opt in options
+        response = readline()
+        length(response)==0 && continue
+        reply = lowercase(first(response))
+        for opt in lowercase.(options)
             reply==opt && return opt
         end
     end
+end
+
+"""
+    input_choice
+
+Prompts the user for one of a list of options.
+Takes a vararg of tuples of Letter, Prompt, Action (0 argument function)
+
+Example:
+```
+input_choice(
+    ('A', "Abort -- errors out", ()->error("aborted")),
+    ('X', "eXit -- exits normally", ()->exit()),
+    ('C', "Continue -- continues running", ()->nothing)),
+)
+
+```
+"""
+function input_choice(options::Vararg{Tuple{Char, <:AbstractString, Any}})
+    acts = Dict{Char, Any}()
+    prompt = ""
+    chars = Char[]
+    for (cc, prmt, act) in options
+        prompt*="\n [$cc] $prmt"
+        push!(chars, cc)
+        acts[lowercase(cc)] = act
+    end
+    prompt*="\n"
+
+    acts[input_choice(prompt, chars...)]()
 end

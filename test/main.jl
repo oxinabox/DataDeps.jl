@@ -20,11 +20,18 @@ withenv("DATADEPS_ALWAY_ACCEPT"=>"true") do
          fetch_method=dummydown
         )
 
-        @test endswith(datadep"Test1", "Test1")
+        @test endswith(datadep"Test1", "Test1/") || endswith(datadep"Test1", "Test1\\")
 
         @test all_expectations_used(dummyhash)
         @test all_expectations_used(dummydown)
 
         rm(datadep"Test1"; recursive=true) # delete the directory
     end
+
+    @testset "sanity check the macro's behaviour with variables" begin
+        var = "foo/bar"
+        macroexpand(:(@datadep_str var)) # this line would throw an error if the varibles were being handle wrong
+        @test true
+    end
+
 end
