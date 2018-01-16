@@ -5,7 +5,15 @@
 Given a remotepath (URL) returns the filename that it should be saved to locally.
 """
 function get_filename(remotepath)
-    filename_match = try_get_filename(remotepath)
+    filename_match = try
+        try_get_filename(remotepath)
+    catch err
+        err isa ErrorException || rethrow(err)
+        warn("Could not resolve filename due to $(err.msg)")
+        warn("falling back to using final part of remotepath")
+        filename_match = nothing
+    end
+
     ret = if filename_match == nothing
         # couldn't get it from the headers
         basename(remotepath)
