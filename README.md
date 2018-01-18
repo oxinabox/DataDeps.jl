@@ -6,6 +6,7 @@ DataDeps is a package for simplifying the management of data in your julia appli
 In particular it is designed to make getting static data from some server into the local machine,
 and making programs know where that data is trivial.
 
+For some examples of it being useful and cool see [this blog post](http://white.ucc.asn.au/2018/01/18/DataDeps.jl-Repeatabled-Data-Setup-for-Repeatable-Science.html)
 
 ### Why not store the data in Git?
 Git is good for files that meet 3 requirements:
