@@ -52,7 +52,7 @@ function resolve(datadep::AbstractDataDep, inner_filepath, calling_filepath)::St
         filepath = joinpath(dirpath, inner_filepath)
         
         if can_read_file(filepath)
-            return filepath
+            return realpath(filepath) # resolve any symlinks for maximum compatibility with external applications
         else # Something has gone wrong
             warn("DataDep $(datadep.name) found at \"$(dirpath)\". But could not read file at \"$(filepath)\".")
             warn("Something has gone wrong. What would you like to do?")
