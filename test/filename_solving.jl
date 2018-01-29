@@ -8,5 +8,16 @@ end
 
 
 @testset "using headers" begin
-    @test r"JuliaCI-Coverage.*\.tar\.gz"(get_filename("https://api.github.com/repos/JuliaCI/Coverage.jl/tarball"))
+    # From http://test.greenbytes.de/tech/tc2231/
+
+    
+    @test "foo.html" == get_filename("http://test.greenbytes.de/tech/tc2231/attwithasciifilename.asis")
+
+    @test "attonly.asis" == get_filename("http://test.greenbytes.de/tech/tc2231/attonly.asis")
+
+
+    @test_broken "\"quoting\" tested.html" == get_filename("http://test.greenbytes.de/tech/tc2231/attwithasciifnescapedquote.asis")
+
+    @test_broken "ä-%41.html" == get_filename("http://test.greenbytes.de/tech/tc2231/attwithfilenamepctandiso.asis")
+
 end

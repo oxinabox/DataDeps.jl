@@ -34,5 +34,5 @@ Returns a regex Match or nothing
 function try_get_filename(url)
     resp = HTTP.request("HEAD", url,  ["User-Agent"=>"DataDeps.jl (http-lib: HTTP.jl; lang: Julia)"]);
     content_disp = get(Dict(resp.headers),"Content-Disposition","");
-    match(r"filename=(.*)", content_disp);
+    match(r"filename=\"(.*)\"", content_disp);
 end
