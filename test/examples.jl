@@ -167,60 +167,28 @@ end
 end
 
 
-@testset "GitHub repo via API" begin
-    # This test set is important because it catching the case where the filename is determined by the headers, not by the URL
-    # Also githubs API is finicky about USER-AGENT and stuff
-
+@testset "Data.Gov Babynames" begin
     RegisterDataDep(
-        "DataDeps.jl Repo",
+        "Baby Names",
         """
-        Dataset: The DataDeps.jl Repo.
+        Dataset: Baby Names from Social Security Card Applications-National Level Data
+        Website: https://catalog.data.gov/dataset/baby-names-from-social-security-card-applications-national-level-data
+        License: CC0
 
-        It is not normally a good idea to download code using DataDeps.
-        But if you are treating that code as Data, e.g. doing a survey of coding practices, it is correct.
-
-        See LICENSE.md for details on what you can do with this.
+        The data (name, year of birth, sex and number) are from a 100 percent sample of Social Security card applications after 1879.
         """,
-        "https://api.github.com/repos/oxinabox/DataDeps.jl/tarball",
-        Any; # Does not have a constant checksum, but this is just for testing purposes anyway
-        post_fetch_method = unpack)
-    @test length(readdir(datadep"DataDeps.jl Repo"))==1
-    folder = readdir(datadep"DataDeps.jl Repo")[1]
-    @test isdir(joinpath(datadep"DataDeps.jl Repo", folder))
+        ["https://www.ssa.gov/oact/babynames/names.zip",
+        "https://catalog.data.gov/harvest/object/f8ab4d49-b6b4-47d8-b1bb-b18187094f35"
+         # Interestingly this metadata file fails on windows to resolve to filename to save to
+         # See warnings, The `mv` in post_fetch_method is the work-around.
+        ],
+        Any, # Test that there is no warning about checksum. This data is updated annually
+        #TODO : Automate this test with new 0.7 test_warn stuff
+        ;
+        post_fetch_method = [unpack, f->mv(f, "metadata551randstuff.json")]
+    )
 
-end
-using Base.Test
-using DataDeps
-
-# These Tests are too Flaky to run on CI
-# They should run fine on any properly configured machine
-# but do to the webserver hosting them having perculuarities
-# they are overly fragile to things like SSL versions
-
-if DataDeps.env_bool("DATADEPS_ENABLE_FLAKY_TESTS")
-    @testset "Data.Gov Babynames" begin
-        RegisterDataDep(
-            "Baby Names",
-            """
-            Dataset: Baby Names from Social Security Card Applications-National Level Data
-            Website: https://catalog.data.gov/dataset/baby-names-from-social-security-card-applications-national-level-data
-            License: CC0
-
-            The data (name, year of birth, sex and number) are from a 100 percent sample of Social Security card applications after 1879.
-            """,
-            ["https://www.ssa.gov/oact/babynames/names.zip",
-            "https://catalog.data.gov/harvest/object/f8ab4d49-b6b4-47d8-b1bb-b18187094f35"
-             # Interestingly this metadata file fails on windows to resolve to filename to save to
-             # See warnings, The `mv` in post_fetch_method is the work-around.
-            ],
-            Any, # Test that there is no warning about checksum. This data is updated annually
-            #TODO : Automate this test with new 0.7 test_warn stuff
-            ;
-            post_fetch_method = [unpack, f->mv(f, "metadata551randstuff.json")]
-        )
-
-        @test !any(endswith.(readdir(datadep"Baby Names"), "zip"))
-        @test first(eachline(joinpath(datadep"Baby Names", "yob2016.txt")))=="Emma,F,19414"
-        @test filemode(joinpath(datadep"Baby Names", "metadata551randstuff.json")) > 0
-    end
+    @test !any(endswith.(readdir(datadep"Baby Names"), "zip"))
+    @test first(eachline(joinpath(datadep"Baby Names", "yob2016.txt")))=="Emma,F,19414"
+    @test filemode(joinpath(datadep"Baby Names", "metadata551randstuff.json")) > 0
 end
