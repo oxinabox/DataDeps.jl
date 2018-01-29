@@ -1,6 +1,6 @@
 module DataDeps
 
-
+using HTTP
 using Reexport
 @reexport using SHA
 
