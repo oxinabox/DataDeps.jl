@@ -23,13 +23,11 @@ end
             @testset "download and use" begin
                 include("examples.jl")
                 include("examples_manual.jl")
-                include("examples_flaky.jl")
             end
             withenv("DATADEPS_DISABLE_DOWNLOAD"=>"true") do
                 @testset "use already downloaded" begin
                     include("examples.jl")
                     include("examples_manual.jl")
-                    include("examples_flaky.jl")
                 end
             end
         end
