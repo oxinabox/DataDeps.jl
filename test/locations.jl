@@ -14,5 +14,9 @@ end
 
 
 @testset "determine_save_path" begin
-    @test !contains(determine_save_path("EG"), "/DataDeps/") # Ensure package path is not included
+    if !contains(Pkg.dir(), "/DataDeps/") 
+        # Test assumes that not, e.g. running from a home directory called "DataDeps"
+        # But actually this occurs, as JuliaCIBot runs its tests in just such a directory
+        @test !contains(determine_save_path("EG"), "/DataDeps/") # Ensure package path is not included
+    end
 end
