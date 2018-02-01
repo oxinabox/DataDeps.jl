@@ -137,7 +137,7 @@ function accept_terms(datadep::DataDep, localpath, remotepath, ::Void)
 end
 function accept_terms(datadep::DataDep, localpath, remotepath, i_accept_the_terms_of_use::Bool)
     if !i_accept_the_terms_of_use
-        error("User declined to download $(dd.name). Can not proceed without the data.")
+        error("User declined to download $(datadep.name). Can not proceed without the data.")
     end
     true
 end
