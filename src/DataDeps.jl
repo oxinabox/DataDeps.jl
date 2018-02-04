@@ -50,7 +50,7 @@ function resolve(datadep::AbstractDataDep, inner_filepath, calling_filepath)::St
     while true
         dirpath = _resolve(datadep, calling_filepath)
         filepath = joinpath(dirpath, inner_filepath)
-        
+
         if can_read_file(filepath)
             return filepath
         else # Something has gone wrong
@@ -59,7 +59,7 @@ function resolve(datadep::AbstractDataDep, inner_filepath, calling_filepath)::St
             input_choice(
                 ('A', "Abort -- this will error out",
                     ()->error("Aborted resolving data dependency, program could not continue.")),
-                ('R', "Retry -- do this after fixing the problem outside of this script", 
+                ('R', "Retry -- do this after fixing the problem outside of this script",
                     ()->nothing), # nothing to do
                 ('X', "Remove directory and retry  -- will retrigger download if there isn't another copy elsewhere",
                     ()->rm(dirpath, force=true, recursive=true);
@@ -92,5 +92,11 @@ include("resolution_automatic.jl")
 include("resolution_manual.jl")
 
 include("helpers.jl")
+
+function __init__()
+    #ensure at least something in the loadpath exists.
+    path = first(default_loadpath)
+    isdir(path) || mkpath(first(default_loadpath))
+end
 
 end # module

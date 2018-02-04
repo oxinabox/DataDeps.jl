@@ -15,9 +15,6 @@ const default_loadpath = joinpath.([
          "/usr/share", "/usr/local/share"] # Unix Filestructure
     end], "datadeps")
 
-#ensure at least something in the loadpath exists.
-mkpath(first(default_loadpath))
-
 
 
 
