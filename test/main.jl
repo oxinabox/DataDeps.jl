@@ -20,7 +20,7 @@ withenv("DATADEPS_ALWAY_ACCEPT"=>"true") do
          fetch_method=dummydown
         )
 
-        @test basename(dirname(datadep"Test1")) == "Test1"
+        @test basename(datadep"Test1") == "Test1"
 
         @test all_expectations_used(dummyhash)
         @test all_expectations_used(dummydown)
