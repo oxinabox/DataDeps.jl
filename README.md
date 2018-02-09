@@ -216,24 +216,24 @@ If you do this you might like to contribute the type back up to this repository,
 
 
 ## Usage for users
-The mail goal of DataDeps.jl is to simplify life for the user.
-They should just plain not be thinking about the data the package needs so much anymore.
+The main goal of DataDeps.jl is to simplify life for the user.
+They should just forget about the data their package needs.
 
 ### Moving Data
 Moving data is a great idea.
-DataDeps.jl is infavour of moving data
+DataDeps.jl is in favour of moving data
 When data is automatically downloaded it will almost always go to the same location.
 The first (existant, writable) directory on your `DATADEPS_LOADPATH`.
 Which by-default is `~/.julia/datadeps/`.
 But you can move them from there to anywhere in the `DATADEPS_LOADPATH`.
-If you have some data that everyone in your lab is using, and it is like 200GB large,
+If you have a large chunk of data that everyone in your lab is using (e.g. 200GB),
 you probably want to shift it to a shared area, like `/usr/share/datadeps`.
-Even if you don't have write permission, you can have a sysadmin move it, and so long as you still have read permission DataDeps.jl will find it and use it for you.
+Even if you don't have write permissions, you can have a sysadmin move it, and so long as you still have read permission DataDeps.jl will find it and use it for you.
 
 
 ### Having multiple copies of the same DataDir
 You probably don't want to have multiple copies of a DataDir with the same name.
-DataDeps.jl tried to handle it as gracefuly as it can.
+DataDeps.jl will try to handle it as gracefuly as it can.
 But having different DataDep under the same name, is probably going to lead to packages loading the wrong one.
 Except if they are (both) located in their packages `deps/data` folder.
 
@@ -244,10 +244,10 @@ for the package `EXAMPLEPKG`, and the datadep `EXAMPLEDATADEP`.
 Ideally though you should probably raise an issue with the package maintainers and see if one (or both) of them want to change the DataDep name.
 
 Note also when it comes to file level loading, e.g. `datadep"Name/subfolder/file.txt"`,
-DataDeps does not check all folders with that `Name` (if you do have multiple).
-If the file is not in the first folder it finds you will be presented with the recovery dialog.
-From which the easiest option is to select the option to delete the folder and retry,
-since that will result in it checked the second folder (as the first will not exist).
+DataDeps does not check all folders with that `Name` (if you have multiples).
+If the file is not in the first folder it finds you will be presented with the recovery dialog, 
+from which the easiest option is to select to delete the folder and retry,
+since that will result in it checking the second folder (as the first one does not exist).
 
 
 
