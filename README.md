@@ -3,10 +3,10 @@ Master: [![Build Status](https://travis-ci.org/oxinabox/DataDeps.jl.svg?branch=m
 
 ## What is DataDeps?
 DataDeps is a package for simplifying the management of data in your julia application.
-In particular it is designed to make getting static data from some server into the local machine,
-and making programs know where that data is trivial.
+In particular it is designed to simplify the process of getting static data from some server into the local machine,
+and making programs know where that data is.
 
-For some examples of it being useful and cool see [this blog post](http://white.ucc.asn.au/2018/01/18/DataDeps.jl-Repeatabled-Data-Setup-for-Repeatable-Science.html)
+For a few examples of its usefulness see [this blog post](http://white.ucc.asn.au/2018/01/18/DataDeps.jl-Repeatabled-Data-Setup-for-Repeatable-Science.html)
 
 ### Why not store the data in Git?
 Git is good for files that meet 3 requirements:
@@ -15,7 +15,7 @@ Git is good for files that meet 3 requirements:
  - Smallish (Github will not accept files >50Mb in size)
  - Dynamic (Git is version control, it is good at knowing about changes)
 
-There is certainly some room around the edges for this, like sorting a few image in repository is OK, but storing all of ImageNet is a no go.
+There is certainly some room around the edges for this, like storing a few images in the repository is OK, but storing all of ImageNet is a no go.
 
 DataDeps.jl is good for:
 
@@ -23,7 +23,7 @@ DataDeps.jl is good for:
  - Any size
  - Static (that is to say it doesn't change)
  
-The main use case is downloading large dataset for machine learning, and corpora for NLP.
+The main use case is downloading large datasets for machine learning, and corpora for NLP.
 In this case the data is not even normally yours to begin with.
 It lives on some website somewhere.
 
