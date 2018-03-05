@@ -46,8 +46,8 @@ end
     Tweets from 538's article:
     [The World’s Favorite Donald Trump Tweets](https://fivethirtyeight.com/features/the-worlds-favorite-donald-trump-tweets/)
 
-    Includes a filtered view that is 
-    the tweats filtered to remove any tweets that @mention anyone, so no coversations etc, just announcements of opinions/thoughts.
+    Includes a filtered view that is the tweats filtered to remove any tweets that @mention anyone,
+    so no conversations etc, just announcements of opinions/thoughts.
 
     Used under Creative Commons Attribution 4.0 International License.
     """,
