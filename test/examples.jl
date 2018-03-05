@@ -38,6 +38,46 @@ end
 end
 
 
+@testset "TrumpTweets" begin
+    # This tests demostrates how the `post_fetch_method` can be used to synthesize new files
+    
+    RegisterDataDep("TrumpTweets",
+    """
+    Tweets from 538's article:
+    [The World’s Favorite Donald Trump Tweets](https://fivethirtyeight.com/features/the-worlds-favorite-donald-trump-tweets/)
+
+    Includes a filtered view that is the tweats filtered to remove any tweets that @mention anyone,
+    so no conversations etc, just announcements of opinions/thoughts.
+
+    Used under Creative Commons Attribution 4.0 International License.
+    """,
+    "https://raw.githack.com/fivethirtyeight/data/master/trump-twitter/realDonaldTrump_poll_tweets.csv",
+    "5a63b6cb2503a20517b5d41bd73e821ffbfdddd5cdc1977a547f1c925790bb15",
+    post_fetch_method = function(in_fn) # Multiline anon function.
+        out_fn = "nonmentions_"*basename(in_fn)
+        print(out_fn)
+        open(out_fn, "w") do out_fh
+            for line in eachline(in_fn)
+                if !contains(line, "@")
+                    println(out_fh, line)
+                end
+            end
+        end
+
+    end
+    )
+
+    # Read the original file
+    all_tweets = Set(eachline(datadep"TrumpTweets/realDonaldTrump_poll_tweets.csv"))
+    # Read the file that we are generating
+    nonmentions_tweets = Set(eachline(datadep"TrumpTweets/nonmentions_realDonaldTrump_poll_tweets.csv"))
+    # Use them both
+    mentions_tweets = setdiff(all_tweets, nonmentions_tweets)
+    @test length(mentions_tweets) > 0
+    @test all(contains.(collect(mentions_tweets), "@"))
+end
+
+
 
 
 @testset "MNIST" begin
