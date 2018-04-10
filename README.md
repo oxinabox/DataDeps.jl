@@ -3,9 +3,9 @@ Master: [![Build Status](https://travis-ci.org/oxinabox/DataDeps.jl.svg?branch=m
 
 ##### Table of Contents  
 [What is DataDeps?](#what-is-datadeps)  
-[Usage for developers](#Usage-for-developers)  
-[Usage for end-users](#Usage-for-end--users) 
-[Extending DataDeps.jl for Contributors](#Extending-DataDeps.jl-for-Contributors)
+[Usage for developers](#usage-for-developers)  
+[Usage for end-users](#usage-for-end--users) 
+[Extending DataDeps.jl for Contributors](#extending-dataDeps.jl-for-contributors)
 
 ## What is DataDeps?
 DataDeps is a package for simplifying the management of data in your julia application.
