@@ -23,7 +23,7 @@ end
      "These are the first 65 thousand primes. Still faster to calculate locally.",
      "http://staffhome.ecm.uwa.edu.au/~00061811/pub/primes.txt",
 
-     "http://staffhome.ecm.uwa.edu.au/~00061811/pub/primes.sha256" |> download |> readstring |> split |> first
+     "d6524d63a5cf5e5955568cc96b72b3f39258af4f0f79c61cbc01d8853e587f1b"
      #Important: this is a hash I didn't calculate, so is a test that our checksum methods actually align with the normal values.
     )
 
