@@ -32,22 +32,24 @@ DataDeps.jl is good for:
 The main use case is downloading large datasets for machine learning, and corpora for NLP.
 In this case the data is not even normally yours to begin with.
 It lives on some website somewhere.
+You don't want to copy and redistribute it;
+and depending on liscensing you may not even be allowed to.
 
 #### But my data is dynamic
 Well how dynamic?
 If you are willing to tag a new relase of your package each time the data changes, then maybe this is no worry, but maybe it is.
 
-But the real question is are you managing your data properly in the first place.
+But the real question is, is DataDeps.jl really suitable for managing your data properly in the first place.
 DataDeps.jl does not provide for versioning of data -- you can't force users to download new copies of your data using DataDeps.
 There are work arounds, such as using DataDeps.jl + `deps/build.jl` to `rm(datadep"MyData", recursive=true, force=true` every package update. Or considering each version of the data as a different datadep with a different name.
-
-But maybe DataDeps isn't the solution for you.
 DataDeps.jl may form part of your overall solution or it may not.
-That is a discussion to have on Slack or Discourse maybe. Or in the issues for this repo.
+That is a discussion to have on [Slack](http://slackinvite.julialang.org/) or [Discourse](http://discourse.julialang.org/) (feel free to tag me, I am **@oxinabox** on both).
 See also the list of related packages at the bottom
 
-The other option is that if your data a good fit for git (being in the overlapping area of plaintext & small (or close enough to those things)),
-then you could add it as a `ManualDataDep` in `deps/data/MyData`.
+The other option is that if your data a good fit for git.
+If it is in overlapping area of plaintext & small (or close enough to those things),
+then you could add it as a `ManualDataDep` in and include it in the git repo in the  `deps/data/` folder of your package. 
+The ManuaulDataDep will not need manual installation if it is being installed via git.
 
 
 ## Usage for developers
@@ -115,9 +117,9 @@ RegisterDataDep(
     name::String, 
     message::String,
     remote_path::Union{String,Vector{String}...},
-    [checksum::Union{String,Vector{String}...},]; # Optional
-    # keyword args:
-    fetch_method=download # (remote_fikepath, local_filepath)->Any 
+    [checksum::Union{String,Vector{String}...},]; # Optional, if not provided will generate
+    # keyword args (Optional):
+    fetch_method=download # (remote_filepath, local_filepath)->Any 
     post_fetch_method=download # (local_filepath)->Any
 )
 ```
@@ -133,14 +135,14 @@ This is the bare minium to setup a datadep.
 
  - *checksum* this is very flexible, it is used to check the files downloaded correctly
     - By far the most common use is to just provide a SHA256 sum as a hex-string for the files
-    - If not provided, then a warning message with the  SHA256 sum is displayed; this is to help package devs workout the sum for there files.
+    - If not provided, then a warning message with the  SHA256 sum is displayed. This is to help package devs workout the sum for there files, without using an external tool.
     - If you want to use a different hashing algorithm, then you can provide a tuple `(hashfun, targethex)`
         - `hashfun` should be a function which takes an IOStream, and returns a `Vector{UInt8}`. 
 	      - Such as any of the functions from [SHA.jl](https://github.com/staticfloat/SHA.jl), eg `sha3_384`, `sha1_512`
 	      - or `md5` from [MD5.jl](https://github.com/oxinabox/MD5.jl)
   - If you want to use a different hashing algorithm, but don't know the sum, you can provide just the `hashfun` and a warning message will be displayed, giving the correct tuple of `(hashfun, targethex)` that should be added to the registration block.
 
-	- If you don't want to provide a checksum,  because your data can change pass in the type `Any`. (But see above warnings about "what if my data is dynamic")
+	- If you don't want to provide a checksum,  because your data can change pass in the type `Any` which will suppress the warning messages. (But see above warnings about "what if my data is dynamic")
     - Can take a vector of checksums, being one for each file, or a single checksum in which case the per file hashes are `xor`ed to get the target hash. (See [Recursive Structure](Recursive Structure) below)
 
 
