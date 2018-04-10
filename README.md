@@ -3,7 +3,7 @@ Master: [![Build Status](https://travis-ci.org/oxinabox/DataDeps.jl.svg?branch=m
 
 ##### Table of Contents  
 [What is DataDeps?](#what-is-datadeps)  
-[Usage for developers (including researchers)](#usage-for-developers)  
+[Usage for developers (including researchers)](#usage-for-developers-including-researchers)  
 [Usage for end-users](#usage-for-end-users)  
 [Extending DataDeps.jl for Contributors](#extending-datadepsjl-for-contributors)
 
