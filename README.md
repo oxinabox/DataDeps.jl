@@ -127,7 +127,8 @@ RegisterDataDep(
     post_fetch_method=download # (local_filepath)->Any
 )
 ```
-This is the bare minium to setup a datadep.
+
+#### Required Fields
 
  - *Name**: the name used to refer to this datadep, coresponds to a folder name where it will be stored
     - It can have spaces or any other character that is allowed in a Windows filestring (which is a strict subset of the restriction for unix filenames).
@@ -136,7 +137,7 @@ This is the bare minium to setup a datadep.
  - *remote_path*: where to fetch the data from. Normally a string or strings) containing an URL
     - This is usually a string, or a vector of strings (or a vector of vector... see [Recursive Structure](Recursive Structure) below)
     
-
+#### Optional Fields
  - *checksum* this is very flexible, it is used to check the files downloaded correctly
     - By far the most common use is to just provide a SHA256 sum as a hex-string for the files
     - If not provided, then a warning message with the  SHA256 sum is displayed. This is to help package devs workout the sum for there files, without using an external tool.
@@ -154,6 +155,7 @@ This is the bare minium to setup a datadep.
     - Function should take 2 parameters (remote_fikepath, local_filepath), and can return anything
     - Defaults to `Base.download` which invokes commandline download tools. 
     - Can take a vector of methods, being one for each file, or a single method, in which case that method is used to download all of them. (See [Recursive Structure](Recursive Structure) below)
+    - Very few people will need to override this, but potentially it can be used to deal with things like authorisation (let me know if you try)
     
  - `post_fetch_method` a function to run after the files have download
     - Should take the local filepath as its first and only argument. Can return anything.
@@ -346,4 +348,4 @@ Alternatives that I am aware of are:
 
  - [RemoteFiles.jl](https://github.com/helgee/RemoteFiles.jl): keeps local files up to date with remotes
  - [BinaryProvider.jl](https://github.com/JuliaPackaging/BinaryProvider.jl) downloads binaries intended as part of a build chain. I'm pretty sure you can trick it into downloading data.
- - [`Base.download`]()
+ - [`Base.download`](https://docs.julialang.org/en/stable/stdlib/file/#Base.download) if your situtation is really simple just sticking a `download` into the `deps/build.jl` file might do you just fine.
