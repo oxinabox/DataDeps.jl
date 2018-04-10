@@ -1,6 +1,12 @@
 # DataDeps
 Master: [![Build Status](https://travis-ci.org/oxinabox/DataDeps.jl.svg?branch=master)](https://travis-ci.org/oxinabox/DataDeps.jl)
 
+##### Table of Contents  
+[What is DataDeps?](#what-is-datadeps)  
+[Usage for developers](#Usage-for-developers)  
+[Usage for end-users](#Usage-for-end--users) 
+[Extending DataDeps.jl for Contributors](#Extending-DataDeps.jl-for-Contributors)
+
 ## What is DataDeps?
 DataDeps is a package for simplifying the management of data in your julia application.
 In particular it is designed to simplify the process of getting static data from some server into the local machine,
@@ -44,7 +50,55 @@ The other option is that if your data a good fit for git (being in the overlappi
 then you could add it as a `ManualDataDep` in `deps/data/MyData`.
 
 
-## Usage for package developers
+## Usage for developers
+
+### Using a datadep string to get hold of the data.
+For any registered DataDep (see below), `datadep"Name"` returns a path to a folder containing the data.
+If when that string macro is evaluated no such folder exists, then DataDeps will swing into action and coordiante the acquisition of the data into a folder, then return the path that now contains the data.
+
+You can also use `datadep"Name/subfolder/file.txt"` (and similar) to get a path to the file at  `subfolder/file.txt` within the data directory for `Name`.
+Just like when using the plain `datadep"Name"` this will if required downloadload the whole datadep (**not** just the file).
+However, it will also engage additional features to verify that that file exists (and is readable),
+and if not will attempt to help the user resolve the situation.
+This is useful if files may have been deleted by mistake, or if a ManualDataDep might have been incorrectly installed.
+
+
+
+
+#### Installing Data Lazily
+Most packages using more than one data source, will want to download them only when the user requires them.
+That is to say if the user never calls a function that requires that data, then the data should not be downloaded.
+
+DataDeps.jl resolves the dependency when a `datadep"Name"` string is evaluated.
+If no code containing a data dependency string is run, then no data will be downloaded
+
+The basic way is to hide the datadep in some code not being evaluated except on a condition.
+For example, say some webcam security system can be run in training mode, in which case data should be used from the datadep,
+or in deployment mode, in which case the data should be read from the webcam's folder:
+
+```
+data_folder = training_mode ? datadep"SecurityFootage" : "/srv/webcam/today"       
+```
+The data will not be downloaded if `training_mode==false`, because the referred to folder is never required.
+Of-course if the data was already downloaded, then it wouldn't be downloaded again either way.
+
+Another example of a particularly nice way of doing this is to use the datadep string as the default value for a function paramater
+`function predict(path=datadep"SecurityFootage")`.
+If the user passses a value when they call `predict` then the datadep string will never be evaluated.
+So the data will not be sourced via DataDeps.jl
+
+
+#### Installing Data Eagerly
+If you want the data to be installed when the package is first loaded,
+just put the datadep string `datadep"Name"` anywhere it will immediately run.
+For example, in the `__init__` function immediately after the registration block.
+
+If you want it to be installed at `Pkg.build` time.
+The best thing to do is to put your data dep registration block in a file (eg `src/dataregistrations.jl`),
+and then `include` it into `deps/build.jl` followed by putting in the datadep string somewhere at global scope.
+(Including would be done by `include(pathjoin(@__DIR__,"..","src","dataregistrations.jl"`).
+One would also `include` that registrations file into the `__init__` function in the  main source of the package as well.
+
 
 ### Registering a DataDep
 A DataDeps registration is a block of code delaring a dependency.
@@ -106,7 +160,7 @@ This is the bare minium to setup a datadep.
     - Can take a vector of methods, being one for each file, or a single method, in which case that ame method is applied to all of the files. (See [Recursive Structure](Recursive Structure) below)
     
     
-##### Recursive Structure
+#### Recursive Structure
 `fetch_method`, `post_fetch_method` and `checksum` all can match the structure of `remote_path`.
 If `remote_path` is just an single path, then they each must be single items.
 If `remote_path` is a vector, then if those properties are a vector (which must be the same length) then they are applied each to the corresponding element; or if not then it is applied to all of them.
@@ -139,60 +193,19 @@ ManualDataDeps are datadeps that have to be managed by some means outside of Dat
 but DataDeps.jl will still provide the convient `datadep"MyData"` string macro for finding them.
 As mentions above, if you put the data in your git repo for your package under `deps/data/NAME` then it will be managed by julia package manager.
 
-A manaul DataDep registration is just like a normal `DataDep` registration,
+A manual DataDep registration is just like a normal `DataDep` registration,
 except that only a `name` and `message` are provided. 
 
 Inside the message you should give instructions on how to acquire the data.
 
 
-### Using a datadep string to get hold of the data.
-For any registered DataDep, `datadep"Name"` returns a path to a folder containing the data.
-If when that string macro is evaluated no such folder exists, then DataDeps will swing into action and coordiante the acquisition of the data into a folder, then return the path that now contains the data.
-
-You can also use `datadep"Name/subfolder/file.txt"` (and similar) to get a path to the file at  `subfolder/file.txt` within the data directory for `Name`.
-Just like when using the plain `datadep"Name"` this will if required downloadload the whole datadep (**not** just the file).
-However, it will also engage additional features to verify that that file exists (and is readable),
-and if not will attempt to help the user resolve the situation.
-This is useful if files may have been deleted by mistake, or if a ManualDataDep might have been incorrectly installed.
-
-
-
-
-### Installing Data Lazily.
-Most packages using more than one data source, will want to download them only when the user requires them.
-That is to say if the user never calls a function that requires that data, then the data should not be downloaded.
-
-The basic way is to hide the datadep in some code not being evaluated except on a condition.
-For example, say some webcam security system can be run in training mode, in which case data should be used from the datadep,
-or in deployment mode, in which case the data should be read from the webcam's folder:
-
-```
-data_folder = training_mode ? datadep"SecurityFootage" : "/srv/webcam/today"       
-```
-The data will not be downloaded if `training_mode==false`, because the referred to folder is never required.
-Of-course if the data was already downloaded, then it wouldn't be downloaded again either way.
-
-Another example of a particularly nice way of doing this is to use the datadep string as the default value for a function paramater
-`function foo(path=datadep"FooData")`.
-If the user passses a value when they call `foo` then the datadep string will never be evaluated.
-So the data will not be sourced via DataDeps.jl
-
-
-#### Installing Data Eagerly
-If you want the data to be installed when the package is first loaded,
-just put the datadep string `datadep"Name"` anywhere it will immediately run.
-For example, in the `__init__` function immediately after the registration block.
-
-If you want it to be installed at `Pkg.build` time.
-The best thing to do is to put your data dep registration block in a file (eg `src/dataregistrations.jl`),
-and then `include` it into `deps/build.jl` followed by putting in the datadep string somewhere at global scope.
-(Including would be done by `include(pathjoin(@__DIR__,"..","src","dataregistrations.jl"`).
-One would also `include` that registrations file into the `__init__` function in the  main source of the package as well.
 
 
 ### DataDepsGenerators
-[DataDepsGenerators.jl](https://github.com/oxinabox/DataDepsGenerators.jl) is a julia package to help generate DataDeps registration blocks from well known data sources.
+[DataDepsGenerators.jl](https://github.com/oxinabox/DataDepsGenerators.jl) is a julia package to help generate DataDeps registration blocks from well-known data sources.
 It attempts to use webscraping and such to workout what should be in the registration block.
+You can then edit the generated code to make it suitable for your use.
+(E.g. remove excessive information in the message)
 
 
 ### Assuming direct control
@@ -202,20 +215,9 @@ by directly invoking the method `Base.download(::DataDep, localpath; kwargs...)`
 It is fully documented in its docstring.
 
 
-### Extending DataDeps with custom `AbstractDataDep` types
-One of the intended point of extension for DataDeps.jl is in developers defining their own DataDep types.
-99% of developers won't need to do this, a `ManualDataDep` or a normal (automatic) `DataDep` covers most use cases.
-However, if for example you want to have a DataDep that after the download is complete and after the `post_fetch_method` is run, does an additional validation, or some data synthesis step that requires working with multiple of the files simultaneously (which `post_fetch_method` can not do), or a `SemiManualDataDep` where the user does some things and then other things happen automatically, then this can be done by creating your own `AbstractDataDep` type.
-
-The code for `ManualDataDep` is a good place to start looking to see how that is done.
-You can also encapsulate an `DataDep` as one of the elements of your new type.
-
-If you do this you might like to contribute the type back up to this repository, so others can use it also.
 
 
-
-
-## Usage for users
+## Usage for end-users
 The main goal of DataDeps.jl is to simplify life for the user.
 They should just forget about the data their package needs.
 
@@ -225,10 +227,51 @@ DataDeps.jl is in favour of moving data
 When data is automatically downloaded it will almost always go to the same location.
 The first (existant, writable) directory on your `DATADEPS_LOADPATH`.
 Which by-default is `~/.julia/datadeps/`.
-But you can move them from there to anywhere in the `DATADEPS_LOADPATH`.
-If you have a large chunk of data that everyone in your lab is using (e.g. 200GB),
+(If you delete this, it will go to another location
+But you can move them from there to anywhere in the `DATADEPS_LOADPATH`. (See below)
+
+If you have a large chunk of data that everyone in your lab is using (e.g. a 1TB video corpora),
 you probably want to shift it to a shared area, like `/usr/share/datadeps`.
 Even if you don't have write permissions, you can have a sysadmin move it, and so long as you still have read permission DataDeps.jl will find it and use it for you.
+
+
+## The LOAD_PATH
+The LOAD PATH is the list of paths that DataDeps.jl looks in when trying to resolve a data dependency.
+If it doesn't find the data in any of them it will download the data.
+
+The default loadpath is not quiet statically determined -- it somewhat depends on your system configuration.
+The below examples show the paths on two of my systems.
+
+In general it should by default include just about anywhere you might want to put the data.
+If it doesn't, please file an issue. (Unless your location is super-specific, e.g. `/MyUniName/student/commons/datadeps`).
+You can override the default loadpath by setting the environment variable `DATADEPS_LOAD_PATH`.
+You can also make symlinks from the locations on the loadpath to other locations where the data really is, if you'ld rather do that.
+
+
+### Linux/Mac Default LOAD_PATH
+For the user **oxinabox**
+
+```bash
+/home/wheel/oxinabox/.julia/datadeps
+/home/wheel/oxinabox/datadeps
+/scratch/datadeps
+/staging/datadeps
+/usr/share/datadeps
+/usr/local/share/datadeps
+```
+
+### Windows Default LOAD_PATH
+For the user **oxinabox**, wen using JuliaPro 0.6.2.1, on windows 7.
+(Other configurations should be fairly similar).
+
+```batch
+C:\Users\oxinabox\AppData\Local\JuliaPro-0.6.2.1\pkgs-0.6.2.1\datadeps
+C:\Users\oxinabox\datadeps
+C:\Users\oxinabox\AppData\Roaming\datadeps
+C:\Users\oxinabox\AppData\Local\datadeps
+C:\ProgramData\datadeps
+C:\Users\Public\datadeps
+```
 
 
 ### Having multiple copies of the same DataDir
@@ -250,24 +293,44 @@ from which the easiest option is to select to delete the folder and retry,
 since that will result in it checking the second folder (as the first one does not exist).
 
 
-
 ## Configuration
-
 Currently configuration is done via Enviroment Variables.
 It is likely to stay that way, as they are also easy to setup in CI tools.
 You can set these in the `.juliarc` file using the `ENV` dictionary if you don't want to mess up your `.profile`.
-However, you shouldn't need to.
+However, most people shouldn't need to.
 DataDeps.jl tries to have very sensible defaults.
 
  - `DATADEPS_ALWAY_ACCEPT` -- bypasses the confirmation before downloading data. Set to `true` (or similar string)
     - This is provided for scripting (in particular CI) use
     - Note that it remains your responsibility to understand and read any terms of the data use (this is remains true even if you don't turn on this bypass)
 	- default `false`
- - `DATADEPS_LOAD_PATH` -- The list of paths, other than the package directory (`PKGNAME/deps/data`) to save and load data from
-    - default values is complex. On all systems it includes the equivalent of `~/.julia/datadeps`. It also includes a large number of other locations such as `/usr/share/datadeps` on linux, and `C:/ProgramData` on Windows.
+ - `DATADEPS_LOAD_PATH` -- The list of paths, other than the package directory (`Pkg.dir(PKGNAME)/deps/data`) to save and load data from
+    - default values is complex. On all systems it includes the equivalent of `~/.julia/datadeps`. It also includes a large number of other locations such as `/usr/share/datadeps` on linux, and `C:/ProgramData` on Windows. [more details](#The-LOAD-PATH)
  - `DATADEPS_DISABLE_DOWNLOAD` -- causes any action that would result in the download being triggered to throw an exception.
    - useful e.g. if you are in an environment with metered data, where your datasets should have already been downloaded earlier, and if there were not you want to respond to the situation rather than let DataDeps download them for you.
    - default `false`
+
+## Extending DataDeps.jl for Contributors
+Feel free (encouraged even) to open issues and make PRs.
+
+### Internal Docstrings
+As well as the usual all the publicly facing methods having docistrings,
+most of the internal methods do also.
+You can view them in the source; or via the julia REPL etc.
+Hopefully the internal docstrings make it clear how each method is used.
+
+### Creating custom `AbstractDataDep` types
+The primary point of extension for DataDeps.jl is in developers defining their own DataDep types.
+99% of developers won't need to do this, a `ManualDataDep` or a normal (automatic) `DataDep` covers most use cases.
+However, if for example you want to have a DataDep that after the download is complete and after the `post_fetch_method` is run, does an additional validation, or some data synthesis step that requires working with multiple of the files simultaneously (which `post_fetch_method` can not do), or a `SemiManualDataDep` where the user does some things and then other things happen automatically, then this can be done by creating your own `AbstractDataDep` type.
+
+The code for `ManualDataDep` is a good place to start looking to see how that is done.
+You can also encapsulate an `DataDep` as one of the elements of your new type.
+
+If you do this you might like to contribute the type back up to this repository, so others can use it also.
+Particularly, if it is something that generalises beyond your specific usecase.
+
+
 
 ## Other similar packages:
 DataDeps.jl isn't the answer to all your download needs.
@@ -277,4 +340,5 @@ It might not be good for your use case.
 Alternatives that I am aware of are:
 
  - [RemoteFiles.jl](https://github.com/helgee/RemoteFiles.jl): keeps local files up to date with remotes
- - [BinaryProvider.jl](https://github.com/JuliaPackaging/BinaryProvider.jl) downloads binaries intended as part of a build chain.
+ - [BinaryProvider.jl](https://github.com/JuliaPackaging/BinaryProvider.jl) downloads binaries intended as part of a build chain. I'm pretty sure you can trick it into downloading data.
+ - [`Base.download`]()
