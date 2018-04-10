@@ -54,6 +54,11 @@ The ManuaulDataDep will not need manual installation if it is being installed vi
 
 ## Usage for developers
 
+### Examples
+ - [the aformentioned blog post](http://white.ucc.asn.au/2018/01/18/DataDeps.jl-Repeatabled-Data-Setup-for-Repeatable-Science.html)
+ - [Examples in the test code](test/examples.jl)
+ - [Manual examples from the test code](test/examples_manual.jl)
+
 ### Using a datadep string to get hold of the data.
 For any registered DataDep (see below), `datadep"Name"` returns a path to a folder containing the data.
 If when that string macro is evaluated no such folder exists, then DataDeps will swing into action and coordiante the acquisition of the data into a folder, then return the path that now contains the data.
@@ -107,8 +112,7 @@ A DataDeps registration is a block of code delaring a dependency.
 You should put it somewhere that it will be executed before any other code in your script that depends on that data.
 In most cases it is best to put it inside the  [modules's `__init__()` function](https://docs.julialang.org/en/stable/manual/modules/#Module-initialization-and-precompilation-1).
 
-It is pretty flexible.
-Perhaps easiest is to look at the [examples](test/examples.jl).
+It is pretty flexible. See the [examples](#examples)
 
 
 The basic Registration block looks like: (Type parameters are shown below are a simplifaction)
@@ -196,10 +200,9 @@ but DataDeps.jl will still provide the convient `datadep"MyData"` string macro f
 As mentions above, if you put the data in your git repo for your package under `deps/data/NAME` then it will be managed by julia package manager.
 
 A manual DataDep registration is just like a normal `DataDep` registration,
-except that only a `name` and `message` are provided. 
-
+except that only a `name` and `message` are provided.
 Inside the message you should give instructions on how to acquire the data.
-
+Again see the [examples](#examples)
 
 
 
