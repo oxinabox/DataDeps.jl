@@ -3,7 +3,7 @@ Master: [![Build Status](https://travis-ci.org/oxinabox/DataDeps.jl.svg?branch=m
 
 ##### Table of Contents  
 [What is DataDeps?](#what-is-datadeps)  
-[Usage for developers](#usage-for-developers)  
+[Usage for developers (including researchers)](#usage-for-developers)  
 [Usage for end-users](#usage-for-end-users)  
 [Extending DataDeps.jl for Contributors](#extending-datadepsjl-for-contributors)
 
@@ -52,7 +52,7 @@ then you could add it as a `ManualDataDep` in and include it in the git repo in 
 The ManuaulDataDep will not need manual installation if it is being installed via git.
 
 
-## Usage for developers
+## Usage for developers (including researchers)
 
 ### Examples
  - [the aformentioned blog post](http://white.ucc.asn.au/2018/01/18/DataDeps.jl-Repeatabled-Data-Setup-for-Repeatable-Science.html)
