@@ -1,5 +1,6 @@
 # DataDeps
-Master: [![Build Status](https://travis-ci.org/oxinabox/DataDeps.jl.svg?branch=master)](https://travis-ci.org/oxinabox/DataDeps.jl)
+Travis CI Master: [![Build Status](https://travis-ci.org/oxinabox/DataDeps.jl.svg?branch=master)](https://travis-ci.org/oxinabox/DataDeps.jl)
+AppVeyor Master: [![Build status](https://ci.appveyor.com/api/projects/status/kpi2pgfnvx6yp9n4/branch/master?svg=true)](https://ci.appveyor.com/project/oxinabox/datadeps-jl-ld1pa/branch/master)
 
 ##### Table of Contents  
 [What is DataDeps?](#what-is-datadeps)  
