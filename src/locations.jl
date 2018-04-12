@@ -39,9 +39,9 @@ function try_determine_package_datadeps_dir(filepath)::Nullable{String}
     # checking for `deps/data`
     package_roots = [LOAD_PATH; Pkg.dir()]
     for root in package_roots
-        if startswith(filepath, root)
+        if startswith(filepath, root) && filepath!=root # if running from REPL from a root this can happen
             inner_path = filepath[length(root) + 1:end]
-            first_pp, pkgname = (splitpath(inner_path))
+            first_pp, pkgname = splitpath(inner_path)
             @assert(first_pp ∈ ["/", "\\"], "expected \"/\", got \"$(first_pp)\"")
             datadeps_dir = joinpath(root, pkgname,"deps","data")
             return Nullable(datadeps_dir)
