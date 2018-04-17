@@ -353,3 +353,10 @@ Alternatives that I am aware of are:
  
  Outside of julia's ecosystem is 
   - [Python: Quilt](https://github.com/quiltdata/quilt). Quilt uses a centralised data store, and allows the user to download the data as Python packages containing it in serialised from. It *might* be possible to use PyCall.jl to use this from julia.
+  
+ ## Links:
+ 
+  - [ANN: thread on Discourse](https://discourse.julialang.org/t/ann-datadeps-jl-bindeps-for-data/8457/15)
+  - [MLOSS](http://mloss.org/software/view/705/)
+  - [Release Blog Post (as above)](http://white.ucc.asn.au/2018/01/18/DataDeps.jl-Repeatabled-Data-Setup-for-Repeatable-Science.html)
+ 
