@@ -7,6 +7,7 @@ AppVeyor Master: [![Build status](https://ci.appveyor.com/api/projects/status/kp
 [Usage for developers (including researchers)](#usage-for-developers-including-researchers)  
 [Usage for end-users](#usage-for-end-users)  
 [Extending DataDeps.jl for Contributors](#extending-datadepsjl-for-contributors)
+[See Also](#see-also)
 
 ## What is DataDeps?
 DataDeps is a package for simplifying the management of data in your julia application.
@@ -339,6 +340,7 @@ If you do this you might like to contribute the type back up to this repository,
 Particularly, if it is something that generalises beyond your specific usecase.
 
 
+## See Also
 
 ## Other similar packages:
 DataDeps.jl isn't the answer to all your download needs.
@@ -359,4 +361,5 @@ Alternatives that I am aware of are:
   - [ANN: thread on Discourse](https://discourse.julialang.org/t/ann-datadeps-jl-bindeps-for-data/8457/15)
   - [MLOSS](http://mloss.org/software/view/705/)
   - [Release Blog Post (as above)](http://white.ucc.asn.au/2018/01/18/DataDeps.jl-Repeatabled-Data-Setup-for-Repeatable-Science.html)
+  - [DataDepsGenerators.jl (as above)](https://github.com/oxinabox/DataDepsGenerators.jl)
  
