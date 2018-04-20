@@ -2,6 +2,7 @@
 Travis CI Master: [![Build Status](https://travis-ci.org/oxinabox/DataDeps.jl.svg?branch=master)](https://travis-ci.org/oxinabox/DataDeps.jl)
 AppVeyor Master: [![Build status](https://ci.appveyor.com/api/projects/status/kpi2pgfnvx6yp9n4/branch/master?svg=true)](https://ci.appveyor.com/project/oxinabox/datadeps-jl-ld1pa/branch/master)
 
+
 ##### Table of Contents  
 [What is DataDeps?](#what-is-datadeps)  
 [Usage for developers (including researchers)](#usage-for-developers-including-researchers)  
@@ -60,6 +61,15 @@ The ManuaulDataDep will not need manual installation if it is being installed vi
  - [the aformentioned blog post](http://white.ucc.asn.au/2018/01/18/DataDeps.jl-Repeatabled-Data-Setup-for-Repeatable-Science.html)
  - [Examples in the test code](test/examples.jl)
  - [Manual examples from the test code](test/examples_manual.jl)
+ 
+### Installation
+As normal for julia packages install DataDeps.jl using:
+
+```
+julia> Pkg.add("DataDeps")
+```
+
+Remember to add `DataDeps` to your `REQUIRE` file, so it will be automatically installed for end-users. 
 
 ### Using a datadep string to get hold of the data.
 For any registered DataDep (see below), `datadep"Name"` returns a path to a folder containing the data.
