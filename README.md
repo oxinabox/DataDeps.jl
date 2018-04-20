@@ -342,7 +342,16 @@ Particularly, if it is something that generalises beyond your specific usecase.
 
 ## See Also
 
-## Other similar packages:
+### Software using DataDeps.jl
+It might help to look at DataDeps.jl is being used to understand how it maybe used for your project.
+
+ - [WordNet.jl](https://github.com/JuliaText/WordNet.jl)
+ - [MLDatasets.jl](https://github.com/JuliaML/MLDatasets.jl/)
+ - [CorpusLoaders.jl](https://github.com/JuliaText/CorpusLoaders.jl)
+ 
+(Feel free to submit a PR adding a link your Package, or research script here.)
+ 
+### Other similar packages:
 DataDeps.jl isn't the answer to all your download needs.
 It is focused squarely on static data.
 It might not be good for your use case.
@@ -354,9 +363,10 @@ Alternatives that I am aware of are:
  - [`Base.download`](https://docs.julialang.org/en/stable/stdlib/file/#Base.download) if your situtation is really simple just sticking a `download` into the `deps/build.jl` file might do you just fine.
  
  Outside of julia's ecosystem is 
+ 
   - [Python: Quilt](https://github.com/quiltdata/quilt). Quilt uses a centralised data store, and allows the user to download the data as Python packages containing it in serialised from. It *might* be possible to use PyCall.jl to use this from julia.
   
- ## Links:
+ ### Links:
  
   - [ANN: thread on Discourse](https://discourse.julialang.org/t/ann-datadeps-jl-bindeps-for-data/8457/15)
   - [MLOSS](http://mloss.org/software/view/705/)
