@@ -1,3 +1,4 @@
+# This file is a part of DataDeps.jl. License is MIT.
 # Code for doing checksums etc.
 
 ##################

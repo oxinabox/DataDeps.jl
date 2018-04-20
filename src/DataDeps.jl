@@ -1,3 +1,4 @@
+# This file is a part of DataDeps.jl. License is MIT.
 module DataDeps
 
 using HTTP

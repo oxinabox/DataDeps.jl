@@ -1,3 +1,5 @@
+# This file is a part of DataDeps.jl. License is MIT.
+
 const registry = Dict{String, AbstractDataDep}()
 
 function RegisterDataDep(name::String,

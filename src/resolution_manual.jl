@@ -1,3 +1,4 @@
+# This file is a part of DataDeps.jl. License is MIT.
 
 function handle_missing(datadep::ManualDataDep, calling_filepath)::String
     localpaths = list_local_paths(datadep, calling_filepath)

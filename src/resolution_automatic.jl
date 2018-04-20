@@ -1,3 +1,5 @@
+# This file is a part of DataDeps.jl. License is MIT.
+
 function handle_missing(datadep::DataDep, calling_filepath)::String
     save_dir = determine_save_path(datadep.name, calling_filepath)
     !env_bool("DATADEPS_DISABLE_DOWNLOAD") || error("DATADEPS_DISABLE_DOWNLOAD enviroment variable set. Can not trigger download.")

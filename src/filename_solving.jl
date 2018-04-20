@@ -1,3 +1,5 @@
+# This file is a part of DataDeps.jl. License is MIT.
+
 
 """
     get_filename(remotepath)
