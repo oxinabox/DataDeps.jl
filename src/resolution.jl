@@ -8,16 +8,11 @@ The name alone will resolve to the corresponding folder.
 Even if that means it has to be downloaded first.
 Adding a path within it functions as expected.
 """
-macro datadep_str(path)
+macro datadep_str(namepath)
     quote
-        parts = splitpath($(esc(path)))
-        name = first(parts)
-        inner_path = length(parts) > 1 ? joinpath(Iterators.drop(parts, 1)...) : ""
-        resolve(name, inner_path, @__FILE__)
+        resolve($(esc(namepath)), @__FILE__)
     end
 end
-
-
 
 
 """
@@ -63,7 +58,15 @@ function resolve(datadep_name::AbstractString, inner_filepath, calling_filepath)
     resolve(registry[datadep_name], inner_filepath, calling_filepath)
 end
 
-"The core of the resolve function without any user friendly stuff, returns the directory"
+function resolve(namepath::AbstractString, calling_filepath=nothing)
+    parts = splitpath(namepath)
+    name = first(parts)
+    inner_path = length(parts) > 1 ? joinpath(Iterators.drop(parts, 1)...) : ""
+    resolve(name, inner_path, calling_filepath)
+end
+
+
+"The core of the resolve function without any user friendly file stuff, returns the directory"
 function _resolve(datadep::AbstractDataDep, calling_filepath)::String
     lp = try_determine_load_path(datadep.name, calling_filepath)
     dirpath = if !isnull(lp)
