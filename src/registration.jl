@@ -2,25 +2,18 @@
 
 const registry = Dict{String, AbstractDataDep}()
 
-function RegisterDataDep(name::String,
-        message::String,
-        remotepath,
-        hash=nothing;
-        fetch_method=download,
-        post_fetch_method=identity,
-    )
+function register(datadep::AbstractDataDep)
+    name = datadep.name
     if haskey(registry, name)
         warn("Over-writing registration of the datadep: $name")
     end
-    registry[name] = DataDep(name,remotepath,hash,fetch_method,post_fetch_method, message)
+    if !is_valid_name(name)
+        error(name, " is not a valid name for a datadep. Valid names must be legal foldernames on Windows.")
+    end
+
+    registry[name] = datadep
 end
 
-function RegisterDataDep(name::String, message::String)
-    if haskey(registry, name)
-        warn("Over-writing registration of the datadep: $name")
-    end
-    registry[name] = ManualDataDep(name, message)
-end
 
 """
     is_valid_name(name)
@@ -31,5 +24,5 @@ This basically means it must be a valid folder name on windows.
 """
 function is_valid_name(name)
     namechars = collect(name)
-    !any( namechars .∈ "\\/:*?<>|") && !any(Base.UTF8prox.iscntrl.(namechars))
+    !any( namechars .∈ "\\/:*?<>|") && !any(iscntrl.(namechars))
 end
