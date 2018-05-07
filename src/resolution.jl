@@ -49,16 +49,24 @@ function resolve(datadep::AbstractDataDep, inner_filepath, calling_filepath)::St
     end
 end
 
-"""
-Passing resolve a string rather than an actual datadep object works to look up
-the data dep from the registry.
-This is useful for progammatic downloading.
-"""
+
 function resolve(datadep_name::AbstractString, inner_filepath, calling_filepath)::String
     resolve(registry[datadep_name], inner_filepath, calling_filepath)
 end
 
-function resolve(namepath::AbstractString, calling_filepath=nothing)
+"""
+    resolve("name/path", @__FILE__)
+
+Is the function that lives directly behind the `datadep"name/path"` macro.
+If you are working the the names of the datadeps programatically,
+and don't want to download them by mistake;
+it can be easier to work with this function.
+
+Note though that you must include `@__FILE__` as the second argument,
+as DataDeps.jl uses this to allow reading the package specific `deps/data` directory.
+Advanced usage could specify a different file or `nothing`, but at that point you are on your own.
+"""
+function resolve(namepath::AbstractString, calling_filepath)
     parts = splitpath(namepath)
     name = first(parts)
     inner_path = length(parts) > 1 ? joinpath(Iterators.drop(parts, 1)...) : ""
