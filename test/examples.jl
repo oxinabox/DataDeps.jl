@@ -4,12 +4,12 @@ using DataDeps
 ENV["DATADEPS_ALWAY_ACCEPT"]=true
 
 @testset "Pi" begin
-    RegisterDataDep(
+    register(DataDep(
      "Pi",
      "There is no real reason to download Pi, unlike say lists of prime numbers, it is always faster to compute than it is to download. No matter how many digits you want.",
      "https://www.angio.net/pi/digits/10000.txt",
      sha2_256
-    )
+    ))
 
     pi_string = readstring(datadep"Pi/10000.txt")
     @test parse(pi_string) ≈ π
@@ -18,14 +18,14 @@ ENV["DATADEPS_ALWAY_ACCEPT"]=true
 end
 
 @testset "Primes" begin
-    RegisterDataDep(
+    register(DataDep(
      "Primes",
      "These are the first 65 thousand primes. Still faster to calculate locally.",
      "http://staffhome.ecm.uwa.edu.au/~00061811/pub/primes.txt",
 
      "d6524d63a5cf5e5955568cc96b72b3f39258af4f0f79c61cbc01d8853e587f1b"
      #Important: this is a hash I didn't calculate, so is a test that our checksum methods actually align with the normal values.
-    )
+    ))
 
     data = readdlm(datadep"Primes/primes.txt", ',')
     primes = data[4:end, 2] #skip fist 3
@@ -40,8 +40,8 @@ end
 
 @testset "TrumpTweets" begin
     # This tests demostrates how the `post_fetch_method` can be used to synthesize new files
-    
-    RegisterDataDep("TrumpTweets",
+
+    register(DataDep("TrumpTweets",
     """
     Tweets from 538's article:
     [The World’s Favorite Donald Trump Tweets](https://fivethirtyeight.com/features/the-worlds-favorite-donald-trump-tweets/)
@@ -65,7 +65,7 @@ end
         end
 
     end
-    )
+    ))
 
     # Read the original file
     all_tweets = Set(eachline(datadep"TrumpTweets/realDonaldTrump_poll_tweets.csv"))
@@ -82,7 +82,7 @@ end
 
 @testset "MNIST" begin
 
-    RegisterDataDep(
+    register(DataDep(
         "MNIST train",
         """
         Dataset: THE MNIST DATABASE of handwritten digits, (training subset)
@@ -103,10 +103,10 @@ end
         "http://yann.lecun.com/exdb/mnist/".*["train-images-idx3-ubyte.gz", "train-labels-idx1-ubyte.gz"];
         # Not providing a checksum at all so can check it gives output
         # TODO : automate this test with new 0.7 stuff
-    )
+    ))
 
 
-    RegisterDataDep(
+    register(DataDep(
         "MNIST",
         """
         Dataset: THE MNIST DATABASE of handwritten digits
@@ -126,14 +126,14 @@ end
         """,
         "http://yann.lecun.com/exdb/mnist/".*["train-images-idx3-ubyte.gz", "train-labels-idx1-ubyte.gz", "t10k-images-idx3-ubyte.gz", "t10k-labels-idx1-ubyte.gz"],
         "0bb1d5775d852fc5bb32c76ca15a7eb4e9a3b1514a2493f7edfcf49b639d7975"
-    )
+    ))
 read(datadep"MNIST"*"/train-labels-idx1-ubyte.gz")
     @test read(datadep"MNIST"*"/train-labels-idx1-ubyte.gz") == read(datadep"MNIST train"*"/train-labels-idx1-ubyte.gz")
 end
 
 
 @testset "UCI Banking" begin
-    RegisterDataDep(
+    register(DataDep(
         "UCI Banking",
         """
         Dataset: Bank Marketing Data Set
@@ -152,7 +152,7 @@ end
          (SHA.sha3_224, "01b53f5b69d0b169070219b4391c623d84ab17d4cea8c8895cbf951d")];
 
          post_fetch_method = file->run(`unzip $file`)
-    )
+    ))
 
     data, header = readdlm(datadep"UCI Banking/bank.csv", ';', header=true)
     @test size(header) == (1,17)
@@ -168,7 +168,7 @@ end
     # Doing this with checksums is not particularly useful
     # But the same thing applies to `fetch_method` and `post_fetch_method`.
     # So for example the
-    RegisterDataDep(
+    register(DataDep(
         "UCI Adult",
         """
     	Dataset: Adult Data Set UCI ML Repository
@@ -199,7 +199,7 @@ end
              "818481d320861c4b623626ff6fab3426ad93dae4434b7f54ca5a0f357169c362" # adult.names ⊻ old.adult.names
             ]
         ]
-    )
+    ))
 
     @test length(collect(eachline(datadep"UCI Adult/adult.names"))) == 110
 
@@ -208,7 +208,7 @@ end
 
 
 @testset "Data.Gov Babynames" begin
-    RegisterDataDep(
+    register(DataDep(
         "Baby Names",
         """
         Dataset: Baby Names from Social Security Card Applications-National Level Data
@@ -226,7 +226,7 @@ end
         #TODO : Automate this test with new 0.7 test_warn stuff
         ;
         post_fetch_method = [unpack, f->mv(f, "metadata551randstuff.json")]
-    )
+    ))
 
     @test !any(endswith.(readdir(datadep"Baby Names"), "zip"))
     @test first(eachline(joinpath(datadep"Baby Names", "yob2016.txt")))=="Emma,F,19414"
