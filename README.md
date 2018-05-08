@@ -31,7 +31,7 @@ DataDeps.jl is good for:
  - Any file format
  - Any size
  - Static (that is to say it doesn't change)
- 
+
 The main use case is downloading large datasets for machine learning, and corpora for NLP.
 In this case the data is not even normally yours to begin with.
 It lives on some website somewhere.
@@ -51,7 +51,7 @@ See also the list of related packages at the bottom
 
 The other option is that if your data a good fit for git.
 If it is in overlapping area of plaintext & small (or close enough to those things),
-then you could add it as a `ManualDataDep` in and include it in the git repo in the  `deps/data/` folder of your package. 
+then you could add it as a `ManualDataDep` in and include it in the git repo in the  `deps/data/` folder of your package.
 The ManuaulDataDep will not need manual installation if it is being installed via git.
 
 
@@ -61,7 +61,7 @@ The ManuaulDataDep will not need manual installation if it is being installed vi
  - [the aformentioned blog post](http://white.ucc.asn.au/2018/01/18/DataDeps.jl-Repeatabled-Data-Setup-for-Repeatable-Science.html)
  - [Examples in the test code](test/examples.jl)
  - [Manual examples from the test code](test/examples_manual.jl)
- 
+
 ### Installation
 As normal for julia packages install DataDeps.jl using:
 
@@ -69,10 +69,10 @@ As normal for julia packages install DataDeps.jl using:
 julia> Pkg.add("DataDeps")
 ```
 
-Remember to add `DataDeps` to your `REQUIRE` file, so it will be automatically installed for end-users. 
+Remember to add `DataDeps` to your `REQUIRE` file, so it will be automatically installed for end-users.
 
-### Using a datadep string to get hold of the data.
-For any registered DataDep (see below), `datadep"Name"` returns a path to a folder containing the data.
+### Using a datadep string or `resolve` to get hold of the data.
+For any registered DataDep (see below), `datadep"Name"`, returns a path to a folder containing the data.
 If when that string macro is evaluated no such folder exists, then DataDeps will swing into action and coordiante the acquisition of the data into a folder, then return the path that now contains the data.
 
 You can also use `datadep"Name/subfolder/file.txt"` (and similar) to get a path to the file at  `subfolder/file.txt` within the data directory for `Name`.
@@ -80,8 +80,6 @@ Just like when using the plain `datadep"Name"` this will if required downloadloa
 However, it will also engage additional features to verify that that file exists (and is readable),
 and if not will attempt to help the user resolve the situation.
 This is useful if files may have been deleted by mistake, or if a ManualDataDep might have been incorrectly installed.
-
-
 
 
 #### Installing Data Lazily
@@ -119,25 +117,30 @@ and then `include` it into `deps/build.jl` followed by putting in the datadep st
 One would also `include` that registrations file into the `__init__` function in the  main source of the package as well.
 
 
+
+
+
 ### Registering a DataDep
-A DataDeps registration is a block of code delaring a dependency.
+A DataDeps registration is a block of code declaring a dependency.
 You should put it somewhere that it will be executed before any other code in your script that depends on that data.
 In most cases it is best to put it inside the  [modules's `__init__()` function](https://docs.julialang.org/en/stable/manual/modules/#Module-initialization-and-precompilation-1).
 
-It is pretty flexible. See the [examples](#examples)
 
+To do the actual registration one just  calls `register(::AbstractDataDep)`.
+The rest of this section is basically about the constructors for the `DataDep` type.
+It is pretty flexible. See the [examples](#examples).
 
 The basic Registration block looks like: (Type parameters are shown below are a simplifaction)
 ```
-RegisterDataDep(
-    name::String, 
+register(DataDep(
+    name::String,
     message::String,
     remote_path::Union{String,Vector{String}...},
     [checksum::Union{String,Vector{String}...},]; # Optional, if not provided will generate
     # keyword args (Optional):
-    fetch_method=download # (remote_filepath, local_filepath)->Any 
+    fetch_method=download # (remote_filepath, local_filepath)->Any
     post_fetch_method=download # (local_filepath)->Any
-)
+))
 ```
 
 #### Required Fields
@@ -148,13 +151,13 @@ RegisterDataDep(
     - This is normally used to give a link to the original source of the data, a paper to be cited etc.
  - *remote_path*: where to fetch the data from. Normally a string or strings) containing an URL
     - This is usually a string, or a vector of strings (or a vector of vector... see [Recursive Structure](Recursive Structure) below)
-    
+
 #### Optional Fields
  - *checksum* this is very flexible, it is used to check the files downloaded correctly
     - By far the most common use is to just provide a SHA256 sum as a hex-string for the files
     - If not provided, then a warning message with the  SHA256 sum is displayed. This is to help package devs workout the sum for there files, without using an external tool.
     - If you want to use a different hashing algorithm, then you can provide a tuple `(hashfun, targethex)`
-        - `hashfun` should be a function which takes an IOStream, and returns a `Vector{UInt8}`. 
+        - `hashfun` should be a function which takes an IOStream, and returns a `Vector{UInt8}`.
 	      - Such as any of the functions from [SHA.jl](https://github.com/staticfloat/SHA.jl), eg `sha3_384`, `sha1_512`
 	      - or `md5` from [MD5.jl](https://github.com/oxinabox/MD5.jl)
   - If you want to use a different hashing algorithm, but don't know the sum, you can provide just the `hashfun` and a warning message will be displayed, giving the correct tuple of `(hashfun, targethex)` that should be added to the registration block.
@@ -165,10 +168,10 @@ RegisterDataDep(
 
  -  `fetch_method=download` a function to run to download the files.
     - Function should take 2 parameters (remote_fikepath, local_filepath), and can return anything
-    - Defaults to `Base.download` which invokes commandline download tools. 
+    - Defaults to `Base.download` which invokes commandline download tools.
     - Can take a vector of methods, being one for each file, or a single method, in which case that method is used to download all of them. (See [Recursive Structure](Recursive Structure) below)
     - Very few people will need to override this, but potentially it can be used to deal with things like authorisation (let me know if you try)
-    
+
  - `post_fetch_method` a function to run after the files have download
     - Should take the local filepath as its first and only argument. Can return anything.
     - Default is to do nothing.
@@ -178,8 +181,8 @@ RegisterDataDep(
        - which means operations that just write to the current working directory (like `rm` or `mv` or ```run(`SOMECMD`))``` just work.
        - You can call `cwd()` to get the the data directory for your own functions. (Or `dirname(local_filepath)`)
     - Can take a vector of methods, being one for each file, or a single method, in which case that ame method is applied to all of the files. (See [Recursive Structure](Recursive Structure) below)
-    
-    
+
+
 #### Recursive Structure
 `fetch_method`, `post_fetch_method` and `checksum` all can match the structure of `remote_path`.
 If `remote_path` is just an single path, then they each must be single items.
@@ -190,19 +193,19 @@ Further more this applies recursively.
 
 For example:
 ```
-RegisterDataDep("eg", "eg message",
+register(DataDep("eg", "eg message",
     ["http//example.com/text.txt", "http//example.com/sub1.zip", "http//example.com/sub2.zip"]
     post_fetch_method = [identity, file->run(`unzip $file`), file->run(`unzip $file`)]
-)
+))
 ```
 So `identity`  (i.e. nothing) will be done to the first paths resulting file, and the second and third will be unzipped.
 
 can also be written:
 ```
-RegisterDataDep("eg", "eg message",
+register(DataDep("eg", "eg message",
     ["http//example.com/text.txt", ["http//example.com/sub1.zip", "http//example.com/sub2.zip"]]
     post_fetch_method = [identity, file->run(`unzip $file`)]
-)
+))
 ```
 The unzip will be applied to both elements in the child array
 
@@ -227,7 +230,26 @@ You can then edit the generated code to make it suitable for your use.
 (E.g. remove excessive information in the message)
 
 
-### Assuming direct control
+### Assuming direct control and customization
+The heirachy of methods for acquiring a datadep is:
+
+`datadep"name/path"` ▶ `resolve("name/path", @__FILE__)` ▶ `resolve(::AbstractDataDep, "path", @__FILE__)` ▶ `download(::DataDep)`
+
+One can make use of this at various levels to override the default generally sane behavior.
+Most of the time you shouldn't have to -- the normal point of customization is in setting the `post_fetch_method`, and occasionally `fetch_method` or  `hash=(hashmethod, key)`.
+
+#### Advanced: `resolve` for high-level programmatic resolution
+`resolve("name/path", @__FILE__)` is the functional form of `datadep"name/path`.
+If you are really worried about resolving a datadep early, or of you are generating the names pragmatically, or you just really feel uncomfortable about string macros, you can use `resolve(namepath, @__FILE__)`.
+You can (basically) equivalently use `@datadep_str namepath`.
+
+
+It comes in a number of flavors for which you can read the docstring `?resolve`.
+Including `resolve(::AbstactDataDep, innerpath, @__FILE__)`, which can directly download a datadep.
+
+
+
+#### `download` for low-level programmatic resolution.
 For more hardcore devs customising the user experience,
 and people needing to do debugging you may assume (nearly) full control over the download operation
 by directly invoking the method `Base.download(::DataDep, localpath; kwargs...)`.
@@ -307,7 +329,7 @@ Ideally though you should probably raise an issue with the package maintainers a
 
 Note also when it comes to file level loading, e.g. `datadep"Name/subfolder/file.txt"`,
 DataDeps does not check all folders with that `Name` (if you have multiples).
-If the file is not in the first folder it finds you will be presented with the recovery dialog, 
+If the file is not in the first folder it finds you will be presented with the recovery dialog,
 from which the easiest option is to select to delete the folder and retry,
 since that will result in it checking the second folder (as the first one does not exist).
 
@@ -358,9 +380,9 @@ It might help to look at DataDeps.jl is being used to understand how it maybe us
  - [WordNet.jl](https://github.com/JuliaText/WordNet.jl)
  - [MLDatasets.jl](https://github.com/JuliaML/MLDatasets.jl/)
  - [CorpusLoaders.jl](https://github.com/JuliaText/CorpusLoaders.jl)
- 
+
 (Feel free to submit a PR adding a link your Package, or research script here.)
- 
+
 ### Other similar packages:
 DataDeps.jl isn't the answer to all your download needs.
 It is focused squarely on static data.
@@ -371,15 +393,14 @@ Alternatives that I am aware of are:
  - [RemoteFiles.jl](https://github.com/helgee/RemoteFiles.jl): keeps local files up to date with remotes
  - [BinaryProvider.jl](https://github.com/JuliaPackaging/BinaryProvider.jl) downloads binaries intended as part of a build chain. I'm pretty sure you can trick it into downloading data.
  - [`Base.download`](https://docs.julialang.org/en/stable/stdlib/file/#Base.download) if your situtation is really simple just sticking a `download` into the `deps/build.jl` file might do you just fine.
- 
- Outside of julia's ecosystem is 
- 
+
+ Outside of julia's ecosystem is
+
   - [Python: Quilt](https://github.com/quiltdata/quilt). Quilt uses a centralised data store, and allows the user to download the data as Python packages containing it in serialised from. It *might* be possible to use PyCall.jl to use this from julia.
-  
+
  ### Links:
- 
+
   - [ANN: thread on Discourse](https://discourse.julialang.org/t/ann-datadeps-jl-bindeps-for-data/8457/15)
   - [MLOSS](http://mloss.org/software/view/705/)
   - [Release Blog Post (as above)](http://white.ucc.asn.au/2018/01/18/DataDeps.jl-Repeatabled-Data-Setup-for-Repeatable-Science.html)
   - [DataDepsGenerators.jl (as above)](https://github.com/oxinabox/DataDepsGenerators.jl)
- 

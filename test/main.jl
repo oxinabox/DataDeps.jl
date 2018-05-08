@@ -13,12 +13,12 @@ withenv("DATADEPS_ALWAY_ACCEPT"=>"true") do
         @stub dummydown
         @expect(dummydown("http://www.example.com/eg.zip", ::String) = "eg.zip")
 
-        RegisterDataDep( "Test1",
+        register(DataDep( "Test1",
          "A dummy message",
          "http://www.example.com/eg.zip", # the remote-path to fetch it from, normally an URL. Passed to the `fetch_method`
          (dummyhash, "1234"), #A hash that is used to check the data is right.
          fetch_method=dummydown
-        )
+        ))
 
         @test endswith(datadep"Test1", "Test1") || endswith(datadep"Test1", "Test1/") ||  endswith(datadep"Test1", "Test1\\")
 

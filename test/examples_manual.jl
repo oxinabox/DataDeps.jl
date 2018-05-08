@@ -3,7 +3,7 @@ using Base.Test
 
 
 @testset "Manual included" begin
-    RegisterDataDep(
+    register(ManualDataDep(
         "Example",
         """
         This manual datadep should have been installed with the package.
@@ -11,7 +11,7 @@ using Base.Test
         Try removing and then adding the package back again.
         If that doesn't work raise an issue on the repo.
         """
-    )
+    ))
 
     content = readstring(datadep"Example"*"/loremipsum.txt")
     @test startswith(content, "lorem ipsum dolor sit amet")
@@ -20,7 +20,7 @@ end
 
 if DataDeps.env_bool("DATADEPS_ENABLE_MANUAL_TESTS")
     @testset "Manual nonincluded" begin
-        RegisterDataDep(
+        register(ManualDataDep(
             "Kafta",
             """
             Please go to
@@ -29,7 +29,7 @@ if DataDeps.env_bool("DATADEPS_ENABLE_MANUAL_TESTS")
                 Note this must be done manually as Project Gutenberg does not allow directly linking to their ebooks.
                 only to the canonical catalog entry (See https://www.gutenberg.org/wiki/Gutenberg:Information_About_Linking_to_our_Pages)
             """
-        )
+        ))
 
         @test first(readlines(datadep"Kafta"*"/mm.txt")) == "\ufeffThe Project Gutenberg EBook of Metamorphosis, by Franz Kafka"
     end

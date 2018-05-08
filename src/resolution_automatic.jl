@@ -147,7 +147,6 @@ end
 function check_if_accept_terms(datadep::DataDep, localpath, remotepath)
     info("This program has requested access to the data dependency $(datadep.name).")
     info("which is not currently installed. It can be installed automatically, and you will not see this message again.")
-    info(datadep.extra_message)
-    info("\n")
+    info("\n",datadep.extra_message,"\n\n")
     input_bool("Do you want to download the dataset from $remotepath to \"$localpath\"?")
 end
