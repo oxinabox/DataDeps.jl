@@ -397,7 +397,9 @@ Alternatives that I am aware of are:
  Outside of julia's ecosystem is
 
   - [Python: Quilt](https://github.com/quiltdata/quilt). Quilt uses a centralised data store, and allows the user to download the data as Python packages containing it in serialised from. It *might* be possible to use PyCall.jl to use this from julia.
-
+  - [R: suppdata](https://github.com/ropensci/suppdata), features extra stuff relating to published datasets (See also DataDeps.jl), it *might* be possible to use RCall.jl to use this from julia.
+  
+  
  ### Links:
 
   - [ANN: thread on Discourse](https://discourse.julialang.org/t/ann-datadeps-jl-bindeps-for-data/8457/15)
