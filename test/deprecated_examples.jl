@@ -229,6 +229,6 @@ end
     )
 
     @test !any(endswith.(readdir(datadep"Baby Names"), "zip"))
-    @test first(eachline(joinpath(datadep"Baby Names", "yob2016.txt")))=="Emma,F,19414"
+    @test first(eachline(joinpath(datadep"Baby Names", "yob2016.txt"))) == "Emma,F,19471"
     @test filemode(joinpath(datadep"Baby Names", "metadata551randstuff.json")) > 0
 end
