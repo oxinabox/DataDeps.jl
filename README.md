@@ -139,7 +139,7 @@ register(DataDep(
     [checksum::Union{String,Vector{String}...},]; # Optional, if not provided will generate
     # keyword args (Optional):
     fetch_method=download # (remote_filepath, local_filepath)->Any
-    post_fetch_method=download # (local_filepath)->Any
+    post_fetch_method=identity # (local_filepath)->Any
 ))
 ```
 
