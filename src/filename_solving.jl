@@ -13,11 +13,12 @@ function get_filename(remotepath)
         # Catch *everything* here, as we can always recover and there are many things that can go wrong
         warn("Could not resolve filename due to")
         warn(err)
-        warn("falling back to using final part of remotepath")
+
         filename = nothing
     end
 
     ret = if filename == nothing
+        warn("falling back to using final part of remotepath")
         # couldn't get it from the headers
         basename(remotepath)
     else
@@ -34,11 +35,15 @@ Uses as HEAD request, to attempt to retrieve the filename from the HTTP headers.
 Returns a string or nothing if it failes
 """
 function try_get_filename(url)
-    resp = HTTP.request("HEAD", url,  ["User-Agent"=>"DataDeps.jl (http-lib: HTTP.jl; lang: Julia)"]);
-    content_disp = get(Dict(resp.headers),"Content-Disposition","");
-    raw = match(r"filename\s*=\s*(.*)", content_disp); # TECHDEBT: Consider if more of this should be moved to process header filename
+    if lowercase(url[1:4])=="http"
+        resp = HTTP.request("HEAD", url,  ["User-Agent"=>"DataDeps.jl (http-lib: HTTP.jl; lang: Julia)"]);
+        content_disp = get(Dict(resp.headers),"Content-Disposition","");
+        raw = match(r"filename\s*=\s*(.*)", content_disp); # TECHDEBT: Consider if more of this should be moved to process header filename
 
-    process_header_filename(raw)
+        process_header_filename(raw)
+    else
+        nothing
+    end
 end
 
 """
