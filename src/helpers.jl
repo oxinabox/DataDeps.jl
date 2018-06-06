@@ -13,7 +13,8 @@ if is_unix() && Sys.KERNEL != :FreeBSD
         elseif extension == ".zip"
             return (`unzip -x $file -d $directory`)
         elseif extension == ".gz"
-            return pipeline(`gzip -k -d $directory/$file`)
+            target = joinpath(directory, file)
+            return pipeline(`gzip -k -d $target`)
         end
         error("I don't know how to unpack $file")
     end
