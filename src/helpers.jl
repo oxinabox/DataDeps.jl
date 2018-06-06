@@ -13,7 +13,8 @@ if is_unix() && Sys.KERNEL != :FreeBSD
         elseif extension == ".zip"
             return (`unzip -x $file -d $directory`)
         elseif extension == ".gz"
-            return pipeline(`gzip -k -d $directory/$file`)
+            target = joinpath(directory, file)
+            return pipeline(`gzip -k -d $target`)
         end
         error("I don't know how to unpack $file")
     end
@@ -39,9 +40,11 @@ if is_windows()
         if ((extension == ".Z" || extension == ".gz" || extension == ".xz" || extension == ".bz2") &&
                 secondary_extension == ".tar") || extension == ".tgz" || extension == ".tbz"
             return pipeline(`$exe7z x $file -y -so`, `$exe7z x -si -y -ttar -o$directory`)
-        elseif (extension == ".zip" || extension == ".7z" || extension == ".tar" ||
+        elseif (extension == ".zip" || extension== ".gz" || extension == ".7z" || extension == ".tar" ||
                 (extension == ".exe" && secondary_extension == ".7z"))
             return (`$exe7z x $file -y -o$directory`)
+        
+        
         end
         error("I don't know how to unpack $file")
     end

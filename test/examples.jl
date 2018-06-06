@@ -232,3 +232,21 @@ end
     @test first(eachline(joinpath(datadep"Baby Names", "yob2016.txt")))=="Emma,F,19471"
     @test filemode(joinpath(datadep"Baby Names", "metadata551randstuff.json")) > 0
 end
+
+
+
+@testset "FastText gzipped" begin
+	register(DataDep("FastText fr",
+		"""
+		Dataset: 300 dimentional FastText Word Embeddings, for French trained on Wikipedia and the CommonCrawl
+		Website: https://fasttext.cc/docs/en/crawl-vectors.html
+		Author:  Grave et. al. (Facebook)
+		License: CC-SA 3.0
+		Citation: E. Grave*, P. Bojanowski*, P. Gupta, A. Joulin, T. Mikolov, Learning Word Vectors for 157 Languages
+		""",
+		"https://s3-us-west-1.amazonaws.com/fasttext-vectors/word-vectors-v2/cc.fr.300.vec.gz",
+    	"ab0dca4ef2a8a38d97ca119b491c701c57e17178cfc2f032f3de973e86fe87aa",
+		post_fetch_method=DataDeps.unpack
+	));
+    @test length(readdir(datadep"FastText fr")) == 1
+end
