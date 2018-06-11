@@ -3,7 +3,7 @@
 ## Core path determining stuff
 
 
-const default_loadpath = joinpath.([
+const standard_loadpath = joinpath.([
     Pkg.Dir._pkgroot(); homedir(); # Common all systems
 
     @static if is_windows()
@@ -18,7 +18,7 @@ const default_loadpath = joinpath.([
     end], "datadeps")
 
 #ensure at least something in the loadpath exists when instaleld
-mkpath(first(default_loadpath))
+mkpath(first(standard_loadpath))
 
 
 
@@ -99,8 +99,8 @@ function preferred_paths(rel=nothing; use_package_dir=true)
     end
 
     append!(cands, env_list("DATADEPS_LOAD_PATH", []))
-    if !env_bool("DATADEPS_EXCLUDE_DEFAULT_LOAD_PATH", true)
-        append!(cands, default_loadpath)
+    if !env_bool("DATADEPS_NO_STANDARD_LOAD_PATH", false)
+        append!(cands, standard_loadpath)
     end
     cands
 end
