@@ -345,8 +345,9 @@ DataDeps.jl tries to have very sensible defaults.
     - This is provided for scripting (in particular CI) use
     - Note that it remains your responsibility to understand and read any terms of the data use (this is remains true even if you don't turn on this bypass)
 	- default `false`
- - `DATADEPS_LOAD_PATH` -- The list of paths, other than the package directory (`Pkg.dir(PKGNAME)/deps/data`) to save and load data from
-    - default values is complex. On all systems it includes the equivalent of `~/.julia/datadeps`. It also includes a large number of other locations such as `/usr/share/datadeps` on linux, and `C:/ProgramData` on Windows. [more details](#The-LOAD-PATH)
+ - `DATADEPS_LOAD_PATH` -- The list of paths to be prepended to the standard loadpath (and the package directory (`Pkg.dir(PKGNAME)/deps/data`)) to save and load data from
+    - By default this adds nothing to the setnaded set of values, which on all systems it includes the equivalent of `~/.julia/datadeps`. It also includes a large number of other locations such as `/usr/share/datadeps` on linux, and `C:/ProgramData` on Windows. [more details](#The-LOAD-PATH)
+ - `DATADEPS_NO_STANDARD_LOAD_PATH` if this is set to `true` (default `false`), then the aforementioned list of standard loadpath files is not included
  - `DATADEPS_DISABLE_DOWNLOAD` -- causes any action that would result in the download being triggered to throw an exception.
    - useful e.g. if you are in an environment with metered data, where your datasets should have already been downloaded earlier, and if there were not you want to respond to the situation rather than let DataDeps download them for you.
    - default `false`
