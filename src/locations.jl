@@ -17,7 +17,7 @@ const default_loadpath = joinpath.([
          "/usr/share", "/usr/local/share"] # Unix Filestructure
     end], "datadeps")
 
-#ensure at least something in the loadpath exists.
+#ensure at least something in the loadpath exists when instaleld
 mkpath(first(default_loadpath))
 
 
@@ -97,7 +97,11 @@ function preferred_paths(rel=nothing; use_package_dir=true)
         pkg_deps_root = try_determine_package_datadeps_dir(rel)
         !isnull(pkg_deps_root) && push!(cands, get(pkg_deps_root))
     end
-    append!(cands, env_list("DATADEPS_LOAD_PATH", default_loadpath))
+
+    append!(cands, env_list("DATADEPS_LOAD_PATH", []))
+    if !env_bool("DATADEPS_EXCLUDE_DEFAULT_LOAD_PATH", true)
+        append!(cands, default_loadpath)
+    end
     cands
 end
 
