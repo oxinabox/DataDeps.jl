@@ -242,6 +242,9 @@ Most of the time you shouldn't have to -- the normal point of customization is i
 `resolve("name/path", @__FILE__)` is the functional form of `datadep"name/path`.
 If you are really worried about resolving a datadep early, or of you are generating the names pragmatically, or you just really feel uncomfortable about string macros, you can use `resolve(namepath, @__FILE__)`.
 You can (basically) equivalently use `@datadep_str namepath`.
+Passing in the `@__FILE__` is important as it allows access to the package's "private" data deps location (`PKGNAME/deps/data`),
+which may be needed incase of datadep name conflicts.
+You could passing something else to bypass this "privacy".
 
 
 It comes in a number of flavors for which you can read the docstring `?resolve`.
