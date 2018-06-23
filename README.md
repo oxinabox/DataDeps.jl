@@ -17,6 +17,27 @@ and making programs know where that data is.
 
 For a few examples of its usefulness see [this blog post](http://white.ucc.asn.au/2018/01/18/DataDeps.jl-Repeatabled-Data-Setup-for-Repeatable-Science.html)
 
+### Usage in Brief:
+#### I want to use some data I have in my project. What do?
+The short version is:
+
+1. Stick your data anywhere with a open HTTP link. (Skip this if it is already online.)
+2. Write a DataDep registration block.
+3. Refer to the data using `datadep"Dataname/file.csv` etc as if it were a file path, and DataDeps.jl will sort out getting in onto your system.
+4. For CI purposes set the `DATADEPS_ALWAY_ACCEPT` environment variable.
+
+#### Where can I store my data online?
+Where ever you want, so long as it gives an Open HTTP(/s) link to download it. ** 
+
+ - I use an OwnCloud instance hosted by our national research infastructure.
+ - Research data hosting like FigShare are a good idea.
+ - You can just stick it on your website hosting if you are operating a website.
+ - I'ld like to hear if anyoen has tested GoogleDrive or DropBox etc.
+
+
+**(In theory other protocols and auth can be supported by using a different `fetch_method`)
+
+
 ### Why not store the data in Git?
 Git is good for files that meet 3 requirements:
 
@@ -24,7 +45,7 @@ Git is good for files that meet 3 requirements:
  - Smallish (Github will not accept files >50Mb in size)
  - Dynamic (Git is version control, it is good at knowing about changes)
 
-There is certainly some room around the edges for this, like storing a few images in the repository is OK, but storing all of ImageNet is a no go.
+There is certainly some room around the edges for this, like storing a few images in the repository is OK, but storing all of ImageNet is a no go. For those edge cases `ManualDataDep`s are good (see below).
 
 DataDeps.jl is good for:
 
