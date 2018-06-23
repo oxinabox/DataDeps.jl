@@ -7,7 +7,7 @@ AppVeyor Master: [![Build status](https://ci.appveyor.com/api/projects/status/kp
 [What is DataDeps?](#what-is-datadeps)  
 [Usage for developers (including researchers)](#usage-for-developers-including-researchers)  
 [Usage for end-users](#usage-for-end-users)  
-[Extending DataDeps.jl for Contributors](#extending-datadepsjl-for-contributors)
+[Extending DataDeps.jl for Contributors](#extending-datadepsjl-for-contributors)   
 [See Also](#see-also)
 
 ## What is DataDeps?
