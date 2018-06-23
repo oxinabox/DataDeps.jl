@@ -377,10 +377,12 @@ Particularly, if it is something that generalises beyond your specific usecase.
 
 ### Software using DataDeps.jl
 It might help to look at DataDeps.jl is being used to understand how it maybe used for your project.
+Some of these add some additional abstraction or niceness for users on top of the DataDeps.jl core functionality.
 
  - [WordNet.jl](https://github.com/JuliaText/WordNet.jl)
  - [MLDatasets.jl](https://github.com/JuliaML/MLDatasets.jl/)
  - [CorpusLoaders.jl](https://github.com/JuliaText/CorpusLoaders.jl)
+ - [Embeddings.jl](https://github.com/JuliaText/Embeddings.jl)
 
 (Feel free to submit a PR adding a link your Package, or research script here.)
 
