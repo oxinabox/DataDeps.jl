@@ -401,7 +401,7 @@ Alternatives that I am aware of are:
 
   - [Python: Quilt](https://github.com/quiltdata/quilt). Quilt uses a centralised data store, and allows the user to download the data as Python packages containing it in serialised from. It *might* be possible to use PyCall.jl to use this from julia.
   - [R: suppdata](https://github.com/ropensci/suppdata), features extra stuff relating to published datasets (See also DataDepsGenerators.jl), it *might* be possible to use RCall.jl to use this from julia.
-  - [Node/Commadnline](https://datproject.org/) I'm not too familiar with this, it is a bit of an ecosystem of its own. I think using it from the commandline might satisfy many people's needs. Or automating it with shell calls in `build.jl`.
+  - [Node/Commandline: Datproject](https://datproject.org/) I'm not too familiar with this, it is a bit of an ecosystem of its own. I think using it from the commandline might satisfy many people's needs. Or automating it with shell calls in `build.jl`.
   
   
  ### Links:
