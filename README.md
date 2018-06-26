@@ -300,20 +300,34 @@ you probably want to shift it to a shared area, like `/usr/share/datadeps`.
 Even if you don't have write permissions, you can have a sysadmin move it, and so long as you still have read permission DataDeps.jl will find it and use it for you.
 
 
-## The LOAD_PATH
-The LOAD PATH is the list of paths that DataDeps.jl looks in when trying to resolve a data dependency.
+## The Load Path
+The Load Path is the list of paths that DataDeps.jl looks in when trying to resolve a data dependency.
 If it doesn't find the data in any of them it will download the data.
 
-The default loadpath is not quiet statically determined -- it somewhat depends on your system configuration.
-The below examples show the paths on two of my systems.
+It has 3 sources:
+ - the package load path:
+     - determined from the package where the `datadep"NAME"` was used
+ - The user defined load path
+     - determined from the contents of the environment variable `DATADEPS_LOAD_PATH`
+     - this can be a colon separated list (Like most unix path variables)
+ - the standard load path
+     - depends on your system and configuration
+     - normally starts with user specific locations like your home directory, and expands out to shared locations
+     - See below lists of examples
+     - This can be disabled by setting the `DATADEPS_NO_STANDARD_LOAD_PATH` environment variable.
 
 In general it should by default include just about anywhere you might want to put the data.
 If it doesn't, please file an issue. (Unless your location is super-specific, e.g. `/MyUniName/student/commons/datadeps`).
-You can override the default loadpath by setting the environment variable `DATADEPS_LOAD_PATH`.
+As mentioned you can add things to the load path by setting the environment variable `DATADEPS_LOAD_PATH`.
 You can also make symlinks from the locations on the loadpath to other locations where the data really is, if you'ld rather do that.
 
+When **loading data** the load path is searched in order for a readable folder of the right now.
+When **saving data** is it is searched in order, skipping the package load path, for a writable directory.
+Simple way to avoid part of the standard loadpath being used for saving is to delete it, or make it unwritable.
+You can (and should when desired) move things around between any folder in the load path without redownloading.
 
-### Linux/Mac Default LOAD_PATH
+
+### Unix Standard Load Path
 For the user **oxinabox**
 
 ```bash
@@ -325,7 +339,7 @@ For the user **oxinabox**
 /usr/local/share/datadeps
 ```
 
-### Windows Default LOAD_PATH
+### Windows Standard Load Path
 For the user **oxinabox**, wen using JuliaPro 0.6.2.1, on windows 7.
 (Other configurations should be fairly similar).
 
@@ -369,8 +383,8 @@ DataDeps.jl tries to have very sensible defaults.
     - This is provided for scripting (in particular CI) use
     - Note that it remains your responsibility to understand and read any terms of the data use (this is remains true even if you don't turn on this bypass)
 	- default `false`
- - `DATADEPS_LOAD_PATH` -- The list of paths to be prepended to the standard loadpath (and the package directory (`Pkg.dir(PKGNAME)/deps/data`)) to save and load data from
-    - By default this adds nothing to the setnaded set of values, which on all systems it includes the equivalent of `~/.julia/datadeps`. It also includes a large number of other locations such as `/usr/share/datadeps` on linux, and `C:/ProgramData` on Windows. [more details](#The-LOAD-PATH)
+ - `DATADEPS_LOAD_PATH` -- The list of paths to be prepended to the standard loadpath to save and load data from
+    - By default this is empty, but it can be a colon separated list (like most unix path variables). [For more details see above](#The-Load-Path)
  - `DATADEPS_NO_STANDARD_LOAD_PATH` if this is set to `true` (default `false`), then the aforementioned list of standard loadpath files is not included
  - `DATADEPS_DISABLE_DOWNLOAD` -- causes any action that would result in the download being triggered to throw an exception.
    - useful e.g. if you are in an environment with metered data, where your datasets should have already been downloaded earlier, and if there were not you want to respond to the situation rather than let DataDeps download them for you.
