@@ -60,7 +60,7 @@ Falls back to using the current directory.
 So that if you are prototyping in the REPL (etc) for a package,
 and you are in the packages directory, then
 """
-function try_determine_package_datadeps_dir(::Void)
+function try_determine_package_datadeps_dir(::Nothing)
     try_determine_package_datadeps_dir(pwd())
 end
 
@@ -120,9 +120,9 @@ function uv_access(path, mode::AccessMode)
     req = Libc.malloc(Base._sizeof_uv_fs)
     try
         ret = ccall(:uv_fs_access, Cint,
-                (Ptr{Void}, Ptr{Void}, Cstring, Cint, Ptr{Void}),
+                (Ptr{Cvoid}, Ptr{Cvoid}, Cstring, Cint, Ptr{Cvoid}),
                 Base.eventloop(), req, path, mode, C_NULL)
-        ccall(:uv_fs_req_cleanup, Void, (Ptr{Void},), req)
+        ccall(:uv_fs_req_cleanup, Cvoid, (Ptr{Cvoid},), req)
     finally
         Libc.free(req)
     end

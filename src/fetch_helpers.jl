@@ -93,4 +93,4 @@ function process_header_filename(raw::RegexMatch)::String
     strip(ret)
 end
 
-process_header_filename(::Void) = nothing
+process_header_filename(::Nothing) = nothing

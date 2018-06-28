@@ -1,4 +1,4 @@
-using Base.Test
+using Test
 using DataDeps
 
 ENV["DATADEPS_ALWAY_ACCEPT"]=true

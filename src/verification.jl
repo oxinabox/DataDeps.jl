@@ -59,7 +59,7 @@ run_checksum(hash::AbstractString, path) = run_checksum((sha2_256, hash), path)
 If `nothing` is provided then assume the user is a developer,
 wanting to know what sha2_256 hash-line to add to the Registration line.
 """
-run_checksum(::Void, path) = run_checksum(sha2_256, path)
+run_checksum(::Nothing, path) = run_checksum(sha2_256, path)
 
 
 """

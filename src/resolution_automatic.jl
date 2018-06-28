@@ -128,7 +128,7 @@ end
 
 Ensurses the user accepts the terms of use; otherwise errors out.
 """
-function accept_terms(datadep::DataDep, localpath, remotepath, ::Void)
+function accept_terms(datadep::DataDep, localpath, remotepath, ::Nothing)
     if !env_bool("DATADEPS_ALWAY_ACCEPT")
         response = check_if_accept_terms(datadep, localpath, remotepath)
         accept_terms(datadep, localpath, remotepath, response)

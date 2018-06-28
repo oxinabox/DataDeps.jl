@@ -1,5 +1,5 @@
 using DataDeps
-using Base.Test
+using Test
 
 
 @testset "Manual included" begin

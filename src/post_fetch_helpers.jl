@@ -1,6 +1,6 @@
 # This file is a part of DataDeps.jl. License is MIT.
 
-if is_unix() && Sys.KERNEL != :FreeBSD
+if Sys.isunix() && Sys.KERNEL != :FreeBSD
     function unpack_cmd(file,directory,extension,secondary_extension)
         if ((extension == ".gz" || extension == ".Z") && secondary_extension == ".tar") || extension == ".tgz"
             return (`tar xzf $file --directory=$directory`)
@@ -33,8 +33,8 @@ if Sys.KERNEL == :FreeBSD
     end
 end
 
-if is_windows()
-    const exe7z = joinpath(JULIA_HOME, "7z.exe")
+if Sys.iswindows()
+    const exe7z = joinpath(Sys.BINDIR, "7z.exe")
 
     function unpack_cmd(file,directory,extension,secondary_extension)
         if ((extension == ".Z" || extension == ".gz" || extension == ".xz" || extension == ".bz2") &&

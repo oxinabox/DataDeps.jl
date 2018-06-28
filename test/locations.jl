@@ -1,4 +1,4 @@
-using Base.Test
+using Test
 using DataDeps: try_determine_load_path, determine_save_path, try_determine_package_datadeps_dir
 
 
