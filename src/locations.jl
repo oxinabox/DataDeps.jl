@@ -41,7 +41,7 @@ function try_determine_package_datadeps_dir(filepath)::Union{String, Nothing}
     while(olddir!=curdir) # At root `dirname` returns it's input
         olddir = curdir
         curdir = dirname(curdir)
-        datadeps_dir = joinpath(root, pkgname,"deps","data")
+        datadeps_dir = joinpath(curdir, "deps","data")
         if isdir(datadeps_dir)
             return datadeps_dir
         end
