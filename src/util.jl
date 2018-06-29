@@ -62,8 +62,8 @@ Prompted the user for one of a list of options
 """
 function input_choice(prompt, options::Vararg{Char})::Char
     while(true)
-        info(prompt)
-        info("["*join(options, '/')*"]")
+        @info(prompt)
+        @info("["*join(options, '/')*"]")
         response = readline()
         length(response)==0 && continue
         reply = lowercase(first(response))

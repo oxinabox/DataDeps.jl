@@ -25,7 +25,8 @@ examples =  [
         tempdir = mktempdir()
         try
             info("sending all datadeps to $tempdir")
-            withenv("DATADEPS_LOAD_PATH"=>tempdir) do
+            withenv("DATADEPS_LOAD_PATH"=>tempdir,
+                    "DATADEPS_NO_STANDARD_LOADPATH"=>true) do
                 @testset "download and use" begin
                     include(fn)
                 end
@@ -38,7 +39,8 @@ examples =  [
         finally
     		try
     			info("removing $tempdir")
-    			rm(tempdir, recursive=true, force=true)
+                cd(@__DIR__)  # Ensure not currently in directory being deleted
+                rm(tempdir, recursive=true, force=true)
     		catch err
     			@warn("Something went wrong with removing $tempdir")
     			@warn(err)
