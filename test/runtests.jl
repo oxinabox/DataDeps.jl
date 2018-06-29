@@ -23,7 +23,7 @@ examples =  [
     @testset "$fn" begin
         tempdir = mktempdir()
         try
-            info("sending all datadeps to $tempdir")
+            @info("sending all datadeps to $tempdir")
             withenv("DATADEPS_LOAD_PATH"=>tempdir,
                     "DATADEPS_NO_STANDARD_LOADPATH"=>true) do
                 @testset "download and use" begin
@@ -37,7 +37,7 @@ examples =  [
             end
         finally
     		try
-    			info("removing $tempdir")
+    			@info("removing $tempdir")
                 cd(@__DIR__)  # Ensure not currently in directory being deleted
                 rm(tempdir, recursive=true, force=true)
     		catch err

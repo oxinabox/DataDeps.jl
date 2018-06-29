@@ -1,8 +1,5 @@
 # This file is a part of DataDeps.jl. License is MIT.
 ## Core path determining stuff
-using Base
-
-
 
 const standard_loadpath = joinpath.([
     Base.DEPOT_PATH; homedir(); # Common all systems
@@ -18,11 +15,8 @@ const standard_loadpath = joinpath.([
          "/usr/share", "/usr/local/share"] # Unix Filestructure
     end], "datadeps")
 
-#ensure at least something in the loadpath exists when instaleld
+# ensure at least something in the loadpath exists when instaleld
 mkpath(first(standard_loadpath))
-
-
-
 
 
 ########################################################################################################################
@@ -132,7 +126,7 @@ If it fails then it returns nothing.
 """
 function try_determine_load_path(name::String, rel)
     paths = list_local_paths(name, rel)
-    paths = paths[first.(uv_access.(paths, R_OK)) .== 0] #0 means passes
+    paths = paths[first.(uv_access.(paths, Ref(R_OK))) .== 0] # 0 means passes
     length(paths)==0 ? nothing :  first(paths)
 end
 

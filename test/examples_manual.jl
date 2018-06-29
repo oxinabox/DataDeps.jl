@@ -13,7 +13,7 @@ using Test
         """
     ))
 
-    content = readstring(datadep"Example"*"/loremipsum.txt")
+    content = read(datadep"Example"*"/loremipsum.txt", String)
     @test startswith(content, "lorem ipsum dolor sit amet")
 end
 
