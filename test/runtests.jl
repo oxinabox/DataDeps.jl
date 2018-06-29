@@ -17,7 +17,6 @@ end
 examples =  [
     "examples.jl",
     "examples_manual.jl",
-    "deprecated_examples.jl"
 ]
 
 @testset "examples" for fn in examples
