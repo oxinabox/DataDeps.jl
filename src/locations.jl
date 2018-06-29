@@ -1,5 +1,7 @@
 # This file is a part of DataDeps.jl. License is MIT.
 ## Core path determining stuff
+using Base
+
 
 
 const standard_loadpath = joinpath.([
@@ -65,7 +67,7 @@ function preferred_paths(rel=nothing; use_package_dir=true)
     if use_package_dir
         @assert rel != nothing
         pkg_deps_root = try_determine_package_datadeps_dir(rel)
-        pkg_deps_root != nothing && push!(cands, get(pkg_deps_root))
+        pkg_deps_root != nothing && push!(cands, pkg_deps_root)
     end
 
     append!(cands, env_list("DATADEPS_LOAD_PATH", []))
@@ -128,10 +130,10 @@ end
 Trys to find a local path to the datadep with the given name.
 If it fails then it returns nothing.
 """
-function try_determine_load_path(name::String, rel=nothing)::Nullable{String}
+function try_determine_load_path(name::String, rel)
     paths = list_local_paths(name, rel)
     paths = paths[first.(uv_access.(paths, R_OK)) .== 0] #0 means passes
-    length(paths)==0 ? Nullable{String}() : Nullable(first(paths))
+    length(paths)==0 ? nothing :  first(paths)
 end
 
 """
@@ -140,9 +142,9 @@ end
 Lists all the local paths to a given datadep.
 This may be an empty list
 """
-function list_local_paths(name::String, rel=nothing)
+function list_local_paths(name::String, rel)
     cands = preferred_paths(rel)
     joinpath.(cands, name)
 end
 
-list_local_paths(dd::AbstractDataDep, rel=nothing) = list_local_paths(dd.name, rel)
+list_local_paths(dd::AbstractDataDep, rel) = list_local_paths(dd.name, rel)

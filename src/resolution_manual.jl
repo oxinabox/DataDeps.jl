@@ -16,10 +16,10 @@ function handle_missing(datadep::ManualDataDep, calling_filepath)::String
             abort("User has aborted attempt to load datadep. Can not proceed without loading.")
         end
         lp = try_determine_load_path(datadep.name, calling_filepath)
-        if isnull(lp)
+        if lp == nothing
             info("Still failed to find $(datadep.name). User should reattempt to install it.")
         else
-            return get(lp)
+            return lp
         end
     end
 end

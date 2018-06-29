@@ -9,9 +9,7 @@ Even if that means it has to be downloaded first.
 Adding a path within it functions as expected.
 """
 macro datadep_str(namepath)
-    quote
-        resolve($(esc(namepath)), @__FILE__)
-    end
+    :(resolve($(esc(namepath)), @__FILE__))
 end
 
 
@@ -79,8 +77,8 @@ end
 "The core of the resolve function without any user friendly file stuff, returns the directory"
 function _resolve(datadep::AbstractDataDep, calling_filepath)::String
     lp = try_determine_load_path(datadep.name, calling_filepath)
-    dirpath = if !isnull(lp)
-        get(lp)
+    if lp != nothing
+        lp
     else
         handle_missing(datadep, calling_filepath)
     end
