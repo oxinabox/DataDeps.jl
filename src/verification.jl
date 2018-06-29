@@ -35,11 +35,11 @@ wanting to know what hash-line to add to the Registration line.
 """
 function run_checksum(hasher, path)
     res = hexchecksum(hasher, path)
-    warn("Checksum not provided, add to the Datadep Registration the following hash line")
+    @warn("Checksum not provided, add to the Datadep Registration the following hash line")
     if hasher==sha2_256
-        warn(repr(res))
+        @warn(repr(res))
     else
-        warn(repr((hasher, res)))
+        @warn(repr((hasher, res)))
     end
     return true
 end

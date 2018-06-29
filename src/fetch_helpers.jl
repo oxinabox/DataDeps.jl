@@ -46,9 +46,9 @@ function get_filename(remotepath)
         try_get_filename(remotepath)
     catch err
         # Catch *everything* here, as we can always recover and there are many things that can go wrong
-        warn("Could not resolve filename due to")
-        warn(err)
-        warn("falling back to using final part of remotepath")
+        @warn("Could not resolve filename due to")
+        @warn(err)
+        @warn("falling back to using final part of remotepath")
         filename = nothing
     end
 
