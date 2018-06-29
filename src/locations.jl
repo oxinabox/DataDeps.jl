@@ -3,9 +3,9 @@
 
 
 const standard_loadpath = joinpath.([
-    Pkg.Dir._pkgroot(); homedir(); # Common all systems
+    Base.DEPOT_PATH; homedir(); # Common all systems
 
-    @static if is_windows()
+    @static if Sys.iswindows()
         vcat(get.(ENV,
            ["APPDATA", "LOCALAPPDATA",
             "ProgramData", "ALLUSERSPROFILE", # Probably the same, on all systems where both exist
@@ -35,56 +35,26 @@ Then this returns a path to the deps/data dir for that package (as a Nullable).
 Which may or may not exist.
 If not in a package returns null
 """
-function try_determine_package_datadeps_dir(filepath)::Nullable{String}
-    # TODO: Consider rewriting this to just go up the directory tree
-    # checking for `deps/data`
-    package_roots = [LOAD_PATH; Pkg.dir()]
-    for root in package_roots
-        if startswith(filepath, root) && filepath!=root # if running from REPL from a root this can happen
-            inner_path = filepath[length(root) + 1:end]
-            first_pp, pkgname = splitpath(inner_path)
-            @assert(first_pp ∈ ["/", "\\"], "expected \"/\", got \"$(first_pp)\"")
-            datadeps_dir = joinpath(root, pkgname,"deps","data")
-            return Nullable(datadeps_dir)
+function try_determine_package_datadeps_dir(filepath)::Union{String, Nothing}
+    olddir=filepath
+    curdir = dirname(filepath)
+    while(olddir!=curdir) # At root `dirname` returns it's input
+        olddir = curdir
+        curdir = dirname(curdir)
+        datadeps_dir = joinpath(root, pkgname,"deps","data")
+        if isdir(datadeps_dir)
+            return datadeps_dir
         end
     end
-    return Nullable{String}()
+    return nothing
 end
 
-"""
-    try_determine_package_datadeps_dir(::Void)
-
-Fallback for if being run in some enviroment (eg the REPL),
-where @__FILE__ is nothing.
-Falls back to using the current directory.
-So that if you are prototyping in the REPL (etc) for a package,
-and you are in the packages directory, then
-"""
-function try_determine_package_datadeps_dir(::Nothing)
-    try_determine_package_datadeps_dir(pwd())
-end
-
-
-
-"""
-    try_determine_package_datadeps_dir(module::Module)
-
-Takes a module, attempts to located the file for that module,
-and thus the deps/data dir for the package that declares it.
-Then this returns a path to the deps/data dir for that package (as a Nullable).
-Which may or may not exist.
-If not in a package returns null
-"""
-function try_determine_package_datadeps_dir(mm::Module)::Nullable{String}
-    module_file  = first(function_loc(mm.eval, (Any,))) # Hack
-    try_determine_package_datadeps_dir(module_file)
-end
 
 
 ############################################
 
 """
-    preferred_paths([calling_filepath|module|nothing]; use_package_dir=true)
+    preferred_paths(calling_filepath; use_package_dir=true)
 
 returns the datadeps load_path
 plus if calling_filepath is provided and `use_package_dir=true`
@@ -93,8 +63,9 @@ and is currently inside a package directory then it also includes the path to th
 function preferred_paths(rel=nothing; use_package_dir=true)
     cands = String[]
     if use_package_dir
+        @assert rel != nothing
         pkg_deps_root = try_determine_package_datadeps_dir(rel)
-        !isnull(pkg_deps_root) && push!(cands, get(pkg_deps_root))
+        pkg_deps_root != nothing && push!(cands, get(pkg_deps_root))
     end
 
     append!(cands, env_list("DATADEPS_LOAD_PATH", []))
