@@ -1,5 +1,4 @@
 # This file is a part of DataDeps.jl. License is MIT.
-
 ## Core path determining stuff
 
 
@@ -147,7 +146,7 @@ function determine_save_path(name, rel=nothing)::String
         0 == first(uv_access(path, W_OK))
     end
     if path_ind==0
-        error("No possible save path")
+        throw(NoValidPathError("No possible save path"))
     end
     return joinpath(cands[path_ind], name)
 end

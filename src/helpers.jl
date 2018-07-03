@@ -16,7 +16,7 @@ if is_unix() && Sys.KERNEL != :FreeBSD
             target = joinpath(directory, file)
             return pipeline(`gzip -k -d $target`)
         end
-        error("I don't know how to unpack $file")
+        throw(ArguementError("I don't know how to unpack $file"))
     end
 end
 
@@ -43,10 +43,8 @@ if is_windows()
         elseif (extension == ".zip" || extension== ".gz" || extension == ".7z" || extension == ".tar" ||
                 (extension == ".exe" && secondary_extension == ".7z"))
             return (`$exe7z x $file -y -o$directory`)
-        
-        
         end
-        error("I don't know how to unpack $file")
+        throw(ArguementError("I don't know how to unpack $file"))
     end
 end
 

@@ -38,7 +38,7 @@ function resolve(datadep::AbstractDataDep, inner_filepath, calling_filepath)::St
             warn("Something has gone wrong. What would you like to do?")
             input_choice(
                 ('A', "Abort -- this will error out",
-                    ()->error("Aborted resolving data dependency, program could not continue.")),
+                    ()->abort("Aborted resolving data dependency, program could not continue.")),
                 ('R', "Retry -- do this after fixing the problem outside of this script",
                     ()->nothing), # nothing to do
                 ('X', "Remove directory and retry  -- will retrigger download if there isn't another copy elsewhere",

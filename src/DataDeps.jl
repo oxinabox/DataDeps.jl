@@ -9,7 +9,7 @@ export DataDep, ManualDataDep
 export register, resolve, @datadep_str
 export unpack
 
-
+include("errors.jl")
 include("types.jl")
 
 include("util.jl")
