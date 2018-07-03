@@ -2,7 +2,9 @@
 
 function handle_missing(datadep::DataDep, calling_filepath)::String
     save_dir = determine_save_path(datadep.name, calling_filepath)
-    !env_bool("DATADEPS_DISABLE_DOWNLOAD") || error("DATADEPS_DISABLE_DOWNLOAD enviroment variable set. Can not trigger download.")
+    if env_bool("DATADEPS_DISABLE_DOWNLOAD")
+        throw(DisabledError("DATADEPS_DISABLE_DOWNLOAD enviroment variable set. Can not trigger download."))
+    end
     download(datadep, save_dir)
     save_dir
 end
@@ -113,7 +115,7 @@ function checksum_pass(hash, fetched_path)
         warn("Hash failed on $(fetched_path)")
         reply = input_choice("Do you wish to Abort, Retry download or Ignore", 'a','r','i')
         if reply=='a'
-            error("Hash Failed")
+            abort("Hash Failed, user elected not to retry")
         elseif reply=='r'
             return false
         end
@@ -139,7 +141,7 @@ function accept_terms(datadep::DataDep, localpath, remotepath, ::Void)
 end
 function accept_terms(datadep::DataDep, localpath, remotepath, i_accept_the_terms_of_use::Bool)
     if !i_accept_the_terms_of_use
-        error("User declined to download $(datadep.name). Can not proceed without the data.")
+        abort("User declined to download $(datadep.name). Can not proceed without the data.")
     end
     true
 end

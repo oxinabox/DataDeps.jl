@@ -8,7 +8,7 @@ function register(datadep::AbstractDataDep)
         warn("Over-writing registration of the datadep: $name")
     end
     if !is_valid_name(name)
-        error(name, " is not a valid name for a datadep. Valid names must be legal foldernames on Windows.")
+        throw(ArgumentError(name, " is not a valid name for a datadep. Valid names must be legal foldernames on Windows."))
     end
 
     registry[name] = datadep

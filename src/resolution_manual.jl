@@ -13,7 +13,7 @@ function handle_missing(datadep::ManualDataDep, calling_filepath)::String
     while true
         reply = input_choice("Once installed please enter 'y' reattempt loading, or 'a' to abort", 'y','a')
         if reply=='a'
-            error("User has aborted attempt to load datadep. Can not proceed without loading.")
+            abort("User has aborted attempt to load datadep. Can not proceed without loading.")
         end
         lp = try_determine_load_path(datadep.name, calling_filepath)
         if isnull(lp)
