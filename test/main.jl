@@ -2,6 +2,7 @@ using DataDeps
 using Base.Test
 using ExpectationStubs
 
+
 # HACK: todo, work out how ExpectationStubs should be changed to make this make sense
 Base.open(stub::Stub, t::Any, ::AbstractString) = stub(t)
 
@@ -11,12 +12,13 @@ withenv("DATADEPS_ALWAY_ACCEPT"=>"true") do
         @expect(dummyhash(::Any) = [0x12, 0x34])
 
         @stub dummydown
-        @expect(dummydown("http://www.example.com/eg.zip", ::String) = "eg.zip")
+        @expect(dummydown("http://www.example.com/eg.zip", ::String) = joinpath(@__DIR__, "eg.zip"))
+            # HACK: this gives a directory, because we can't trivially mock out the cd
 
         register(DataDep( "Test1",
          "A dummy message",
-         "http://www.example.com/eg.zip", # the remote-path to fetch it from, normally an URL. Passed to the `fetch_method`
-         (dummyhash, "1234"), #A hash that is used to check the data is right.
+         "http://www.example.com/eg.zip",
+         (dummyhash, "1234"),#
          fetch_method=dummydown
         ))
 

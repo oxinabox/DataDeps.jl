@@ -15,7 +15,7 @@ include("types.jl")
 include("util.jl")
 include("registration.jl")
 
-include("filename_solving.jl")
+
 include("locations.jl")
 include("verification.jl")
 
@@ -23,7 +23,8 @@ include("resolution.jl")
 include("resolution_automatic.jl")
 include("resolution_manual.jl")
 
-include("helpers.jl")
+include("fetch_helpers.jl")
+include("post_fetch_helpers.jl")
 include("deprecations.jl")
 
 end # module
