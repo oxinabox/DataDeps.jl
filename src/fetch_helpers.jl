@@ -1,5 +1,40 @@
 # This file is a part of DataDeps.jl. License is MIT.
 
+# TODO Remove this whole thing once https://github.com/JuliaWeb/HTTP.jl/pull/273
+
+"""
+    fetch_http(remotepath, localdir)
+
+Pass in a HTTP[/S] URL  and a directory to save it to,
+and it downloads that file, returing the local path.
+This is using the HTTP protocol's method of defining filenames in headers,
+if that information is present.
+"""
+function fetch_http(remotepath, localdir)
+    @assert(localdir |> isdir)
+    filename = get_filename(remotepath)
+    localpath = safer_joinpath(localdir, filename)
+    Base.download(remotepath, localpath)
+end
+
+
+"""
+    safer_joinpath(basepart, parts...)
+
+A variation on `joinpath`, that is more resistant to directory traveral attack
+The parts to be joined (excluding the `basepart`),
+are not allowed to contain `..`, or begin with a `/`.
+If they do then this throws an `DomainError`.
+"""
+function safer_joinpath(basepart, parts...)
+    explain =  "Possible Directory Traversal Attack detected."
+    for part in parts
+        contains(part, "..") && throw(DomainError(part, "contains illegal string \"..\". $explain"))
+        startswith(part, '/') && throw(DomainError(part, "begins with \"/\". $explain"))
+    end
+    joinpath(basepart, parts...)
+end
+
 
 """
     get_filename(remotepath)
@@ -17,13 +52,11 @@ function get_filename(remotepath)
         filename = nothing
     end
 
-    ret = if filename == nothing
+    if filename == nothing
         # couldn't get it from the headers
-        basename(remotepath)
-    else
-        filename
+        filename = basename(remotepath)
     end
-    ret
+    filename
 end
 
 

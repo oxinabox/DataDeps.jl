@@ -159,7 +159,7 @@ register(DataDep(
     remote_path::Union{String,Vector{String}...},
     [checksum::Union{String,Vector{String}...},]; # Optional, if not provided will generate
     # keyword args (Optional):
-    fetch_method=download # (remote_filepath, local_filepath)->Any
+    fetch_method=http_download # (remote_filepath, local_directory_path)->local_filepath
     post_fetch_method=identity # (local_filepath)->Any
 ))
 ```
@@ -187,12 +187,14 @@ register(DataDep(
     - Can take a vector of checksums, being one for each file, or a single checksum in which case the per file hashes are `xor`ed to get the target hash. (See [Recursive Structure](Recursive Structure) below)
 
 
- -  `fetch_method=download` a function to run to download the files.
-    - Function should take 2 parameters (remote_fikepath, local_filepath), and can return anything
-    - Defaults to `Base.download` which invokes commandline download tools.
+ -  `fetch_method=http_download` a function to run to download the files.
+    - Function should take 2 parameters `(remote_filepath, local_directorypath)`, and can must return the local filepath to the file downloaded
     - Can take a vector of methods, being one for each file, or a single method, in which case that method is used to download all of them. (See [Recursive Structure](Recursive Structure) below)
-    - Very few people will need to override this, but potentially it can be used to deal with things like authorisation (let me know if you try)
-
+	- Overloading this lets you change things about how the download is done -- the transport protocol.
+	- The default is suitable for HTTP[/S], without auth. Modifying it can add authentication or an entirely different protocol (e.g. git, google drive etc)
+	- This function is also responsible for workout out what the local file should be called (as this is protocol dependent)
+	
+	
  - `post_fetch_method` a function to run after the files have download
     - Should take the local filepath as its first and only argument. Can return anything.
     - Default is to do nothing.

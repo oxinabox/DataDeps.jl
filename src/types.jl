@@ -62,11 +62,13 @@ DataDep(
     - Can take a vector of checksums, being one for each file, or a single checksum in which case the per file hashes are `xor`ed to get the target hash. (See [Recursive Structure](Recursive Structure) below)
 
 
- -  `fetch_method=download` a function to run to download the files.
-    - Function should take 2 parameters (remote_fikepath, local_filepath), and can return anything
-    - Defaults to `Base.download` which invokes commandline download tools.
+ -  `fetch_method=fetch_http` a function to run to download the files.
+    - Function should take 2 parameters (remotepath, local_directory), and must return a local filepath
+    - It is responsible for determining what the local filename should be
+    - Change this to change the transfer protocol, for example to use an auth'ed connection.
+    - Default `fetch_http` is a wrapper around `Base.download` which invokes commandline download tools.
     - Can take a vector of methods, being one for each file, or a single method, in which case that method is used to download all of them. (See [Recursive Structure](Recursive Structure) below)
-    - Very few people will need to override this, but potentially it can be used to deal with things like authorisation (let me know if you try)
+    - Very few people will need to override this if they are just downloading public HTTP files. 
 
  - `post_fetch_method` a function to run after the files have download
     - Should take the local filepath as its first and only argument. Can return anything.
@@ -78,6 +80,11 @@ DataDep(
        - You can call `cwd()` to get the the data directory for your own functions. (Or `dirname(local_filepath)`)
     - Can take a vector of methods, being one for each file, or a single method, in which case that ame method is applied to all of the files. (See **Recursive Structure** in the README.md)
 """
-function DataDep(name::String, message::String, remotepath, hash=nothing; fetch_method=download, post_fetch_method=identity)
+function DataDep(name::String,
+                 message::String,
+                 remotepath, hash=nothing;
+                 fetch_method=fetch_http,
+                 post_fetch_method=identity)
+
     DataDep(name, remotepath, hash, fetch_method, post_fetch_method, message)
 end

@@ -67,7 +67,7 @@ If a vector of paths is provided
 and a vector of hashing methods (of any form)
 then they are all required to match.
 """
-function run_checksum(hash::Vector, path::Vector)
+function run_checksum(hash::AbstractVector, path::AbstractVector)
     all(run_checksum.(hash, path))
 end
 
@@ -84,6 +84,6 @@ and returns a UInt8 array of the hash.
 xored if there are multiple files
 """
 checksum(hasher, filename) = open(hasher, filename, "r")
-checksum(hasher, filenames::Vector) = xor.(checksum.(hasher, filenames)...)
+checksum(hasher, filenames::AbstractVector) = xor.(checksum.(hasher, filenames)...)
 
 hexchecksum(hasher, filename) = bytes2hex(checksum(hasher, filename))

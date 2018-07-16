@@ -65,18 +65,15 @@ Performs in (async) parallel if multiple paths are given
 """
 function run_fetch(fetch_method, remotepath, localdir)
     mkpath(localdir)
-    filename = get_filename(remotepath)
-    localpath = joinpath(localdir, filename)
-    #use the local folder and the remote filename
-    fetch_method(remotepath, localpath)
+    localpath = fetch_method(remotepath, localdir)
     localpath
 end
 
-function run_fetch(fetch_method, remotepaths::Vector, localdir)
+function run_fetch(fetch_method, remotepaths::AbstractVector, localdir)
     asyncmap(rp->run_fetch(fetch_method, rp, localdir),  remotepaths)
 end
 
-function run_fetch(fetch_methods::Vector, remotepaths::Vector, localdir)
+function run_fetch(fetch_methods::AbstractVector, remotepaths::AbstractVector, localdir)
     asyncmap((meth, rp)->run_fetch(meth, rp, localdir),  fetch_method, remotepaths)
 end
 
@@ -95,11 +92,11 @@ function run_post_fetch(post_fetch_method, fetched_path)
     end
 end
 
-function run_post_fetch(post_fetch_method, fetched_paths::Vector)
+function run_post_fetch(post_fetch_method, fetched_paths::AbstractVector)
     asyncmap(fp->run_post_fetch(post_fetch_method, fp),  fetched_paths)
 end
 
-function run_post_fetch(post_fetch_methods::Vector, fetched_paths::Vector)
+function run_post_fetch(post_fetch_methods::AbstractVector, fetched_paths::AbstractVector)
     asyncmap((meth, fp)->run_post_fetch(meth, fp),  post_fetch_methods, fetched_paths)
 end
 
