@@ -32,7 +32,7 @@ Where ever you want, so long as it gives an Open HTTP(/s) link to download it. *
  - I use an OwnCloud instance hosted by our national research infastructure.
  - Research data hosting like FigShare are a good idea.
  - You can just stick it on your website hosting if you are operating a website.
- - I'ld like to hear if anyoen has tested GoogleDrive or DropBox etc.
+ - I'd like to hear if anyone has tested GoogleDrive or DropBox etc.
 
 
 **(In theory other protocols and auth can be supported by using a different `fetch_method`)
@@ -94,7 +94,7 @@ Remember to add `DataDeps` to your `REQUIRE` file, so it will be automatically i
 
 ### Using a datadep string or `resolve` to get hold of the data.
 For any registered DataDep (see below), `datadep"Name"`, returns a path to a folder containing the data.
-If when that string macro is evaluated no such folder exists, then DataDeps will swing into action and coordiante the acquisition of the data into a folder, then return the path that now contains the data.
+If when that string macro is evaluated no such folder exists, then DataDeps will swing into action and coordinate the acquisition of the data into a folder, then return the path that now contains the data.
 
 You can also use `datadep"Name/subfolder/file.txt"` (and similar) to get a path to the file at  `subfolder/file.txt` within the data directory for `Name`.
 Just like when using the plain `datadep"Name"` this will if required downloadload the whole datadep (**not** just the file).
@@ -254,7 +254,7 @@ You can then edit the generated code to make it suitable for your use.
 
 
 ### Assuming direct control and customization
-The heirachy of methods for acquiring a datadep is:
+The hierachy of methods for acquiring a datadep is:
 
 `datadep"name/path"` ▶ `resolve("name/path", @__FILE__)` ▶ `resolve(::AbstractDataDep, "path", @__FILE__)` ▶ `download(::DataDep)`
 
@@ -342,7 +342,7 @@ For the user **oxinabox**
 ```
 
 ### Windows Standard Load Path
-For the user **oxinabox**, wen using JuliaPro 0.6.2.1, on windows 7.
+For the user **oxinabox**, when using JuliaPro 0.6.2.1, on windows 7.
 (Other configurations should be fairly similar).
 
 ```batch
