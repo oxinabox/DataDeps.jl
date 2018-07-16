@@ -7,7 +7,7 @@
 
 Pass in a HTTP[/S] URL  and a directory to save it to,
 and it downloads that file, returing the local path.
-This using the HTTP protocol's method of defining filenames in headers,
+This is using the HTTP protocol's method of defining filenames in headers,
 if that information is present.
 """
 function fetch_http(remotepath, localdir)
