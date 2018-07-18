@@ -12,7 +12,7 @@ AppVeyor Master: [![Build status](https://ci.appveyor.com/api/projects/status/kp
 
 ## What is DataDeps?
 DataDeps is a package for simplifying the management of data in your julia application.
-In particular it is designed to simplify the process of getting static data from some server into the local machine,
+In particular it is designed to simplify the process of getting static files from some server into the local machine,
 and making programs know where that data is.
 
 For a few examples of its usefulness see [this blog post](http://white.ucc.asn.au/2018/01/18/DataDeps.jl-Repeatabled-Data-Setup-for-Repeatable-Science.html)
