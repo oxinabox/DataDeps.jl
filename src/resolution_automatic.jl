@@ -97,7 +97,7 @@ function run_post_fetch(post_fetch_method, fetched_paths::AbstractVector)
 end
 
 function run_post_fetch(post_fetch_methods::AbstractVector, fetched_paths::AbstractVector)
-    asyncmap((meth, fp)->run_post_fetch(meth, fp),  post_fetch_methods, fetched_paths)
+    asyncmap(run_post_fetch,  post_fetch_methods, fetched_paths)
 end
 
 
@@ -109,7 +109,7 @@ Ensures the checksum passes, and handles the dialog with use user when it fails.
 """
 function checksum_pass(hash, fetched_path)
     if !run_checksum(hash, fetched_path)
-        @warn("Hash failed on $(fetched_path)")
+        @warn("Hash failed", fetched_path)
         reply = input_choice("Do you wish to Abort, Retry download or Ignore", 'a','r','i')
         if reply=='a'
             abort("Hash Failed, user elected not to retry")
@@ -144,8 +144,8 @@ function accept_terms(datadep::DataDep, localpath, remotepath, i_accept_the_term
 end
 
 function check_if_accept_terms(datadep::DataDep, localpath, remotepath)
-    @info("This program has requested access to the data dependency $(datadep.name).")
-    @info("which is not currently installed. It can be installed automatically, and you will not see this message again.")
-    @info("\n",datadep.extra_message,"\n\n")
+    println("This program has requested access to the data dependency $(datadep.name).")
+    println("which is not currently installed. It can be installed automatically, and you will not see this message again.")
+    println("\n",datadep.extra_message,"\n\n")
     input_bool("Do you want to download the dataset from $remotepath to \"$localpath\"?")
 end

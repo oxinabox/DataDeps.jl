@@ -33,7 +33,7 @@ function resolve(datadep::AbstractDataDep, inner_filepath, calling_filepath)::St
             return realpath(filepath) # resolve any symlinks for maximum compatibility with external applications
         else # Something has gone wrong
             @warn("DataDep $(datadep.name) found at \"$(dirpath)\". But could not read file at \"$(filepath)\".")
-            @warn("Something has gone wrong. What would you like to do?")
+            println("Something has gone wrong. What would you like to do?")
             input_choice(
                 ('A', "Abort -- this will error out",
                     ()->abort("Aborted resolving data dependency, program could not continue.")
