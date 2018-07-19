@@ -75,7 +75,7 @@ end
     # Use them both
     mentions_tweets = setdiff(all_tweets, nonmentions_tweets)
     @test length(mentions_tweets) > 0
-    @test all('@' .∈ collect(mentions_tweets))
+    @test all(Ref('@') .∈ collect(mentions_tweets))
 end
 
 
