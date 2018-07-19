@@ -1,7 +1,7 @@
 authors = ["oxinabox <oxinabox@ucc.asn.au>"]
 name = "DataDeps"
 uuid = "9ca5147a-7bb5-11e8-2d1a-6b423858166c"
-version = "0.4.0"
+version = "0.5.0"
 
 [deps]
 HTTP = "cd3eb016-35fb-5094-929b-558a96fad6f3"
