@@ -1,5 +1,6 @@
-using Base.Test
+using Test
 using DataDeps
+using DelimitedFiles
 
 ENV["DATADEPS_ALWAY_ACCEPT"]=true
 
@@ -11,8 +12,8 @@ ENV["DATADEPS_ALWAY_ACCEPT"]=true
      sha2_256
     ))
 
-    pi_string = readstring(datadep"Pi/10000.txt")
-    @test parse(pi_string) ≈ π
+    pi_string = read(datadep"Pi/10000.txt", String)
+    @test parse(Float64, pi_string) ≈ π
     @test parse(BigFloat, pi_string) ≈ π
 
 end
@@ -58,7 +59,7 @@ end
         print(out_fn)
         open(out_fn, "w") do out_fh
             for line in eachline(in_fn)
-                if !contains(line, "@")
+                if '@' ∉ line
                     println(out_fh, line)
                 end
             end
@@ -74,7 +75,7 @@ end
     # Use them both
     mentions_tweets = setdiff(all_tweets, nonmentions_tweets)
     @test length(mentions_tweets) > 0
-    @test all(contains.(collect(mentions_tweets), "@"))
+    @test all(Ref('@') .∈ collect(mentions_tweets))
 end
 
 

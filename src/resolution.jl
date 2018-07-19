@@ -9,9 +9,7 @@ Even if that means it has to be downloaded first.
 Adding a path within it functions as expected.
 """
 macro datadep_str(namepath)
-    quote
-        resolve($(esc(namepath)), @__FILE__)
-    end
+    :(resolve($(esc(namepath)), @__FILE__))
 end
 
 
@@ -34,15 +32,17 @@ function resolve(datadep::AbstractDataDep, inner_filepath, calling_filepath)::St
         if can_read_file(filepath)
             return realpath(filepath) # resolve any symlinks for maximum compatibility with external applications
         else # Something has gone wrong
-            warn("DataDep $(datadep.name) found at \"$(dirpath)\". But could not read file at \"$(filepath)\".")
-            warn("Something has gone wrong. What would you like to do?")
+            @warn("DataDep $(datadep.name) found at \"$(dirpath)\". But could not read file at \"$(filepath)\".")
+            println("Something has gone wrong. What would you like to do?")
             input_choice(
                 ('A', "Abort -- this will error out",
-                    ()->abort("Aborted resolving data dependency, program could not continue.")),
+                    ()->abort("Aborted resolving data dependency, program could not continue.")
+                ),
                 ('R', "Retry -- do this after fixing the problem outside of this script",
-                    ()->nothing), # nothing to do
+                    ()->nothing  # nothing to do
+                ),
                 ('X', "Remove directory and retry  -- will retrigger download if there isn't another copy elsewhere",
-                    ()->rm(dirpath, force=true, recursive=true);
+                    ()->rm(dirpath, force=true, recursive=true)
                 )
             )
         end
@@ -77,8 +77,8 @@ end
 "The core of the resolve function without any user friendly file stuff, returns the directory"
 function _resolve(datadep::AbstractDataDep, calling_filepath)::String
     lp = try_determine_load_path(datadep.name, calling_filepath)
-    dirpath = if !isnull(lp)
-        get(lp)
+    if lp != nothing
+        lp
     else
         handle_missing(datadep, calling_filepath)
     end

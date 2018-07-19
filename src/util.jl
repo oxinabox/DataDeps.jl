@@ -11,11 +11,11 @@ function splitpath(path::AbstractString)
    prev_path = path
    while(true)
        path, lastpart = splitdir(path)
-       length(lastpart)>0 && unshift!(ret, lastpart)
+       length(lastpart)>0 && pushfirst!(ret, lastpart)
        length(path)==0 && break
        if prev_path==path
             # catch the casewhere path begins with a root
-            unshift!(ret, path)
+            pushfirst!(ret, path)
             break
        end
        prev_path = path
@@ -62,8 +62,8 @@ Prompted the user for one of a list of options
 """
 function input_choice(prompt, options::Vararg{Char})::Char
     while(true)
-        info(prompt)
-        info("["*join(options, '/')*"]")
+        println(prompt)
+        println("["*join(options, '/')*"]")
         response = readline()
         length(response)==0 && continue
         reply = lowercase(first(response))

@@ -29,7 +29,7 @@ If they do then this throws an `DomainError`.
 function safer_joinpath(basepart, parts...)
     explain =  "Possible Directory Traversal Attack detected."
     for part in parts
-        contains(part, "..") && throw(DomainError(part, "contains illegal string \"..\". $explain"))
+        occursin(part, "..") && throw(DomainError(part, "contains illegal string \"..\". $explain"))
         startswith(part, '/') && throw(DomainError(part, "begins with \"/\". $explain"))
     end
     joinpath(basepart, parts...)
@@ -46,9 +46,7 @@ function get_filename(remotepath)
         try_get_filename(remotepath)
     catch err
         # Catch *everything* here, as we can always recover and there are many things that can go wrong
-        warn("Could not resolve filename due to")
-        warn(err)
-        warn("falling back to using final part of remotepath")
+        @warn("Could not resolve filename due to error (Fallback engaged)",remotepath, exception=err)
         filename = nothing
     end
 
@@ -93,4 +91,4 @@ function process_header_filename(raw::RegexMatch)::String
     strip(ret)
 end
 
-process_header_filename(::Void) = nothing
+process_header_filename(::Nothing) = nothing

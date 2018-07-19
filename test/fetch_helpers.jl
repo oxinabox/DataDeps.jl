@@ -1,5 +1,5 @@
 using DataDeps
-using Base.Test
+using Test
 import DataDeps.get_filename
 
 @testset "post processing" begin

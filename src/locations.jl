@@ -1,11 +1,10 @@
 # This file is a part of DataDeps.jl. License is MIT.
 ## Core path determining stuff
 
-
 const standard_loadpath = joinpath.([
-    Pkg.Dir._pkgroot(); homedir(); # Common all systems
+    Base.DEPOT_PATH; homedir(); # Common all systems
 
-    @static if is_windows()
+    @static if Sys.iswindows()
         vcat(get.(ENV,
            ["APPDATA", "LOCALAPPDATA",
             "ProgramData", "ALLUSERSPROFILE", # Probably the same, on all systems where both exist
@@ -16,11 +15,8 @@ const standard_loadpath = joinpath.([
          "/usr/share", "/usr/local/share"] # Unix Filestructure
     end], "datadeps")
 
-#ensure at least something in the loadpath exists when instaleld
+# ensure at least something in the loadpath exists when instaleld
 mkpath(first(standard_loadpath))
-
-
-
 
 
 ########################################################################################################################
@@ -35,56 +31,26 @@ Then this returns a path to the deps/data dir for that package (as a Nullable).
 Which may or may not exist.
 If not in a package returns null
 """
-function try_determine_package_datadeps_dir(filepath)::Nullable{String}
-    # TODO: Consider rewriting this to just go up the directory tree
-    # checking for `deps/data`
-    package_roots = [LOAD_PATH; Pkg.dir()]
-    for root in package_roots
-        if startswith(filepath, root) && filepath!=root # if running from REPL from a root this can happen
-            inner_path = filepath[length(root) + 1:end]
-            first_pp, pkgname = splitpath(inner_path)
-            @assert(first_pp ∈ ["/", "\\"], "expected \"/\", got \"$(first_pp)\"")
-            datadeps_dir = joinpath(root, pkgname,"deps","data")
-            return Nullable(datadeps_dir)
+function try_determine_package_datadeps_dir(filepath)::Union{String, Nothing}
+    olddir=filepath
+    curdir = dirname(filepath)
+    while(olddir!=curdir) # At root `dirname` returns it's input
+        olddir = curdir
+        curdir = dirname(curdir)
+        datadeps_dir = joinpath(curdir, "deps","data")
+        if isdir(datadeps_dir)
+            return datadeps_dir
         end
     end
-    return Nullable{String}()
+    return nothing
 end
 
-"""
-    try_determine_package_datadeps_dir(::Void)
-
-Fallback for if being run in some enviroment (eg the REPL),
-where @__FILE__ is nothing.
-Falls back to using the current directory.
-So that if you are prototyping in the REPL (etc) for a package,
-and you are in the packages directory, then
-"""
-function try_determine_package_datadeps_dir(::Void)
-    try_determine_package_datadeps_dir(pwd())
-end
-
-
-
-"""
-    try_determine_package_datadeps_dir(module::Module)
-
-Takes a module, attempts to located the file for that module,
-and thus the deps/data dir for the package that declares it.
-Then this returns a path to the deps/data dir for that package (as a Nullable).
-Which may or may not exist.
-If not in a package returns null
-"""
-function try_determine_package_datadeps_dir(mm::Module)::Nullable{String}
-    module_file  = first(function_loc(mm.eval, (Any,))) # Hack
-    try_determine_package_datadeps_dir(module_file)
-end
 
 
 ############################################
 
 """
-    preferred_paths([calling_filepath|module|nothing]; use_package_dir=true)
+    preferred_paths(calling_filepath; use_package_dir=true)
 
 returns the datadeps load_path
 plus if calling_filepath is provided and `use_package_dir=true`
@@ -93,8 +59,9 @@ and is currently inside a package directory then it also includes the path to th
 function preferred_paths(rel=nothing; use_package_dir=true)
     cands = String[]
     if use_package_dir
+        @assert rel != nothing
         pkg_deps_root = try_determine_package_datadeps_dir(rel)
-        !isnull(pkg_deps_root) && push!(cands, get(pkg_deps_root))
+        pkg_deps_root != nothing && push!(cands, pkg_deps_root)
     end
 
     append!(cands, env_list("DATADEPS_LOAD_PATH", []))
@@ -120,9 +87,9 @@ function uv_access(path, mode::AccessMode)
     req = Libc.malloc(Base._sizeof_uv_fs)
     try
         ret = ccall(:uv_fs_access, Cint,
-                (Ptr{Void}, Ptr{Void}, Cstring, Cint, Ptr{Void}),
+                (Ptr{Cvoid}, Ptr{Cvoid}, Cstring, Cint, Ptr{Cvoid}),
                 Base.eventloop(), req, path, mode, C_NULL)
-        ccall(:uv_fs_req_cleanup, Void, (Ptr{Void},), req)
+        ccall(:uv_fs_req_cleanup, Cvoid, (Ptr{Cvoid},), req)
     finally
         Libc.free(req)
     end
@@ -157,10 +124,10 @@ end
 Trys to find a local path to the datadep with the given name.
 If it fails then it returns nothing.
 """
-function try_determine_load_path(name::String, rel=nothing)::Nullable{String}
+function try_determine_load_path(name::String, rel)
     paths = list_local_paths(name, rel)
-    paths = paths[first.(uv_access.(paths, R_OK)) .== 0] #0 means passes
-    length(paths)==0 ? Nullable{String}() : Nullable(first(paths))
+    paths = paths[first.(uv_access.(paths, Ref(R_OK))) .== 0] # 0 means passes
+    length(paths)==0 ? nothing :  first(paths)
 end
 
 """
@@ -169,9 +136,9 @@ end
 Lists all the local paths to a given datadep.
 This may be an empty list
 """
-function list_local_paths(name::String, rel=nothing)
+function list_local_paths(name::String, rel)
     cands = preferred_paths(rel)
     joinpath.(cands, name)
 end
 
-list_local_paths(dd::AbstractDataDep, rel=nothing) = list_local_paths(dd.name, rel)
+list_local_paths(dd::AbstractDataDep, rel) = list_local_paths(dd.name, rel)

@@ -25,6 +25,5 @@ include("resolution_manual.jl")
 
 include("fetch_helpers.jl")
 include("post_fetch_helpers.jl")
-include("deprecations.jl")
 
 end # module
