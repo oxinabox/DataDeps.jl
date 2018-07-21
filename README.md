@@ -24,7 +24,7 @@ The short version is:
 1. Stick your data anywhere with a open HTTP link. (Skip this if it is already online.)
 2. Write a DataDep registration block.
 3. Refer to the data using `datadep"Dataname/file.csv` etc as if it were a file path, and DataDeps.jl will sort out getting in onto your system.
-4. For CI purposes set the `DATADEPS_ALWAY_ACCEPT` environment variable.
+4. For CI purposes set the `DATADEPS_ALWAYS_ACCEPT` environment variable.
 
 #### Where can I store my data online?
 Where ever you want, so long as it gives an Open HTTP(/s) link to download it. ** 
@@ -381,7 +381,7 @@ You can set these in the `.juliarc` file using the `ENV` dictionary if you don't
 However, most people shouldn't need to.
 DataDeps.jl tries to have very sensible defaults.
 
- - `DATADEPS_ALWAY_ACCEPT` -- bypasses the confirmation before downloading data. Set to `true` (or similar string)
+ - `DATADEPS_ALWAYS_ACCEPT` -- bypasses the confirmation before downloading data. Set to `true` (or similar string)
     - This is provided for scripting (in particular CI) use
     - Note that it remains your responsibility to understand and read any terms of the data use (this is remains true even if you don't turn on this bypass)
 	- default `false`
