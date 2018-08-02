@@ -37,5 +37,7 @@ install:
 # Run installer silently, output to C:\projects\julia
   - C:\projects\julia-binary.exe /S /D=C:\projects\julia
 
+build: off  # Disable MSBuild
+
 test_script:
   - C:\projects\julia\bin\julia -e "Pkg.test(\"DataDeps\")"

@@ -396,7 +396,7 @@ DataDeps.jl tries to have very sensible defaults.
 Feel free (encouraged even) to open issues and make PRs.
 
 ### Internal Docstrings
-As well as the usual all the publicly facing methods having docistrings,
+As well as the usual all the publicly facing methods having docstrings,
 most of the internal methods do also.
 You can view them in the source; or via the julia REPL etc.
 Hopefully the internal docstrings make it clear how each method is used.
