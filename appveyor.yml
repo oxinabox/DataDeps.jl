@@ -37,6 +37,8 @@ install:
 # Run installer silently, output to C:\projects\julia
   - C:\projects\julia-binary.exe /S /D=C:\projects\julia
 
+build: off  # Disable MSBuild
+
 build_script:
 # Need to convert from shallow to complete for Pkg.clone to work
   - IF EXIST .git\shallow (git fetch --unshallow)
