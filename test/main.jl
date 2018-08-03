@@ -6,7 +6,7 @@ using ExpectationStubs
 # HACK: todo, work out how ExpectationStubs should be changed to make this make sense
 Base.open(stub::Stub, t::Any, ::AbstractString) = stub(t)
 
-withenv("DATADEPS_ALWAY_ACCEPT"=>"true") do
+withenv("DATADEPS_ALWAYS_ACCEPT"=>"true") do
     @testset "automatic download" begin
         @stub dummyhash
         @expect(dummyhash(::Any) = [0x12, 0x34])
