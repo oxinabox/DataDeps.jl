@@ -450,3 +450,6 @@ Alternatives that I am aware of are:
   - [MLOSS](http://mloss.org/software/view/705/)
   - [Release Blog Post (as above)](http://white.ucc.asn.au/2018/01/18/DataDeps.jl-Repeatabled-Data-Setup-for-Repeatable-Science.html)
   - [DataDepsGenerators.jl (as above)](https://github.com/oxinabox/DataDepsGenerators.jl)
+ 
+ #### Paper Preprint
+ [White, L.; Togneri, R.; Liu, W. & Bennamoun, M. DataDeps.jl: Repeatable Data Setup for Replicable Data Science ArXiv e-prints, 2018](https://arxiv.org/abs/1808.01091)
