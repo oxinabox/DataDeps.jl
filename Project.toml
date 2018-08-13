@@ -15,4 +15,4 @@ ExpectationStubs = "cd0106a6-6d98-567f-99b2-156dd1635c57"
 DelimitedFiles = "8bb1440f-4735-579b-a4ab-409b98df4dab"
 
 [targets]
-test = ["Test", "ExpectationStubs, "DelimitedFiles"]
+test = ["Test", "ExpectationStubs", "DelimitedFiles"]
