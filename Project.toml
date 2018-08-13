@@ -12,6 +12,7 @@ SHA = "ea8e919c-243c-51af-8825-aaa63cd721ce"
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 ExpectationStubs = "cd0106a6-6d98-567f-99b2-156dd1635c57"
+DelimitedFiles = "8bb1440f-4735-579b-a4ab-409b98df4dab"
 
 [targets]
-test = ["Test", "ExpectationStubs"]
+test = ["Test", "ExpectationStubs, "DelimitedFiles"]
