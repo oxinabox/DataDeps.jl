@@ -12,7 +12,7 @@ end
 """
     Base.download(
         datadep::DataDep,
-        localpath;
+        localdir;
         remotepath=datadep.remotepath,
         skip_checksum=false,
         i_accept_the_terms_of_use=nothing)
@@ -25,7 +25,7 @@ to be exectuted it will be downloaded if not already present.
 Invoking this `download` method manually is normally for purposes of debugging,
 As such it include a number of parameters that most people will not want to use.
 
- - `localpath`: this is the local path to save to.
+ - `localdir`: this is the local directory to save to.
  - `remotepath`: the remote path to fetch the data from, use this e.g. if you can't access the normal path where the data should be, but have an alternative.
  - `skip_checksum`: setting this to true causes the checksum to not be checked. Use this if the data has changed since the checksum was set in the registry, or for some reason you want to download different data.
  - `i_accept_the_terms_of_use`: use this to bypass the I agree to terms screen. Useful if you are scripting the whole process, or using annother system to get confirmation of acceptance.
