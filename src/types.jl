@@ -34,8 +34,8 @@ DataDep(
     remote_path::Union{String,Vector{String}...},
     [checksum::Union{String,Vector{String}...},]; # Optional, if not provided will generate
     # keyword args (Optional):
-    fetch_method=download # (remote_filepath, local_filepath)->Any
-    post_fetch_method=download # (local_filepath)->Any
+    fetch_method=fetch_http # (remote_filepath, local_directory)->local_filepath
+    post_fetch_method=identity # (local_filepath)->Any
 )
 ```
 
