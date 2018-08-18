@@ -11,7 +11,7 @@ This is using the HTTP protocol's method of defining filenames in headers,
 if that information is present.
 """
 function fetch_http(remotepath, localdir)
-    @assert(localdir |> isdir)
+    @assert(isdir(localdir))
     filename = get_filename(remotepath)
     localpath = safer_joinpath(localdir, filename)
     Base.download(remotepath, localpath)
@@ -27,7 +27,7 @@ are not allowed to contain `..`, or begin with a `/`.
 If they do then this throws an `DomainError`.
 """
 function safer_joinpath(basepart, parts...)
-    explain =  "Possible Directory Traversal Attack detected."
+    explain =  "Possible directory traversal attack detected."
     for part in parts
         occursin(part, "..") && throw(DomainError(part, "contains illegal string \"..\". $explain"))
         startswith(part, '/') && throw(DomainError(part, "begins with \"/\". $explain"))
