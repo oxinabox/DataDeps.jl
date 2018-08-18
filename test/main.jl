@@ -35,5 +35,24 @@ withenv("DATADEPS_ALWAY_ACCEPT"=>"true") do
         macroexpand(:(@datadep_str var)) # this line would throw an error if the varibles were being handle wrong
         @test true
     end
+	
+	
+    @testset "Ensure when errors occur the datadep will still retrydownloading" begin
+        @testset "error in fetch" begin
+            use_count = 0
+            function error_down(rp,lp)
+                use_count += 1
+                error("no download for you")
+            end
 
+            register(DataDep("TestErrorFetch", "dummy message", "http://example.void", Any,
+                             fetch_method = error_down
+                            ))
+            @test_throws Exception datadep"TestErrorFetch"
+            @test use_count == 1
+            
+            @test_throws Exception datadep"TestErrorFetch"
+            @test use_count == 2 # it should have tried to download again
+        end
+    end
 end
