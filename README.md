@@ -391,7 +391,9 @@ DataDeps.jl tries to have very sensible defaults.
  - `DATADEPS_DISABLE_DOWNLOAD` -- causes any action that would result in the download being triggered to throw an exception.
    - useful e.g. if you are in an environment with metered data, where your datasets should have already been downloaded earlier, and if there were not you want to respond to the situation rather than let DataDeps download them for you.
    - default `false`
+ - `DATADEPS_DISABLE_ERROR_CLEANUP` -- By default DataDeps.jl will cleanup the directory the datadep was being downloaded to if there is an error during the resolution (In any of the `fetch`, `checksum`, or `post_fetch`). For debugging purposes you may wish to disable this cleanup step so you can interrogate the files by hand.
 
+ 
 ## Extending DataDeps.jl for Contributors
 Feel free (encouraged even) to open issues and make PRs.
 

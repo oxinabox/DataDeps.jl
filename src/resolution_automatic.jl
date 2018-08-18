@@ -45,15 +45,21 @@ function Base.download(
 
     accept_terms(datadep, localdir, remotepath, i_accept_the_terms_of_use)
 
-    local fetched_path
-    while true
-        fetched_path = run_fetch(datadep.fetch_method, remotepath, localdir)
-        if skip_checksum || checksum_pass(datadep.hash, fetched_path)
-            break
+    mkpath(localdir)
+    try
+        local fetched_path
+        while true # this is a Do-While loop
+            fetched_path = run_fetch(datadep.fetch_method, remotepath, localdir)
+            if skip_checksum || checksum_pass(datadep.hash, fetched_path)
+                break
+            end
         end
-    end
 
-    run_post_fetch(datadep.post_fetch_method, fetched_path)
+        run_post_fetch(datadep.post_fetch_method, fetched_path)
+    catch err
+        env_bool("DATADEPS_DISABLE_ERROR_CLEANUP") || rm(localdir, force=true, recursive=true)
+        rethrow(err)
+    end
 end
 
 """
@@ -64,7 +70,6 @@ into the local directory and local paths.
 Performs in (async) parallel if multiple paths are given
 """
 function run_fetch(fetch_method, remotepath, localdir)
-    mkpath(localdir)
     localpath = fetch_method(remotepath, localdir)
     localpath
 end
