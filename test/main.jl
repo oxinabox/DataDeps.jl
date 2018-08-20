@@ -24,8 +24,6 @@ withenv("DATADEPS_ALWAYS_ACCEPT"=>"true") do
 
         @test endswith(datadep"Test1", "Test1") || endswith(datadep"Test1", "Test1/") ||  endswith(datadep"Test1", "Test1\\")
         
-        @show dummydown
-        @show dummyhash
         @test all_expectations_used(dummyhash)
         @test all_expectations_used(dummydown)
 
@@ -46,10 +44,10 @@ withenv("DATADEPS_ALWAYS_ACCEPT"=>"true") do
             register(DataDep("TestErrorChecksum", "dummy message", "http://example.void",
                              (error, "1234"); # this will throw an error
                              fetch_method=dummydown))
-            @test_throws Exception datadep"TestErrorChecksum"
+            @test_throws ErrorException datadep"TestErrorChecksum"
             @test @usecount(dummydown(::Any, ::Any)) == 1
             
-            @test_throws Exception datadep"TestErrorChecksum"
+            @test_throws ErrorException datadep"TestErrorChecksum"
             @test @usecount(dummydown(::Any, ::Any)) == 2 # it should have tried to download again
         end
 
@@ -61,10 +59,10 @@ withenv("DATADEPS_ALWAYS_ACCEPT"=>"true") do
                              fetch_method=dummydown,
                              post_fetch_method = error
                             ))
-            @test_throws Exception datadep"TestErrorPostFetch"
+            @test_throws ErrorException datadep"TestErrorPostFetch"
             @test @usecount(dummydown(::Any, ::Any)) == 1
             
-            @test_throws Exception datadep"TestErrorPostFetch"
+            @test_throws ErrorException datadep"TestErrorPostFetch"
             @test @usecount(dummydown(::Any, ::Any)) == 2 # it should have tried to download again
         end
 
@@ -79,10 +77,10 @@ withenv("DATADEPS_ALWAYS_ACCEPT"=>"true") do
             register(DataDep("TestErrorFetch", "dummy message", "http://example.void", Any,
                              fetch_method = error_down
                             ))
-            @test_throws Exception datadep"TestErrorFetch"
+            @test_throws ErrorException datadep"TestErrorFetch"
             @test use_count == 1
             
-            @test_throws Exception datadep"TestErrorFetch"
+            @test_throws ErrorException datadep"TestErrorFetch"
             @test use_count == 2 # it should have tried to download again
         end
     end
