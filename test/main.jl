@@ -40,11 +40,14 @@ withenv("DATADEPS_ALWAYS_ACCEPT"=>"true") do
     @testset "Ensure when errors occur the datadep will still retrydownloading" begin
         @testset "error in checksum" begin
             @stub dummydown
-            @expect dummydown(::Any, ::Any) = joinpath(@__DIR__, "eg.zip")
+            @expect dummydown(::Any, ::Any) = @__FILE__ # give path to an actual file so `open` works
+            
+
             register(DataDep("TestErrorChecksum", "dummy message", "http://example.void",
                              (error, "1234"); # this will throw an error
                              fetch_method=dummydown))
             @test_throws ErrorException datadep"TestErrorChecksum"
+            #datadep"TestErrorChecksum"
             @test @usecount(dummydown(::Any, ::Any)) == 1
             
             @test_throws ErrorException datadep"TestErrorChecksum"
