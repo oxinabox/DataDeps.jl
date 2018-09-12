@@ -1,12 +1,36 @@
 # This file is a part of DataDeps.jl. License is MIT.
 
+"""
+    handle_missing(datadep::DataDep, calling_filepath)::String
+
+This function is called when the datadep is missing.
+"""
 function handle_missing(datadep::DataDep, calling_filepath)::String
     save_dir = determine_save_path(datadep.name, calling_filepath)
-    if env_bool("DATADEPS_DISABLE_DOWNLOAD")
-        throw(DisabledError("DATADEPS_DISABLE_DOWNLOAD enviroment variable set. Can not trigger download."))
-    end
     download(datadep, save_dir)
     save_dir
+end
+
+
+"""
+    ensure_download_permitted()
+
+This function will throw an error if download functionality has been disabled.
+Otherwise will do nothing.
+"""
+function ensure_download_permitted()
+    if env_bool("DATADEPS_DISABLE_DOWNLOAD")
+        throw(DisabledError("DATADEPS_DISABLE_DOWNLOAD enviroment variable set."))
+    end
+    if env_bool("CI") && !haskey(ENV, "DATADEPS_ALWAYS_ACCEPT")
+        throw(DisabledError("DataDeps download disabled, as we appear to be in a CI environment, " *
+                            "and the environment variable `DATADEPS_ALWAYS_ACCEPT` is not set.\n" *
+                            "If this is indeed running in a headless CI environment, then " *
+                            "set the `DATADEPS_ALWAYS_ACCEPT` environment variable to `true` to bypass " *
+                            "the accept download prompt (if you do wish to always accept.)\n" *
+                            "If not, then either unset the `CI` environment variable from true, or " *
+                            "set `DATADEPS_ALWAYS_ACCEPT` to `false` for the normal prompt behaviour."))
+    end
 end
 
 """
@@ -42,6 +66,8 @@ function Base.download(
     remotepath=datadep.remotepath,
     i_accept_the_terms_of_use = nothing,
     skip_checksum=false)
+
+    ensure_download_permitted()
 
     accept_terms(datadep, localdir, remotepath, i_accept_the_terms_of_use)
 
