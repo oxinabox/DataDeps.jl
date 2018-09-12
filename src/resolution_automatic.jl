@@ -30,7 +30,7 @@ As such it include a number of parameters that most people will not want to use.
  - `skip_checksum`: setting this to true causes the checksum to not be checked. Use this if the data has changed since the checksum was set in the registry, or for some reason you want to download different data.
  - `i_accept_the_terms_of_use`: use this to bypass the I agree to terms screen. Useful if you are scripting the whole process, or using annother system to get confirmation of acceptance.
      - For automation perposes you can set the enviroment variable `DATADEPS_ALWAYS_ACCEPT`
-     - If not set, and if `DATADEPS_ALWAYS_ACCEPT` is not set, then the user will be prompted
+     - If not set, and if `DATADEPS_ALWAYS_ACCEPT` is not set, then the user will be prompted.
      - Strictly speaking these are not always terms of use, it just refers to the message and permission to download.
 
  If you need more control than this, then your best bet is to construct a new DataDep object, based on the original,
@@ -45,15 +45,21 @@ function Base.download(
 
     accept_terms(datadep, localdir, remotepath, i_accept_the_terms_of_use)
 
-    local fetched_path
-    while true
-        fetched_path = run_fetch(datadep.fetch_method, remotepath, localdir)
-        if skip_checksum || checksum_pass(datadep.hash, fetched_path)
-            break
+    mkpath(localdir)
+    try
+        local fetched_path
+        while true # this is a Do-While loop
+            fetched_path = run_fetch(datadep.fetch_method, remotepath, localdir)
+            if skip_checksum || checksum_pass(datadep.hash, fetched_path)
+                break
+            end
         end
-    end
 
-    run_post_fetch(datadep.post_fetch_method, fetched_path)
+        run_post_fetch(datadep.post_fetch_method, fetched_path)
+    catch err
+        env_bool("DATADEPS_DISABLE_ERROR_CLEANUP") || rm(localdir, force=true, recursive=true)
+        rethrow(err)
+    end
 end
 
 """
@@ -64,7 +70,6 @@ into the local directory and local paths.
 Performs in (async) parallel if multiple paths are given
 """
 function run_fetch(fetch_method, remotepath, localdir)
-    mkpath(localdir)
     localpath = fetch_method(remotepath, localdir)
     localpath
 end

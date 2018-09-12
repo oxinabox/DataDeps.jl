@@ -23,7 +23,7 @@ withenv("DATADEPS_ALWAYS_ACCEPT"=>"true") do
         ))
 
         @test endswith(datadep"Test1", "Test1") || endswith(datadep"Test1", "Test1/") ||  endswith(datadep"Test1", "Test1\\")
-
+        
         @test all_expectations_used(dummyhash)
         @test all_expectations_used(dummydown)
 
@@ -36,4 +36,58 @@ withenv("DATADEPS_ALWAYS_ACCEPT"=>"true") do
         @test true
     end
 
+
+    @testset "Ensure when errors occur the datadep will still retrydownloading" begin
+        @testset "error in checksum" begin
+            @stub dummydown
+            @expect dummydown(::Any, ::Any) = @__FILE__ # give path to an actual file so `open` works
+            
+
+            register(DataDep("TestErrorChecksum", "dummy message", "http://example.void",
+                             (error, "1234"); # this will throw an error
+                             fetch_method=dummydown))
+            @test_throws ErrorException datadep"TestErrorChecksum"
+            #datadep"TestErrorChecksum"
+            @test @usecount(dummydown(::Any, ::Any)) == 1
+            
+            @test_throws ErrorException datadep"TestErrorChecksum"
+            @test @usecount(dummydown(::Any, ::Any)) == 2 # it should have tried to download again
+        end
+
+        @testset "error in post fetch" begin
+            @stub dummydown
+            @expect dummydown(::Any, ::Any) = joinpath(@__DIR__, "eg.zip")
+            
+            register(DataDep("TestErrorPostFetch", "dummy message", "http://example.void", Any,
+                             fetch_method=dummydown,
+                             post_fetch_method = error
+                            ))
+            @test_throws ErrorException datadep"TestErrorPostFetch"
+            @test @usecount(dummydown(::Any, ::Any)) == 1
+            
+            @test_throws ErrorException datadep"TestErrorPostFetch"
+            @test @usecount(dummydown(::Any, ::Any)) == 2 # it should have tried to download again
+        end
+
+
+        @testset "error in fetch" begin
+            use_count = 0
+            function error_down(rp,lp)
+                use_count += 1
+                error("no download for you")
+            end
+
+            register(DataDep("TestErrorFetch", "dummy message", "http://example.void", Any,
+                             fetch_method = error_down
+                            ))
+            @test_throws ErrorException datadep"TestErrorFetch"
+            @test use_count == 1
+            
+            @test_throws ErrorException datadep"TestErrorFetch"
+            @test use_count == 2 # it should have tried to download again
+        end
+    end
 end
+
+
+
