@@ -47,7 +47,6 @@ withenv("DATADEPS_ALWAYS_ACCEPT"=>"true") do
                              (error, "1234"); # this will throw an error
                              fetch_method=dummydown))
             @test_throws ErrorException datadep"TestErrorChecksum"
-            #datadep"TestErrorChecksum"
             @test @usecount(dummydown(::Any, ::Any)) == 1
             
             @test_throws ErrorException datadep"TestErrorChecksum"
@@ -91,3 +90,17 @@ end
 
 
 
+
+@testset "Ensure disabled if in CI #70" begin
+    withenv("CI"=> "true") do
+        @assert !haskey(ENV, "DATADEPS_ALWAYS_ACCEPT")
+        @stub dummydown
+        @expect dummydown(::Any, ::Any) = @__FILE__ # give path to an actual file so `open` works
+
+        register(DataDep("TestErrorInCI", "dummy message", "http://example.void", Any,
+                         fetch_method=dummydown))
+        @test_throws DataDeps.DisabledError datadep"TestErrorInCI"
+        @test @usecount(dummydown(::Any, ::Any)) == 0
+        
+    end
+end
