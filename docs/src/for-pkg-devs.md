@@ -2,17 +2,17 @@
 
 ### Examples
  - [the aformentioned blog post](http://white.ucc.asn.au/2018/01/18/DataDeps.jl-Repeatabled-Data-Setup-for-Repeatable-Science.html)
- - [Examples in the test code](test/examples.jl)
- - [Manual examples from the test code](test/examples_manual.jl)
+ - [Examples in the test code](https://github.com/oxinabox/DataDeps.jl/blob/master/test/examples.jl)
+ - [Manual examples from the test code](https://github.com/oxinabox/DataDeps.jl/blob/master/test/examples_manual.jl)
 
 ### Installation
 As normal for julia packages install DataDeps.jl using:
 
 ```
-julia> Pkg.add("DataDeps")
+pkg> add DataDeps
 ```
 
-Remember to add `DataDeps` to your `REQUIRE` file, so it will be automatically installed for end-users.
+This will add `DataDeps` to your `Project.toml` file, so it will be automatically installed for end-users.
 
 ### Using a datadep string or `resolve` to get hold of the data.
 For any registered DataDep (see below), `datadep"Name"`, returns a path to a folder containing the data.
@@ -64,6 +64,10 @@ One would also `include` that registrations file into the `__init__` function in
 
 
 ### Registering a DataDep
+When we say registering a DataDep we do not mean a centralised universal shared registry.
+Registring simply means defining the specifics of the DataDep in your code.
+This is done in a declaritie manner.
+
 A DataDeps registration is a block of code declaring a dependency.
 You should put it somewhere that it will be executed before any other code in your script that depends on that data.
 In most cases it is best to put it inside the  [modules's `__init__()` function](https://docs.julialang.org/en/stable/manual/modules/#Module-initialization-and-precompilation-1).
@@ -71,7 +75,7 @@ In most cases it is best to put it inside the  [modules's `__init__()` function]
 
 To do the actual registration one just  calls `register(::AbstractDataDep)`.
 The rest of this section is basically about the constructors for the `DataDep` type.
-It is pretty flexible. See the [examples](#examples).
+It is pretty flexible. Best is to see the examples above.
 
 The basic Registration block looks like: (Type parameters are shown below are a simplifaction)
 ```
