@@ -97,7 +97,7 @@ register(DataDep(
  - *Message*: A message displayed to the user for they are asked if they want to downloaded it.
     - This is normally used to give a link to the original source of the data, a paper to be cited etc.
  - *remote_path*: where to fetch the data from. Normally a string or strings) containing an URL
-    - This is usually a string, or a vector of strings (or a vector of vector... see [Recursive Structure](Recursive Structure) below)
+    - This is usually a string, or a vector of strings (or a vector of vector... see [Recursive Structure](@ref) below)
 
 #### Optional Fields
  - *checksum* this is very flexible, it is used to check the files downloaded correctly
@@ -108,14 +108,13 @@ register(DataDep(
 	      - Such as any of the functions from [SHA.jl](https://github.com/staticfloat/SHA.jl), eg `sha3_384`, `sha1_512`
 	      - or `md5` from [MD5.jl](https://github.com/oxinabox/MD5.jl)
   - If you want to use a different hashing algorithm, but don't know the sum, you can provide just the `hashfun` and a warning message will be displayed, giving the correct tuple of `(hashfun, targethex)` that should be added to the registration block.
-
 	- If you don't want to provide a checksum,  because your data can change pass in the type `Any` which will suppress the warning messages. (But see above warnings about "what if my data is dynamic")
-    - Can take a vector of checksums, being one for each file, or a single checksum in which case the per file hashes are `xor`ed to get the target hash. (See [Recursive Structure](Recursive Structure) below)
+    - Can take a vector of checksums, being one for each file, or a single checksum in which case the per file hashes are `xor`ed to get the target hash. (See [Recursive Structure](@ref) below)
 
 
  -  `fetch_method=http_download` a function to run to download the files.
     - Function should take 2 parameters `(remote_filepath, local_directorypath)`, and can must return the local filepath to the file downloaded
-    - Can take a vector of methods, being one for each file, or a single method, in which case that method is used to download all of them. (See [Recursive Structure](Recursive Structure) below)
+    - Can take a vector of methods, being one for each file, or a single method, in which case that method is used to download all of them. (See [Recursive Structure](@ref) below)
 	- Overloading this lets you change things about how the download is done -- the transport protocol.
 	- The default is suitable for HTTP[/S], without auth. Modifying it can add authentication or an entirely different protocol (e.g. git, google drive etc)
 	- This function is also responsible for workout out what the local file should be called (as this is protocol dependent)
@@ -129,7 +128,7 @@ register(DataDep(
     - It should be noted that it `post_fetch_method` runs from within the data directory
        - which means operations that just write to the current working directory (like `rm` or `mv` or ```run(`SOMECMD`))``` just work.
        - You can call `cwd()` to get the the data directory for your own functions. (Or `dirname(local_filepath)`)
-    - Can take a vector of methods, being one for each file, or a single method, in which case that ame method is applied to all of the files. (See [Recursive Structure](Recursive Structure) below)
+    - Can take a vector of methods, being one for each file, or a single method, in which case that ame method is applied to all of the files. (See [Recursive Structure](@ref) below)
 
 
 #### Recursive Structure
