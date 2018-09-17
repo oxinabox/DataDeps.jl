@@ -4,9 +4,13 @@ AppVeyor Master: [![Build status](https://ci.appveyor.com/api/projects/status/kp
 
 
 
-## See Also
+[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://oxinabox.github.io/DataDeps.jl/stable)
+[![](https://img.shields.io/badge/docs-latest-blue.svg)](https://oxinabox.github.io/DataDeps.jl/latest)
 
-### Software using DataDeps.jl
+Please see the detailed documentation linked above.
+
+
+## Software using DataDeps.jl
 It might help to look at DataDeps.jl is being used to understand how it maybe used for your project.
 Some of these add some additional abstraction or niceness for users on top of the DataDeps.jl core functionality.
 
@@ -17,25 +21,7 @@ Some of these add some additional abstraction or niceness for users on top of th
 
 (Feel free to submit a PR adding a link your Package, or research script here.)
 
-### Other similar packages:
-DataDeps.jl isn't the answer to all your download needs.
-It is focused squarely on static data.
-It might not be good for your use case.
-
-Alternatives that I am aware of are:
-
- - [RemoteFiles.jl](https://github.com/helgee/RemoteFiles.jl): keeps local files up to date with remotes. In someways it is the opposite of DataDeps.jl (which means it is actually very similar in many ways).
- - [BinaryProvider.jl](https://github.com/JuliaPackaging/BinaryProvider.jl) downloads binaries intended as part of a build chain. I'm pretty sure you can trick it into downloading data.
- - [`Base.download`](https://docs.julialang.org/en/stable/stdlib/file/#Base.download) if your situtation is really simple just sticking a `download` into the `deps/build.jl` file might do you just fine.
-
- Outside of julia's ecosystem is
-
-  - [Python: Quilt](https://github.com/quiltdata/quilt). Quilt uses a centralised data store, and allows the user to download the data as Python packages containing it in serialised from. It *might* be possible to use PyCall.jl to use this from julia.
-  - [R: suppdata](https://github.com/ropensci/suppdata), features extra stuff relating to published datasets (See also DataDepsGenerators.jl), it *might* be possible to use RCall.jl to use this from julia.
-  - [Node/Commandline: Datproject](https://datproject.org/) I'm not too familiar with this, it is a bit of an ecosystem of its own. I think using it from the commandline might satisfy many people's needs. Or automating it with shell calls in `build.jl`.
-  
-  
- ### Links:
+## Links:
 
   - [ANN: thread on Discourse](https://discourse.julialang.org/t/ann-datadeps-jl-bindeps-for-data/8457/15)
   - [MLOSS](http://mloss.org/software/view/705/)
