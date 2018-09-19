@@ -1,11 +1,11 @@
-## Usage for developers (including researchers)
+# Usage for developers (including researchers)
 
-### Examples
+## Examples
  - [the aformentioned blog post](http://white.ucc.asn.au/2018/01/18/DataDeps.jl-Repeatabled-Data-Setup-for-Repeatable-Science.html)
  - [Examples in the test code](https://github.com/oxinabox/DataDeps.jl/blob/master/test/examples.jl)
  - [Manual examples from the test code](https://github.com/oxinabox/DataDeps.jl/blob/master/test/examples_manual.jl)
 
-### Installation
+## Installation
 As normal for julia packages install DataDeps.jl using:
 
 ```
@@ -13,6 +13,9 @@ pkg> add DataDeps
 ```
 
 This will add `DataDeps` to your `Project.toml` file, so it will be automatically installed for end-users.
+
+
+## Accessing a DataDep
 
 ### Using a datadep string or `resolve` to get hold of the data.
 For any registered DataDep (see below), `datadep"Name"`, returns a path to a folder containing the data.
@@ -22,10 +25,20 @@ You can also use `datadep"Name/subfolder/file.txt"` (and similar) to get a path 
 Just like when using the plain `datadep"Name"` this will if required downloadload the whole datadep (**not** just the file).
 However, it will also engage additional features to verify that that file exists (and is readable),
 and if not will attempt to help the user resolve the situation.
-This is useful if files may have been deleted by mistake, or if a ManualDataDep might have been incorrectly installed.
+This is useful if files may have been deleted by mistake, or if a `ManualDataDep` might have been incorrectly installed.
 
 
-#### Installing Data Lazily
+#### Advanced: Programtic resolution 
+If your datadep name (or path) is in a variable (called `namepath` say)  you can use
+
+```
+@datadep_str namepath
+```
+rather than the datadep string macro.
+
+
+
+### Installing Data Lazily
 Most packages using more than one data source, will want to download them only when the user requires them.
 That is to say if the user never calls a function that requires that data, then the data should not be downloaded.
 
@@ -48,7 +61,7 @@ If the user passses a value when they call `predict` then the datadep string wil
 So the data will not be sourced via DataDeps.jl
 
 
-#### Installing Data Eagerly
+### Installing Data Eagerly
 If you want the data to be installed when the package is first loaded,
 just put the datadep string `datadep"Name"` anywhere it will immediately run.
 For example, in the `__init__` function immediately after the registration block.
@@ -63,7 +76,7 @@ One would also `include` that registrations file into the `__init__` function in
 
 
 
-### Registering a DataDep
+## Registering a DataDep
 When we say registering a DataDep we do not mean a centralised universal shared registry.
 Registring simply means defining the specifics of the DataDep in your code.
 This is done in a declaritie manner.
@@ -90,7 +103,7 @@ register(DataDep(
 ))
 ```
 
-#### Required Fields
+### Required Fields
 
  - *Name**: the name used to refer to this datadep, coresponds to a folder name where it will be stored
     - It can have spaces or any other character that is allowed in a Windows filestring (which is a strict subset of the restriction for unix filenames).
@@ -99,7 +112,7 @@ register(DataDep(
  - *remote_path*: where to fetch the data from. Normally a string or strings) containing an URL
     - This is usually a string, or a vector of strings (or a vector of vector... see [Recursive Structure](@ref) below)
 
-#### Optional Fields
+### Optional Fields
  - *checksum* this is very flexible, it is used to check the files downloaded correctly
     - By far the most common use is to just provide a SHA256 sum as a hex-string for the files
     - If not provided, then a warning message with the  SHA256 sum is displayed. This is to help package devs workout the sum for there files, without using an external tool.
@@ -131,7 +144,7 @@ register(DataDep(
     - Can take a vector of methods, being one for each file, or a single method, in which case that ame method is applied to all of the files. (See [Recursive Structure](@ref) below)
 
 
-#### Recursive Structure
+### Recursive Structure
 `fetch_method`, `post_fetch_method` and `checksum` all can match the structure of `remote_path`.
 If `remote_path` is just an single path, then they each must be single items.
 If `remote_path` is a vector, then if those properties are a vector (which must be the same length) then they are applied each to the corresponding element; or if not then it is applied to all of them.
@@ -159,7 +172,7 @@ The unzip will be applied to both elements in the child array
 
 
 
-#### ManualDataDep
+### ManualDataDep
 ManualDataDeps are datadeps that have to be managed by some means outside of DataDeps.jl,
 but DataDeps.jl will still provide the convient `datadep"MyData"` string macro for finding them.
 As mentions above, if you put the data in your git repo for your package under `deps/data/NAME` then it will be managed by julia package manager.
@@ -178,29 +191,16 @@ You can then edit the generated code to make it suitable for your use.
 (E.g. remove excessive information in the message)
 
 
-### Assuming direct control and customization
+## Assuming direct control and customization
 The hierachy of methods for acquiring a datadep is:
 
-`datadep"name/path"` ▶ `resolve("name/path", @__FILE__)` ▶ `resolve(::AbstractDataDep, "path", @__FILE__)` ▶ `download(::DataDep)`
+`datadep"name/path"` ▶ `resolve("name/path", @__FILE__)` ▶ `resolve(::AbstractDataDep, "name", @__FILE__)` ▶ `download(::DataDep)`
 
 One can make use of this at various levels to override the default generally sane behavior.
 Most of the time you shouldn't have to -- the normal point of customization is in setting the `post_fetch_method`, and occasionally `fetch_method` or  `hash=(hashmethod, key)`.
 
-#### Advanced: `resolve` for high-level programmatic resolution
-`resolve("name/path", @__FILE__)` is the functional form of `datadep"name/path`.
-If you are really worried about resolving a datadep early, or of you are generating the names pragmatically, or you just really feel uncomfortable about string macros, you can use `resolve(namepath, @__FILE__)`.
-You can (basically) equivalently use `@datadep_str namepath`.
-Passing in the `@__FILE__` is important as it allows access to the package's "private" data deps location (`PKGNAME/deps/data`),
-which may be needed incase of datadep name conflicts; or for `ManualDataDep`s that are included in the repo.
-You could passing something else to bypass this "privacy".
 
-
-It comes in a number of flavors for which you can read the docstring `?resolve`.
-Including `resolve(::AbstactDataDep, innerpath, @__FILE__)`, which can directly download a datadep.
-
-
-
-#### `download` for low-level programmatic resolution.
+## `download` for low-level programmatic resolution.
 For more hardcore devs customising the user experience,
 and people needing to do debugging you may assume (nearly) full control over the download operation
 by directly invoking the method `Base.download(::DataDep, localpath; kwargs...)`.

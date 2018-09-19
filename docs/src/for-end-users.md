@@ -1,8 +1,8 @@
-## Usage for end-users
+# Usage for end-users
 The main goal of DataDeps.jl is to simplify life for the user.
 They should just forget about the data their package needs.
 
-### Moving Data
+## Moving Data
 Moving data is a great idea.
 DataDeps.jl is in favour of moving data
 When data is automatically downloaded it will almost always go to the same location.
@@ -16,7 +16,7 @@ you probably want to shift it to a shared area, like `/usr/share/datadeps`.
 Even if you don't have write permissions, you can have a sysadmin move it, and so long as you still have read permission DataDeps.jl will find it and use it for you.
 
 
-## The Load Path
+### The Load Path
 The Load Path is the list of paths that DataDeps.jl looks in when trying to resolve a data dependency.
 If it doesn't find the data in any of them it will download the data.
 

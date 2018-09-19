@@ -1,5 +1,4 @@
-
-### Other similar packages:
+# Other similar packages:
 DataDeps.jl isn't the answer to all your download needs.
 It is focused squarely on static data.
 It might not be good for your use case.

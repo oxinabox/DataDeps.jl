@@ -1,14 +1,14 @@
 
-## Extending DataDeps.jl for Contributors
+# Extending DataDeps.jl for Contributors
 Feel free (encouraged even) to open issues and make PRs.
 
-### Internal Docstrings
+## Internal Docstrings
 As well as the usual all the publicly facing methods having docstrings,
 most of the internal methods do also.
 You can view them in the source; or via the julia REPL etc.
 Hopefully the internal docstrings make it clear how each method is used.
 
-### Creating custom `AbstractDataDep` types
+## Creating custom `AbstractDataDep` types
 The primary point of extension for DataDeps.jl is in developers defining their own DataDep types.
 99% of developers won't need to do this, a `ManualDataDep` or a normal (automatic) `DataDep` covers most use cases.
 However, if for example you want to have a DataDep that after the download is complete and after the `post_fetch_method` is run, does an additional validation, or some data synthesis step that requires working with multiple of the files simultaneously (which `post_fetch_method` can not do), or a `SemiManualDataDep` where the user does some things and then other things happen automatically, then this can be done by creating your own `AbstractDataDep` type.

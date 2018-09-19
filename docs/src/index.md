@@ -3,7 +3,3 @@
 ```@contents
 ```
 
-## Index
-
-```@index
-```

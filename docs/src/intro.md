@@ -5,8 +5,8 @@ and making programs know where that data is.
 
 For a few examples of its usefulness see [this blog post](http://white.ucc.asn.au/2018/01/18/DataDeps.jl-Repeatabled-Data-Setup-for-Repeatable-Science.html)
 
-### Usage in Brief:
-#### I want to use some data I have in my project. What do?
+## Usage in Brief:
+### I want to use some data I have in my project. What do?
 The short version is:
 
 1. Stick your data anywhere with a open HTTP link. (Skip this if it is already online.)
@@ -14,7 +14,7 @@ The short version is:
 3. Refer to the data using `datadep"Dataname/file.csv` etc as if it were a file path, and DataDeps.jl will sort out getting in onto your system.
 4. For CI purposes set the `DATADEPS_ALWAYS_ACCEPT` environment variable.
 
-#### Where can I store my data online?
+### Where can I store my data online?
 Where ever you want, so long as it gives an Open HTTP(/s) link to download it. ** 
 
  - I use an OwnCloud instance hosted by our national research infastructure.
@@ -23,10 +23,10 @@ Where ever you want, so long as it gives an Open HTTP(/s) link to download it. *
  - I'd like to hear if anyone has tested GoogleDrive or DropBox etc.
 
 
-**(In theory other protocols and auth can be supported by using a different `fetch_method`)
+**(In other protocols and auth can be supported by using a different `fetch_method`)
 
 
-### Why not store the data in Git?
+#### Why not store the data in Git?
 Git is good for files that meet 3 requirements:
 
  - Plain text (not binary)
