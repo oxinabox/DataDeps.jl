@@ -11,7 +11,7 @@ makedocs(
 )
 
 deploydocs(
-    repo = "github.com/oxinabox/DataDeps.jl.git",
+    repo = "oxinabox/DataDeps.jl",
     julia  = "0.7",
     latest = "master",
     target = "build",
