@@ -1,359 +1,7 @@
 var documenterSearchIndex = {"docs": [
 
 {
-    "location": "apiref.html#",
-    "page": "API Reference",
-    "title": "API Reference",
-    "category": "page",
-    "text": ""
-},
-
-{
-    "location": "apiref.html#API-Reference-1",
-    "page": "API Reference",
-    "title": "API Reference",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "apiref.html#DataDeps.resolve-Tuple{AbstractString,Any}",
-    "page": "API Reference",
-    "title": "DataDeps.resolve",
-    "category": "method",
-    "text": "resolve(\"name/path\", @__FILE__)\n\nIs the function that lives directly behind the datadep\"name/path\" macro. If you are working the the names of the datadeps programatically, and don\'t want to download them by mistake; it can be easier to work with this function.\n\nNote though that you must include @__FILE__ as the second argument, as DataDeps.jl uses this to allow reading the package specific deps/data directory. Advanced usage could specify a different file or nothing, but at that point you are on your own.\n\n\n\n\n\n"
-},
-
-{
-    "location": "apiref.html#DataDeps.resolve-Tuple{DataDeps.AbstractDataDep,Any,Any}",
-    "page": "API Reference",
-    "title": "DataDeps.resolve",
-    "category": "method",
-    "text": "resolve(datadep, inner_filepath, calling_filepath)\n\nReturns a path to the folder containing the datadep. Even if that means downloading the dependancy and putting it in there.\n\n - `inner_filepath` is the path to the file within the data dir\n - `calling_filepath` is a path to the file where this is being invoked from\n\nThis is basically the function the lives behind the string macro datadep\"DepName/inner_filepath\".\n\n\n\n\n\n"
-},
-
-{
-    "location": "apiref.html#DataDeps.unpack-Tuple{Any}",
-    "page": "API Reference",
-    "title": "DataDeps.unpack",
-    "category": "method",
-    "text": "unpack(f; keep_originals=false)\n\nExtracts the content of an archive in the current directory; deleting the original archive, unless the keep_originals flag is set.\n\n\n\n\n\n"
-},
-
-{
-    "location": "apiref.html#Public-API-1",
-    "page": "API Reference",
-    "title": "Public API",
-    "category": "section",
-    "text": "Modules = [DataDeps]\nPrivate = false\nOrder = [:function]"
-},
-
-{
-    "location": "apiref.html#Base.download-Tuple{DataDep,Any}",
-    "page": "API Reference",
-    "title": "Base.download",
-    "category": "method",
-    "text": "Base.download(\n    datadep::DataDep,\n    localdir;\n    remotepath=datadep.remotepath,\n    skip_checksum=false,\n    i_accept_the_terms_of_use=nothing)\n\nA method to download a datadep. Normally, you do not have to download a data dependancy manually. If you simply cause the string macro datadep\"DepName\", to be exectuted it will be downloaded if not already present.\n\nInvoking this download method manually is normally for purposes of debugging, As such it include a number of parameters that most people will not want to use.\n\nlocaldir: this is the local directory to save to.\nremotepath: the remote path to fetch the data from, use this e.g. if you can\'t access the normal path where the data should be, but have an alternative.\nskip_checksum: setting this to true causes the checksum to not be checked. Use this if the data has changed since the checksum was set in the registry, or for some reason you want to download different data.\ni_accept_the_terms_of_use: use this to bypass the I agree to terms screen. Useful if you are scripting the whole process, or using annother system to get confirmation of acceptance.\nFor automation perposes you can set the enviroment variable DATADEPS_ALWAYS_ACCEPT\nIf not set, and if DATADEPS_ALWAYS_ACCEPT is not set, then the user will be prompted.\nStrictly speaking these are not always terms of use, it just refers to the message and permission to download.\n\nIf you need more control than this, then your best bet is to construct a new DataDep object, based on the original,  and then invoke download on that.\n\n\n\n\n\n"
-},
-
-{
-    "location": "apiref.html#DataDeps._resolve-Tuple{DataDeps.AbstractDataDep,Any}",
-    "page": "API Reference",
-    "title": "DataDeps._resolve",
-    "category": "method",
-    "text": "The core of the resolve function without any user friendly file stuff, returns the directory\n\n\n\n\n\n"
-},
-
-{
-    "location": "apiref.html#DataDeps.accept_terms-Tuple{DataDep,Any,Any,Nothing}",
-    "page": "API Reference",
-    "title": "DataDeps.accept_terms",
-    "category": "method",
-    "text": "accept_terms(datadep, localpath, remotepath, i_accept_the_terms_of_use)\n\nEnsurses the user accepts the terms of use; otherwise errors out.\n\n\n\n\n\n"
-},
-
-{
-    "location": "apiref.html#DataDeps.checksum-Tuple{Any,Any}",
-    "page": "API Reference",
-    "title": "DataDeps.checksum",
-    "category": "method",
-    "text": "checksum(hasher=sha2_256, filename[/s])\n\nExecutes the hasher, on the file/files, and returns a UInt8 array of the hash. xored if there are multiple files\n\n\n\n\n\n"
-},
-
-{
-    "location": "apiref.html#DataDeps.checksum_pass-Tuple{Any,Any}",
-    "page": "API Reference",
-    "title": "DataDeps.checksum_pass",
-    "category": "method",
-    "text": "checksum_pass(hash, fetched_path)\n\nEnsures the checksum passes, and handles the dialog with use user when it fails.\n\n\n\n\n\n"
-},
-
-{
-    "location": "apiref.html#DataDeps.determine_save_path",
-    "page": "API Reference",
-    "title": "DataDeps.determine_save_path",
-    "category": "function",
-    "text": "determine_save_path(name)\n\nDetermines the location to save a datadep with the given name to.\n\n\n\n\n\n"
-},
-
-{
-    "location": "apiref.html#DataDeps.ensure_download_permitted-Tuple{}",
-    "page": "API Reference",
-    "title": "DataDeps.ensure_download_permitted",
-    "category": "method",
-    "text": "ensure_download_permitted()\n\nThis function will throw an error if download functionality has been disabled. Otherwise will do nothing.\n\n\n\n\n\n"
-},
-
-{
-    "location": "apiref.html#DataDeps.env_bool",
-    "page": "API Reference",
-    "title": "DataDeps.env_bool",
-    "category": "function",
-    "text": "env_bool(key)\n\nChecks for an enviroment variable and fuzzy converts it to a bool\n\n\n\n\n\n"
-},
-
-{
-    "location": "apiref.html#DataDeps.env_list",
-    "page": "API Reference",
-    "title": "DataDeps.env_list",
-    "category": "function",
-    "text": "env_list(key)\n\nChecks for an enviroment variable and converts it to a list of strings, sperated with a colon\n\n\n\n\n\n"
-},
-
-{
-    "location": "apiref.html#DataDeps.fetch_http-Tuple{Any,Any}",
-    "page": "API Reference",
-    "title": "DataDeps.fetch_http",
-    "category": "method",
-    "text": "fetch_http(remotepath, localdir)\n\nPass in a HTTP[/S] URL  and a directory to save it to, and it downloads that file, returing the local path. This is using the HTTP protocol\'s method of defining filenames in headers, if that information is present.\n\n\n\n\n\n"
-},
-
-{
-    "location": "apiref.html#DataDeps.get_filename-Tuple{Any}",
-    "page": "API Reference",
-    "title": "DataDeps.get_filename",
-    "category": "method",
-    "text": "get_filename(remotepath)\n\nGiven a remotepath (URL) returns the filename that it should be saved to locally.\n\n\n\n\n\n"
-},
-
-{
-    "location": "apiref.html#DataDeps.handle_missing-Tuple{DataDep,Any}",
-    "page": "API Reference",
-    "title": "DataDeps.handle_missing",
-    "category": "method",
-    "text": "handle_missing(datadep::DataDep, calling_filepath)::String\n\nThis function is called when the datadep is missing.\n\n\n\n\n\n"
-},
-
-{
-    "location": "apiref.html#DataDeps.input_bool",
-    "page": "API Reference",
-    "title": "DataDeps.input_bool",
-    "category": "function",
-    "text": "bool_input\n\nPrompted the user for a yes or no.\n\n\n\n\n\n"
-},
-
-{
-    "location": "apiref.html#DataDeps.input_choice-Tuple{Any,Vararg{Char,N} where N}",
-    "page": "API Reference",
-    "title": "DataDeps.input_choice",
-    "category": "method",
-    "text": "input_choice\n\nPrompted the user for one of a list of options\n\n\n\n\n\n"
-},
-
-{
-    "location": "apiref.html#DataDeps.input_choice-Tuple{Vararg{Tuple{Char,#s12,Any} where #s12<:AbstractString,N} where N}",
-    "page": "API Reference",
-    "title": "DataDeps.input_choice",
-    "category": "method",
-    "text": "input_choice\n\nPrompts the user for one of a list of options. Takes a vararg of tuples of Letter, Prompt, Action (0 argument function)\n\nExample:\n\ninput_choice(\n    (\'A\', \"Abort -- errors out\", ()->error(\"aborted\")),\n    (\'X\', \"eXit -- exits normally\", ()->exit()),\n    (\'C\', \"Continue -- continues running\", ()->nothing)),\n)\n\n\n\n\n\n\n"
-},
-
-{
-    "location": "apiref.html#DataDeps.is_valid_name-Tuple{Any}",
-    "page": "API Reference",
-    "title": "DataDeps.is_valid_name",
-    "category": "method",
-    "text": "is_valid_name(name)\n\nThis checks if a datadep name is valid. This basically means it must be a valid folder name on windows.\n\n\n\n\n\n"
-},
-
-{
-    "location": "apiref.html#DataDeps.list_local_paths-Tuple{String,Any}",
-    "page": "API Reference",
-    "title": "DataDeps.list_local_paths",
-    "category": "method",
-    "text": "list_local_paths( name|datadep, [calling_filepath|module|nothing])\n\nLists all the local paths to a given datadep. This may be an empty list\n\n\n\n\n\n"
-},
-
-{
-    "location": "apiref.html#DataDeps.preferred_paths",
-    "page": "API Reference",
-    "title": "DataDeps.preferred_paths",
-    "category": "function",
-    "text": "preferred_paths(calling_filepath; use_package_dir=true)\n\nreturns the datadeps loadpath plus if callingfilepath is provided and use_package_dir=true and is currently inside a package directory then it also includes the path to the dataseps in that folder.\n\n\n\n\n\n"
-},
-
-{
-    "location": "apiref.html#DataDeps.process_header_filename-Tuple{RegexMatch}",
-    "page": "API Reference",
-    "title": "DataDeps.process_header_filename",
-    "category": "method",
-    "text": "process_header_filename(raw)\n\nDeal with some of the weird and varied ways filenames can be given. Not full coverage, but getting the common cases.\n\nReturn nothing if input is nothing\n\n\n\n\n\n"
-},
-
-{
-    "location": "apiref.html#DataDeps.run_checksum-Tuple{AbstractArray{T,1} where T,AbstractArray{T,1} where T}",
-    "page": "API Reference",
-    "title": "DataDeps.run_checksum",
-    "category": "method",
-    "text": "If a vector of paths is provided and a vector of hashing methods (of any form) then they are all required to match.\n\n\n\n\n\n"
-},
-
-{
-    "location": "apiref.html#DataDeps.run_checksum-Tuple{AbstractString,Any}",
-    "page": "API Reference",
-    "title": "DataDeps.run_checksum",
-    "category": "method",
-    "text": "Providing only a hash string, results in defaulting to sha2_256, with that string being the target\n\n\n\n\n\n"
-},
-
-{
-    "location": "apiref.html#DataDeps.run_checksum-Tuple{Any,Any}",
-    "page": "API Reference",
-    "title": "DataDeps.run_checksum",
-    "category": "method",
-    "text": "If only a function is provided then assume the user is a developer, wanting to know what hash-line to add to the Registration line.\n\n\n\n\n\n"
-},
-
-{
-    "location": "apiref.html#DataDeps.run_checksum-Tuple{Nothing,Any}",
-    "page": "API Reference",
-    "title": "DataDeps.run_checksum",
-    "category": "method",
-    "text": "If nothing is provided then assume the user is a developer, wanting to know what sha2_256 hash-line to add to the Registration line.\n\n\n\n\n\n"
-},
-
-{
-    "location": "apiref.html#DataDeps.run_checksum-Tuple{Tuple{#s12,#s51} where #s51<:AbstractString where #s12,Any}",
-    "page": "API Reference",
-    "title": "DataDeps.run_checksum",
-    "category": "method",
-    "text": "run_checksum(checksum, path)\n\nTHis runs the checksum on the files at the fetched_path. And returns true or false base on if the checksum matchs. (always true if no target sum given) It is kinda flexible and accepts different kinds of behavour to give different kinds of results.\n\nIf path (the second parameter) is a Vector, then unless checksum is also a Vector, the result is the xor of the all the file checksums.\n\n\n\n\n\n"
-},
-
-{
-    "location": "apiref.html#DataDeps.run_checksum-Tuple{Type{Any},Any}",
-    "page": "API Reference",
-    "title": "DataDeps.run_checksum",
-    "category": "method",
-    "text": "Use Any to mark as not caring about the hash. Use this for data that can change\n\n\n\n\n\n"
-},
-
-{
-    "location": "apiref.html#DataDeps.run_fetch-Tuple{Any,Any,Any}",
-    "page": "API Reference",
-    "title": "DataDeps.run_fetch",
-    "category": "method",
-    "text": "run_fetch(fetch_method, remotepath, localdir)\n\nexecutes the fetchmethod on the given remotepath, into the local directory and local paths. Performs in (async) parallel if multiple paths are given\n\n\n\n\n\n"
-},
-
-{
-    "location": "apiref.html#DataDeps.run_post_fetch-Tuple{Any,Any}",
-    "page": "API Reference",
-    "title": "DataDeps.run_post_fetch",
-    "category": "method",
-    "text": "run_post_fetch(post_fetch_method, fetched_path)\n\nexecutes the postfetchmethod on the given fetched path, Performs in (async) parallel if multiple paths are given\n\n\n\n\n\n"
-},
-
-{
-    "location": "apiref.html#DataDeps.safer_joinpath-Tuple{Any,Vararg{Any,N} where N}",
-    "page": "API Reference",
-    "title": "DataDeps.safer_joinpath",
-    "category": "method",
-    "text": "safer_joinpath(basepart, parts...)\n\nA variation on joinpath, that is more resistant to directory traveral attack The parts to be joined (excluding the basepart), are not allowed to contain .., or begin with a /. If they do then this throws an DomainError.\n\n\n\n\n\n"
-},
-
-{
-    "location": "apiref.html#DataDeps.splitpath-Tuple{AbstractString}",
-    "page": "API Reference",
-    "title": "DataDeps.splitpath",
-    "category": "method",
-    "text": "splitpath(path)\n\nThe opposite of joinpath, splits a path unto each of its directories names / filename (for the last).\n\n\n\n\n\n"
-},
-
-{
-    "location": "apiref.html#DataDeps.try_determine_load_path-Tuple{String,Any}",
-    "page": "API Reference",
-    "title": "DataDeps.try_determine_load_path",
-    "category": "method",
-    "text": "try_determine_load_path(name)\n\nTrys to find a local path to the datadep with the given name. If it fails then it returns nothing.\n\n\n\n\n\n"
-},
-
-{
-    "location": "apiref.html#DataDeps.try_determine_package_datadeps_dir-Tuple{Any}",
-    "page": "API Reference",
-    "title": "DataDeps.try_determine_package_datadeps_dir",
-    "category": "method",
-    "text": "try_determine_package_datadeps_dir(filepath)\n\nTakes a path to a file. If that path is in a package\'s folder, Then this returns a path to the deps/data dir for that package (as a Nullable). Which may or may not exist. If not in a package returns null\n\n\n\n\n\n"
-},
-
-{
-    "location": "apiref.html#DataDeps.try_get_filename-Tuple{Any}",
-    "page": "API Reference",
-    "title": "DataDeps.try_get_filename",
-    "category": "method",
-    "text": "try_get_filename(url)\n\nUses as HEAD request, to attempt to retrieve the filename from the HTTP headers. Returns a string or nothing if it failes\n\n\n\n\n\n"
-},
-
-{
-    "location": "apiref.html#DataDeps.uv_access-Tuple{Any,DataDeps.AccessMode}",
-    "page": "API Reference",
-    "title": "DataDeps.uv_access",
-    "category": "method",
-    "text": "uv_access(path, mode)\n\nCheck access to a path. Returns 2 results, first an error code (0 for all good), and second an error message. https://stackoverflow.com/a/47126837/179081\n\n\n\n\n\n"
-},
-
-{
-    "location": "apiref.html#Internal-1",
-    "page": "API Reference",
-    "title": "Internal",
-    "category": "section",
-    "text": "Modules = [DataDeps]\nPrivate = true\nOrder = [:function]"
-},
-
-{
-    "location": "for-contributors.html#",
-    "page": "Extending DataDeps.jl for Contributors",
-    "title": "Extending DataDeps.jl for Contributors",
-    "category": "page",
-    "text": ""
-},
-
-{
-    "location": "for-contributors.html#Extending-DataDeps.jl-for-Contributors-1",
-    "page": "Extending DataDeps.jl for Contributors",
-    "title": "Extending DataDeps.jl for Contributors",
-    "category": "section",
-    "text": "Feel free (encouraged even) to open issues and make PRs."
-},
-
-{
-    "location": "for-contributors.html#Internal-Docstrings-1",
-    "page": "Extending DataDeps.jl for Contributors",
-    "title": "Internal Docstrings",
-    "category": "section",
-    "text": "As well as the usual all the publicly facing methods having docstrings, most of the internal methods do also. You can view them in the source; or via the julia REPL etc. Hopefully the internal docstrings make it clear how each method is used."
-},
-
-{
-    "location": "for-contributors.html#Creating-custom-AbstractDataDep-types-1",
-    "page": "Extending DataDeps.jl for Contributors",
-    "title": "Creating custom AbstractDataDep types",
-    "category": "section",
-    "text": "The primary point of extension for DataDeps.jl is in developers defining their own DataDep types. 99% of developers won\'t need to do this, a ManualDataDep or a normal (automatic) DataDep covers most use cases. However, if for example you want to have a DataDep that after the download is complete and after the post_fetch_method is run, does an additional validation, or some data synthesis step that requires working with multiple of the files simultaneously (which post_fetch_method can not do), or a SemiManualDataDep where the user does some things and then other things happen automatically, then this can be done by creating your own AbstractDataDep type.The code for ManualDataDep is a good place to start looking to see how that is done. You can also encapsulate an DataDep as one of the elements of your new type.If you do this you might like to contribute the type back up to this repository, so others can use it also. Particularly, if it is something that generalises beyond your specific usecase."
-},
-
-{
-    "location": "for-end-users.html#",
+    "location": "10-for-end-users.html#",
     "page": "Usage for end-users",
     "title": "Usage for end-users",
     "category": "page",
@@ -361,7 +9,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "for-end-users.html#Usage-for-end-users-1",
+    "location": "10-for-end-users.html#Usage-for-end-users-1",
     "page": "Usage for end-users",
     "title": "Usage for end-users",
     "category": "section",
@@ -369,7 +17,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "for-end-users.html#Moving-Data-1",
+    "location": "10-for-end-users.html#Moving-Data-1",
     "page": "Usage for end-users",
     "title": "Moving Data",
     "category": "section",
@@ -377,7 +25,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "for-end-users.html#The-Load-Path-1",
+    "location": "10-for-end-users.html#The-Load-Path-1",
     "page": "Usage for end-users",
     "title": "The Load Path",
     "category": "section",
@@ -385,7 +33,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "for-end-users.html#Unix-Standard-Load-Path-1",
+    "location": "10-for-end-users.html#Unix-Standard-Load-Path-1",
     "page": "Usage for end-users",
     "title": "Unix Standard Load Path",
     "category": "section",
@@ -393,7 +41,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "for-end-users.html#Windows-Standard-Load-Path-1",
+    "location": "10-for-end-users.html#Windows-Standard-Load-Path-1",
     "page": "Usage for end-users",
     "title": "Windows Standard Load Path",
     "category": "section",
@@ -401,7 +49,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "for-end-users.html#Having-multiple-copies-of-the-same-DataDir-1",
+    "location": "10-for-end-users.html#Having-multiple-copies-of-the-same-DataDir-1",
     "page": "Usage for end-users",
     "title": "Having multiple copies of the same DataDir",
     "category": "section",
@@ -409,7 +57,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "for-end-users.html#Configuration-1",
+    "location": "10-for-end-users.html#Configuration-1",
     "page": "Usage for end-users",
     "title": "Configuration",
     "category": "section",
@@ -417,7 +65,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "for-pkg-devs.html#",
+    "location": "20-for-pkg-devs.html#",
     "page": "Usage for developers (including researchers)",
     "title": "Usage for developers (including researchers)",
     "category": "page",
@@ -425,7 +73,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "for-pkg-devs.html#Usage-for-developers-(including-researchers)-1",
+    "location": "20-for-pkg-devs.html#Usage-for-developers-(including-researchers)-1",
     "page": "Usage for developers (including researchers)",
     "title": "Usage for developers (including researchers)",
     "category": "section",
@@ -433,7 +81,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "for-pkg-devs.html#Examples-1",
+    "location": "20-for-pkg-devs.html#Examples-1",
     "page": "Usage for developers (including researchers)",
     "title": "Examples",
     "category": "section",
@@ -441,7 +89,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "for-pkg-devs.html#Installation-1",
+    "location": "20-for-pkg-devs.html#Installation-1",
     "page": "Usage for developers (including researchers)",
     "title": "Installation",
     "category": "section",
@@ -449,7 +97,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "for-pkg-devs.html#Accessing-a-DataDep-1",
+    "location": "20-for-pkg-devs.html#Accessing-a-DataDep-1",
     "page": "Usage for developers (including researchers)",
     "title": "Accessing a DataDep",
     "category": "section",
@@ -457,7 +105,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "for-pkg-devs.html#Using-a-datadep-string-or-resolve-to-get-hold-of-the-data.-1",
+    "location": "20-for-pkg-devs.html#Using-a-datadep-string-or-resolve-to-get-hold-of-the-data.-1",
     "page": "Usage for developers (including researchers)",
     "title": "Using a datadep string or resolve to get hold of the data.",
     "category": "section",
@@ -465,7 +113,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "for-pkg-devs.html#Advanced:-Programtic-resolution-1",
+    "location": "20-for-pkg-devs.html#Advanced:-Programtic-resolution-1",
     "page": "Usage for developers (including researchers)",
     "title": "Advanced: Programtic resolution",
     "category": "section",
@@ -473,7 +121,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "for-pkg-devs.html#Installing-Data-Lazily-1",
+    "location": "20-for-pkg-devs.html#Installing-Data-Lazily-1",
     "page": "Usage for developers (including researchers)",
     "title": "Installing Data Lazily",
     "category": "section",
@@ -481,7 +129,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "for-pkg-devs.html#Installing-Data-Eagerly-1",
+    "location": "20-for-pkg-devs.html#Installing-Data-Eagerly-1",
     "page": "Usage for developers (including researchers)",
     "title": "Installing Data Eagerly",
     "category": "section",
@@ -489,7 +137,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "for-pkg-devs.html#Registering-a-DataDep-1",
+    "location": "20-for-pkg-devs.html#Registering-a-DataDep-1",
     "page": "Usage for developers (including researchers)",
     "title": "Registering a DataDep",
     "category": "section",
@@ -497,7 +145,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "for-pkg-devs.html#Required-Fields-1",
+    "location": "20-for-pkg-devs.html#Required-Fields-1",
     "page": "Usage for developers (including researchers)",
     "title": "Required Fields",
     "category": "section",
@@ -505,7 +153,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "for-pkg-devs.html#Optional-Fields-1",
+    "location": "20-for-pkg-devs.html#Optional-Fields-1",
     "page": "Usage for developers (including researchers)",
     "title": "Optional Fields",
     "category": "section",
@@ -513,7 +161,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "for-pkg-devs.html#Recursive-Structure-1",
+    "location": "20-for-pkg-devs.html#Recursive-Structure-1",
     "page": "Usage for developers (including researchers)",
     "title": "Recursive Structure",
     "category": "section",
@@ -521,7 +169,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "for-pkg-devs.html#ManualDataDep-1",
+    "location": "20-for-pkg-devs.html#ManualDataDep-1",
     "page": "Usage for developers (including researchers)",
     "title": "ManualDataDep",
     "category": "section",
@@ -529,7 +177,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "for-pkg-devs.html#DataDepsGenerators-1",
+    "location": "20-for-pkg-devs.html#DataDepsGenerators-1",
     "page": "Usage for developers (including researchers)",
     "title": "DataDepsGenerators",
     "category": "section",
@@ -537,7 +185,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "for-pkg-devs.html#Assuming-direct-control-and-customization-1",
+    "location": "20-for-pkg-devs.html#Assuming-direct-control-and-customization-1",
     "page": "Usage for developers (including researchers)",
     "title": "Assuming direct control and customization",
     "category": "section",
@@ -545,11 +193,419 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "for-pkg-devs.html#download-for-low-level-programmatic-resolution.-1",
+    "location": "20-for-pkg-devs.html#download-for-low-level-programmatic-resolution.-1",
     "page": "Usage for developers (including researchers)",
     "title": "download for low-level programmatic resolution.",
     "category": "section",
     "text": "For more hardcore devs customising the user experience, and people needing to do debugging you may assume (nearly) full control over the download operation by directly invoking the method Base.download(::DataDep, localpath; kwargs...). It is fully documented in its docstring."
+},
+
+{
+    "location": "30-for-contributors.html#",
+    "page": "Extending DataDeps.jl for Contributors",
+    "title": "Extending DataDeps.jl for Contributors",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "30-for-contributors.html#Extending-DataDeps.jl-for-Contributors-1",
+    "page": "Extending DataDeps.jl for Contributors",
+    "title": "Extending DataDeps.jl for Contributors",
+    "category": "section",
+    "text": "Feel free (encouraged even) to open issues and make PRs."
+},
+
+{
+    "location": "30-for-contributors.html#Internal-Docstrings-1",
+    "page": "Extending DataDeps.jl for Contributors",
+    "title": "Internal Docstrings",
+    "category": "section",
+    "text": "As well as the usual all the publicly facing methods having docstrings, most of the internal methods do also. You can view them in the source; or via the julia REPL etc. Hopefully the internal docstrings make it clear how each method is used."
+},
+
+{
+    "location": "30-for-contributors.html#Creating-custom-AbstractDataDep-types-1",
+    "page": "Extending DataDeps.jl for Contributors",
+    "title": "Creating custom AbstractDataDep types",
+    "category": "section",
+    "text": "The primary point of extension for DataDeps.jl is in developers defining their own DataDep types. 99% of developers won\'t need to do this, a ManualDataDep or a normal (automatic) DataDep covers most use cases. However, if for example you want to have a DataDep that after the download is complete and after the post_fetch_method is run, does an additional validation, or some data synthesis step that requires working with multiple of the files simultaneously (which post_fetch_method can not do), or a SemiManualDataDep where the user does some things and then other things happen automatically, then this can be done by creating your own AbstractDataDep type.The code for ManualDataDep is a good place to start looking to see how that is done. You can also encapsulate an DataDep as one of the elements of your new type.If you do this you might like to contribute the type back up to this repository, so others can use it also. Particularly, if it is something that generalises beyond your specific usecase."
+},
+
+{
+    "location": "40-apiref.html#",
+    "page": "API Reference",
+    "title": "API Reference",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "40-apiref.html#API-Reference-1",
+    "page": "API Reference",
+    "title": "API Reference",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "40-apiref.html#Public-API-1",
+    "page": "API Reference",
+    "title": "Public API",
+    "category": "section",
+    "text": "DataDep\nManualDataDep\nregister\n@datadep_str\ndownload"
+},
+
+{
+    "location": "40-apiref.html#Helpers-1",
+    "page": "API Reference",
+    "title": "Helpers",
+    "category": "section",
+    "text": "unpack"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.DataDep",
+    "page": "API Reference",
+    "title": "DataDeps.DataDep",
+    "category": "type",
+    "text": "DataDep(\n    name::String,\n    message::String,\n    remote_path::Union{String,Vector{String}...},\n    [checksum::Union{String,Vector{String}...},]; # Optional, if not provided will generate\n    # keyword args (Optional):\n    fetch_method=fetch_http # (remote_filepath, local_directory)->local_filepath\n    post_fetch_method=identity # (local_filepath)->Any\n)\n\nRequired Fields\n\n*Name**: the name used to refer to this datadep, coresponds to a folder name where it will be stored\nIt can have spaces or any other character that is allowed in a Windows filestring (which is a strict subset of the restriction for unix filenames).\nMessage: A message displayed to the user for they are asked if they want to downloaded it.\nThis is normally used to give a link to the original source of the data, a paper to be cited etc.\nremote_path: where to fetch the data from. Normally a string or strings) containing an URL\nThis is usually a string, or a vector of strings (or a vector of vector... see Recursive Structure below)\n\nOptional Fields\n\nchecksum this is very flexible, it is used to check the files downloaded correctly\nBy far the most common use is to just provide a SHA256 sum as a hex-string for the files\nIf not provided, then a warning message with the  SHA256 sum is displayed. This is to help package devs workout the sum for there files, without using an external tool.\nIf you want to use a different hashing algorithm, then you can provide a tuple (hashfun, targethex)\nhashfun should be a function which takes an IOStream, and returns a Vector{UInt8}.\n\n      - Such as any of the functions from [SHA.jl](https://github.com/staticfloat/SHA.jl), eg `sha3_384`, `sha1_512`\n      - or `md5` from [MD5.jl](https://github.com/oxinabox/MD5.jl)\n\nIf you want to use a different hashing algorithm, but don\'t know the sum, you can provide just the hashfun and a warning message will be displayed, giving the correct tuple of (hashfun, targethex) that should be added to the registration block.\n\n- If you don\'t want to provide a checksum,  because your data can change pass in the type `Any` which will suppress the warning messages. (But see above warnings about \"what if my data is dynamic\")\n- Can take a vector of checksums, being one for each file, or a single checksum in which case the per file hashes are `xor`ed to get the target hash. (See [Recursive Structure](Recursive Structure) below)\n\nfetch_method=fetch_http a function to run to download the files.\nFunction should take 2 parameters (remotepath, local_directory), and must return a local filepath\nIt is responsible for determining what the local filename should be\nChange this to change the transfer protocol, for example to use an auth\'ed connection.\nDefault fetch_http is a wrapper around Base.download which invokes commandline download tools.\nCan take a vector of methods, being one for each file, or a single method, in which case that method is used to download all of them. (See Recursive Structure below)\nVery few people will need to override this if they are just downloading public HTTP files. \npost_fetch_method a function to run after the files have download\nShould take the local filepath as its first and only argument. Can return anything.\nDefault is to do nothing.\nCan do what it wants from there, but most likes wants to extract the file into the data directory.\ntowards this end DataDeps includes a command: unpack which will extract an compressed folder, deleting the original.\nIt should be noted that it post_fetch_method runs from within the data directory\nwhich means operations that just write to the current working directory (like rm or mv or run(`SOMECMD`)) just work.\nYou can call cwd() to get the the data directory for your own functions. (Or dirname(local_filepath))\nCan take a vector of methods, being one for each file, or a single method, in which case that ame method is applied to all of the files. (See Recursive Structure in the README.md)\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.ManualDataDep",
+    "page": "API Reference",
+    "title": "DataDeps.ManualDataDep",
+    "category": "type",
+    "text": "ManualDataDep(name, message)\n\nA DataDep for if the installation needs to be handled manually. This can be done via Pkg/git if you put the dependency into the packages repo\'s /deps/data directory. More generally, message should give instructions on how to setup the data.\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.resolve-Tuple{AbstractString,Any}",
+    "page": "API Reference",
+    "title": "DataDeps.resolve",
+    "category": "method",
+    "text": "resolve(\"name/path\", @__FILE__)\n\nIs the function that lives directly behind the datadep\"name/path\" macro. If you are working the the names of the datadeps programatically, and don\'t want to download them by mistake; it can be easier to work with this function.\n\nNote though that you must include @__FILE__ as the second argument, as DataDeps.jl uses this to allow reading the package specific deps/data directory. Advanced usage could specify a different file or nothing, but at that point you are on your own.\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.resolve-Tuple{DataDeps.AbstractDataDep,Any,Any}",
+    "page": "API Reference",
+    "title": "DataDeps.resolve",
+    "category": "method",
+    "text": "resolve(datadep, inner_filepath, calling_filepath)\n\nReturns a path to the folder containing the datadep. Even if that means downloading the dependancy and putting it in there.\n\n - `inner_filepath` is the path to the file within the data dir\n - `calling_filepath` is a path to the file where this is being invoked from\n\nThis is basically the function the lives behind the string macro datadep\"DepName/inner_filepath\".\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.unpack-Tuple{Any}",
+    "page": "API Reference",
+    "title": "DataDeps.unpack",
+    "category": "method",
+    "text": "unpack(f; keep_originals=false)\n\nExtracts the content of an archive in the current directory; deleting the original archive, unless the keep_originals flag is set.\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.@datadep_str-Tuple{Any}",
+    "page": "API Reference",
+    "title": "DataDeps.@datadep_str",
+    "category": "macro",
+    "text": "`datadep\"Name\"` or `datadep\"Name/file\"`\n\nUse this just like you would a file path, except that you can refer by name to the datadep. The name alone will resolve to the corresponding folder. Even if that means it has to be downloaded first. Adding a path within it functions as expected.\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.DisabledError",
+    "page": "API Reference",
+    "title": "DataDeps.DisabledError",
+    "category": "type",
+    "text": "DisabledError For when functionality that is disabled is attempted to be used\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.NoValidPathError",
+    "page": "API Reference",
+    "title": "DataDeps.NoValidPathError",
+    "category": "type",
+    "text": "For when there is no valid location available to save to.\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.UserAbortError",
+    "page": "API Reference",
+    "title": "DataDeps.UserAbortError",
+    "category": "type",
+    "text": "For when a users has selected to abourt\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#Base.download-Tuple{DataDep,Any}",
+    "page": "API Reference",
+    "title": "Base.download",
+    "category": "method",
+    "text": "Base.download(\n    datadep::DataDep,\n    localdir;\n    remotepath=datadep.remotepath,\n    skip_checksum=false,\n    i_accept_the_terms_of_use=nothing)\n\nA method to download a datadep. Normally, you do not have to download a data dependancy manually. If you simply cause the string macro datadep\"DepName\", to be exectuted it will be downloaded if not already present.\n\nInvoking this download method manually is normally for purposes of debugging, As such it include a number of parameters that most people will not want to use.\n\nlocaldir: this is the local directory to save to.\nremotepath: the remote path to fetch the data from, use this e.g. if you can\'t access the normal path where the data should be, but have an alternative.\nskip_checksum: setting this to true causes the checksum to not be checked. Use this if the data has changed since the checksum was set in the registry, or for some reason you want to download different data.\ni_accept_the_terms_of_use: use this to bypass the I agree to terms screen. Useful if you are scripting the whole process, or using annother system to get confirmation of acceptance.\nFor automation perposes you can set the enviroment variable DATADEPS_ALWAYS_ACCEPT\nIf not set, and if DATADEPS_ALWAYS_ACCEPT is not set, then the user will be prompted.\nStrictly speaking these are not always terms of use, it just refers to the message and permission to download.\n\nIf you need more control than this, then your best bet is to construct a new DataDep object, based on the original,  and then invoke download on that.\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps._resolve-Tuple{DataDeps.AbstractDataDep,Any}",
+    "page": "API Reference",
+    "title": "DataDeps._resolve",
+    "category": "method",
+    "text": "The core of the resolve function without any user friendly file stuff, returns the directory\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.accept_terms-Tuple{DataDep,Any,Any,Nothing}",
+    "page": "API Reference",
+    "title": "DataDeps.accept_terms",
+    "category": "method",
+    "text": "accept_terms(datadep, localpath, remotepath, i_accept_the_terms_of_use)\n\nEnsurses the user accepts the terms of use; otherwise errors out.\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.checksum-Tuple{Any,Any}",
+    "page": "API Reference",
+    "title": "DataDeps.checksum",
+    "category": "method",
+    "text": "checksum(hasher=sha2_256, filename[/s])\n\nExecutes the hasher, on the file/files, and returns a UInt8 array of the hash. xored if there are multiple files\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.checksum_pass-Tuple{Any,Any}",
+    "page": "API Reference",
+    "title": "DataDeps.checksum_pass",
+    "category": "method",
+    "text": "checksum_pass(hash, fetched_path)\n\nEnsures the checksum passes, and handles the dialog with use user when it fails.\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.determine_save_path",
+    "page": "API Reference",
+    "title": "DataDeps.determine_save_path",
+    "category": "function",
+    "text": "determine_save_path(name)\n\nDetermines the location to save a datadep with the given name to.\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.ensure_download_permitted-Tuple{}",
+    "page": "API Reference",
+    "title": "DataDeps.ensure_download_permitted",
+    "category": "method",
+    "text": "ensure_download_permitted()\n\nThis function will throw an error if download functionality has been disabled. Otherwise will do nothing.\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.env_bool",
+    "page": "API Reference",
+    "title": "DataDeps.env_bool",
+    "category": "function",
+    "text": "env_bool(key)\n\nChecks for an enviroment variable and fuzzy converts it to a bool\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.env_list",
+    "page": "API Reference",
+    "title": "DataDeps.env_list",
+    "category": "function",
+    "text": "env_list(key)\n\nChecks for an enviroment variable and converts it to a list of strings, sperated with a colon\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.fetch_http-Tuple{Any,Any}",
+    "page": "API Reference",
+    "title": "DataDeps.fetch_http",
+    "category": "method",
+    "text": "fetch_http(remotepath, localdir)\n\nPass in a HTTP[/S] URL  and a directory to save it to, and it downloads that file, returing the local path. This is using the HTTP protocol\'s method of defining filenames in headers, if that information is present.\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.get_filename-Tuple{Any}",
+    "page": "API Reference",
+    "title": "DataDeps.get_filename",
+    "category": "method",
+    "text": "get_filename(remotepath)\n\nGiven a remotepath (URL) returns the filename that it should be saved to locally.\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.handle_missing-Tuple{DataDep,Any}",
+    "page": "API Reference",
+    "title": "DataDeps.handle_missing",
+    "category": "method",
+    "text": "handle_missing(datadep::DataDep, calling_filepath)::String\n\nThis function is called when the datadep is missing.\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.input_bool",
+    "page": "API Reference",
+    "title": "DataDeps.input_bool",
+    "category": "function",
+    "text": "bool_input\n\nPrompted the user for a yes or no.\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.input_choice-Tuple{Any,Vararg{Char,N} where N}",
+    "page": "API Reference",
+    "title": "DataDeps.input_choice",
+    "category": "method",
+    "text": "input_choice\n\nPrompted the user for one of a list of options\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.input_choice-Tuple{Vararg{Tuple{Char,#s12,Any} where #s12<:AbstractString,N} where N}",
+    "page": "API Reference",
+    "title": "DataDeps.input_choice",
+    "category": "method",
+    "text": "input_choice\n\nPrompts the user for one of a list of options. Takes a vararg of tuples of Letter, Prompt, Action (0 argument function)\n\nExample:\n\ninput_choice(\n    (\'A\', \"Abort -- errors out\", ()->error(\"aborted\")),\n    (\'X\', \"eXit -- exits normally\", ()->exit()),\n    (\'C\', \"Continue -- continues running\", ()->nothing)),\n)\n\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.is_valid_name-Tuple{Any}",
+    "page": "API Reference",
+    "title": "DataDeps.is_valid_name",
+    "category": "method",
+    "text": "is_valid_name(name)\n\nThis checks if a datadep name is valid. This basically means it must be a valid folder name on windows.\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.list_local_paths-Tuple{String,Any}",
+    "page": "API Reference",
+    "title": "DataDeps.list_local_paths",
+    "category": "method",
+    "text": "list_local_paths( name|datadep, [calling_filepath|module|nothing])\n\nLists all the local paths to a given datadep. This may be an empty list\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.preferred_paths",
+    "page": "API Reference",
+    "title": "DataDeps.preferred_paths",
+    "category": "function",
+    "text": "preferred_paths(calling_filepath; use_package_dir=true)\n\nreturns the datadeps loadpath plus if callingfilepath is provided and use_package_dir=true and is currently inside a package directory then it also includes the path to the dataseps in that folder.\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.process_header_filename-Tuple{RegexMatch}",
+    "page": "API Reference",
+    "title": "DataDeps.process_header_filename",
+    "category": "method",
+    "text": "process_header_filename(raw)\n\nDeal with some of the weird and varied ways filenames can be given. Not full coverage, but getting the common cases.\n\nReturn nothing if input is nothing\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.run_checksum-Tuple{AbstractArray{T,1} where T,AbstractArray{T,1} where T}",
+    "page": "API Reference",
+    "title": "DataDeps.run_checksum",
+    "category": "method",
+    "text": "If a vector of paths is provided and a vector of hashing methods (of any form) then they are all required to match.\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.run_checksum-Tuple{AbstractString,Any}",
+    "page": "API Reference",
+    "title": "DataDeps.run_checksum",
+    "category": "method",
+    "text": "Providing only a hash string, results in defaulting to sha2_256, with that string being the target\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.run_checksum-Tuple{Any,Any}",
+    "page": "API Reference",
+    "title": "DataDeps.run_checksum",
+    "category": "method",
+    "text": "If only a function is provided then assume the user is a developer, wanting to know what hash-line to add to the Registration line.\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.run_checksum-Tuple{Nothing,Any}",
+    "page": "API Reference",
+    "title": "DataDeps.run_checksum",
+    "category": "method",
+    "text": "If nothing is provided then assume the user is a developer, wanting to know what sha2_256 hash-line to add to the Registration line.\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.run_checksum-Tuple{Tuple{#s12,#s51} where #s51<:AbstractString where #s12,Any}",
+    "page": "API Reference",
+    "title": "DataDeps.run_checksum",
+    "category": "method",
+    "text": "run_checksum(checksum, path)\n\nTHis runs the checksum on the files at the fetched_path. And returns true or false base on if the checksum matchs. (always true if no target sum given) It is kinda flexible and accepts different kinds of behavour to give different kinds of results.\n\nIf path (the second parameter) is a Vector, then unless checksum is also a Vector, the result is the xor of the all the file checksums.\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.run_checksum-Tuple{Type{Any},Any}",
+    "page": "API Reference",
+    "title": "DataDeps.run_checksum",
+    "category": "method",
+    "text": "Use Any to mark as not caring about the hash. Use this for data that can change\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.run_fetch-Tuple{Any,Any,Any}",
+    "page": "API Reference",
+    "title": "DataDeps.run_fetch",
+    "category": "method",
+    "text": "run_fetch(fetch_method, remotepath, localdir)\n\nexecutes the fetchmethod on the given remotepath, into the local directory and local paths. Performs in (async) parallel if multiple paths are given\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.run_post_fetch-Tuple{Any,Any}",
+    "page": "API Reference",
+    "title": "DataDeps.run_post_fetch",
+    "category": "method",
+    "text": "run_post_fetch(post_fetch_method, fetched_path)\n\nexecutes the postfetchmethod on the given fetched path, Performs in (async) parallel if multiple paths are given\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.safer_joinpath-Tuple{Any,Vararg{Any,N} where N}",
+    "page": "API Reference",
+    "title": "DataDeps.safer_joinpath",
+    "category": "method",
+    "text": "safer_joinpath(basepart, parts...)\n\nA variation on joinpath, that is more resistant to directory traveral attack The parts to be joined (excluding the basepart), are not allowed to contain .., or begin with a /. If they do then this throws an DomainError.\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.splitpath-Tuple{AbstractString}",
+    "page": "API Reference",
+    "title": "DataDeps.splitpath",
+    "category": "method",
+    "text": "splitpath(path)\n\nThe opposite of joinpath, splits a path unto each of its directories names / filename (for the last).\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.try_determine_load_path-Tuple{String,Any}",
+    "page": "API Reference",
+    "title": "DataDeps.try_determine_load_path",
+    "category": "method",
+    "text": "try_determine_load_path(name)\n\nTrys to find a local path to the datadep with the given name. If it fails then it returns nothing.\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.try_determine_package_datadeps_dir-Tuple{Any}",
+    "page": "API Reference",
+    "title": "DataDeps.try_determine_package_datadeps_dir",
+    "category": "method",
+    "text": "try_determine_package_datadeps_dir(filepath)\n\nTakes a path to a file. If that path is in a package\'s folder, Then this returns a path to the deps/data dir for that package (as a Nullable). Which may or may not exist. If not in a package returns null\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.try_get_filename-Tuple{Any}",
+    "page": "API Reference",
+    "title": "DataDeps.try_get_filename",
+    "category": "method",
+    "text": "try_get_filename(url)\n\nUses as HEAD request, to attempt to retrieve the filename from the HTTP headers. Returns a string or nothing if it failes\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#DataDeps.uv_access-Tuple{Any,DataDeps.AccessMode}",
+    "page": "API Reference",
+    "title": "DataDeps.uv_access",
+    "category": "method",
+    "text": "uv_access(path, mode)\n\nCheck access to a path. Returns 2 results, first an error code (0 for all good), and second an error message. https://stackoverflow.com/a/47126837/179081\n\n\n\n\n\n"
+},
+
+{
+    "location": "40-apiref.html#Internal-1",
+    "page": "API Reference",
+    "title": "Internal",
+    "category": "section",
+    "text": "Modules = [DataDeps]\nPrivate = true"
 },
 
 {
