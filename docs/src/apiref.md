@@ -3,11 +3,20 @@
 
 ## Public API
 
-```@autodocs
-Modules = [DataDeps]
-Private = false
-Order = [:function]
+```docs
+DataDep
+ManualDataDep
+register
+@datadep_str
+download
 ```
+
+### Helpers
+
+```docs
+unpack
+```
+
 
 ## Internal
 
@@ -15,7 +24,6 @@ Order = [:function]
 ```@autodocs
 Modules = [DataDeps]
 Private = true
-Order = [:function]
 ```
 
 
