@@ -132,8 +132,6 @@ read(datadep"MNIST"*"/train-labels-idx1-ubyte.gz")
     @test read(datadep"MNIST"*"/train-labels-idx1-ubyte.gz") == read(datadep"MNIST train"*"/train-labels-idx1-ubyte.gz")
 end
 
-# TODO: Reenable when UCI site is back up
-#= 
 
 
 @testset "UCI Banking" begin
@@ -208,7 +206,7 @@ end
     @test length(collect(eachline(datadep"UCI Adult/adult.names"))) == 110
 
 end
-=#
+
 
 @testset "FastText gzipped" begin
 	register(DataDep("FastText fr",

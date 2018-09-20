@@ -25,8 +25,8 @@ Some of these add some additional abstraction or niceness for users on top of th
 
   - [ANN: thread on Discourse](https://discourse.julialang.org/t/ann-datadeps-jl-bindeps-for-data/8457/15)
   - [MLOSS](http://mloss.org/software/view/705/)
-  - [Release Blog Post (as above)](http://white.ucc.asn.au/2018/01/18/DataDeps.jl-Repeatabled-Data-Setup-for-Repeatable-Science.html)
-  - [DataDepsGenerators.jl (as above)](https://github.com/oxinabox/DataDepsGenerators.jl)
+  - [Release Blog Post](http://white.ucc.asn.au/2018/01/18/DataDeps.jl-Repeatabled-Data-Setup-for-Repeatable-Science.html)
+  - [DataDepsGenerators.jl](https://github.com/oxinabox/DataDepsGenerators.jl)
   - JuliaCon 2018 [Slides](https://figshare.com/articles/JuliaCon2018_DataDeps_jl_pdf/6949145), and [Video](https://youtu.be/kSlQpzccRaI)
  
  #### Paper Preprint
