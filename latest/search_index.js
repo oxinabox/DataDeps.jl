@@ -329,6 +329,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "z40-apiref.html#DataDeps.unpack",
+    "page": "API Reference",
+    "title": "DataDeps.unpack",
+    "category": "function",
+    "text": "unpack(f; keep_originals=false)\n\nExtracts the content of an archive in the current directory; deleting the original archive, unless the keep_originals flag is set.\n\n\n\n\n\n"
+},
+
+{
     "location": "z40-apiref.html#Helpers-1",
     "page": "API Reference",
     "title": "Helpers",
@@ -342,14 +350,6 @@ var documenterSearchIndex = {"docs": [
     "title": "DataDeps.DataDep",
     "category": "type",
     "text": "DataDep(\n    name::String,\n    message::String,\n    remote_path::Union{String,Vector{String}...},\n    [checksum::Union{String,Vector{String}...},]; # Optional, if not provided will generate\n    # keyword args (Optional):\n    fetch_method=fetch_http # (remote_filepath, local_directory)->local_filepath\n    post_fetch_method=identity # (local_filepath)->Any\n)\n\nRequired Fields\n\n*Name**: the name used to refer to this datadep, coresponds to a folder name where it will be stored\nIt can have spaces or any other character that is allowed in a Windows filestring (which is a strict subset of the restriction for unix filenames).\nMessage: A message displayed to the user for they are asked if they want to downloaded it.\nThis is normally used to give a link to the original source of the data, a paper to be cited etc.\nremote_path: where to fetch the data from. Normally a string or strings) containing an URL\nThis is usually a string, or a vector of strings (or a vector of vector... see Recursive Structure below)\n\nOptional Fields\n\nchecksum this is very flexible, it is used to check the files downloaded correctly\nBy far the most common use is to just provide a SHA256 sum as a hex-string for the files\nIf not provided, then a warning message with the  SHA256 sum is displayed. This is to help package devs workout the sum for there files, without using an external tool.\nIf you want to use a different hashing algorithm, then you can provide a tuple (hashfun, targethex)\nhashfun should be a function which takes an IOStream, and returns a Vector{UInt8}.\n\n      - Such as any of the functions from [SHA.jl](https://github.com/staticfloat/SHA.jl), eg `sha3_384`, `sha1_512`\n      - or `md5` from [MD5.jl](https://github.com/oxinabox/MD5.jl)\n\nIf you want to use a different hashing algorithm, but don\'t know the sum, you can provide just the hashfun and a warning message will be displayed, giving the correct tuple of (hashfun, targethex) that should be added to the registration block.\n\n- If you don\'t want to provide a checksum,  because your data can change pass in the type `Any` which will suppress the warning messages. (But see above warnings about \"what if my data is dynamic\")\n- Can take a vector of checksums, being one for each file, or a single checksum in which case the per file hashes are `xor`ed to get the target hash. (See [Recursive Structure](Recursive Structure) below)\n\nfetch_method=fetch_http a function to run to download the files.\nFunction should take 2 parameters (remotepath, local_directory), and must return a local filepath\nIt is responsible for determining what the local filename should be\nChange this to change the transfer protocol, for example to use an auth\'ed connection.\nDefault fetch_http is a wrapper around Base.download which invokes commandline download tools.\nCan take a vector of methods, being one for each file, or a single method, in which case that method is used to download all of them. (See Recursive Structure below)\nVery few people will need to override this if they are just downloading public HTTP files. \npost_fetch_method a function to run after the files have download\nShould take the local filepath as its first and only argument. Can return anything.\nDefault is to do nothing.\nCan do what it wants from there, but most likes wants to extract the file into the data directory.\ntowards this end DataDeps includes a command: unpack which will extract an compressed folder, deleting the original.\nIt should be noted that it post_fetch_method runs from within the data directory\nwhich means operations that just write to the current working directory (like rm or mv or run(`SOMECMD`)) just work.\nYou can call cwd() to get the the data directory for your own functions. (Or dirname(local_filepath))\nCan take a vector of methods, being one for each file, or a single method, in which case that ame method is applied to all of the files. (See Recursive Structure in the README.md)\n\n\n\n\n\n"
-},
-
-{
-    "location": "z40-apiref.html#DataDeps.ManualDataDep",
-    "page": "API Reference",
-    "title": "DataDeps.ManualDataDep",
-    "category": "type",
-    "text": "ManualDataDep(name, message)\n\nA DataDep for if the installation needs to be handled manually. This can be done via Pkg/git if you put the dependency into the packages repo\'s /deps/data directory. More generally, message should give instructions on how to setup the data.\n\n\n\n\n\n"
 },
 
 {
