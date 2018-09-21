@@ -161,7 +161,7 @@ Ensurses the user accepts the terms of use; otherwise errors out.
 """
 function accept_terms(datadep::DataDep, localpath, remotepath, ::Nothing)
    if haskey(ENV, "DATADEPS_ALWAY_ACCEPT")
-       warn("Environment variable \$DATADEPS_ALWAY_ACCEPT is deprecated. " *
+       @warn("Environment variable \$DATADEPS_ALWAY_ACCEPT is deprecated. " *
             "Please use \$DATADEPS_ALWAYS_ACCEPT instead.")
    end
     if !(env_bool("DATADEPS_ALWAYS_ACCEPT") || env_bool("DATADEPS_ALWAY_ACCEPT"))
