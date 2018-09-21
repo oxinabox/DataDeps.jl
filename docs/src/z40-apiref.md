@@ -3,7 +3,7 @@
 
 ## Public API
 
-```docs
+```@docs
 DataDep
 ManualDataDep
 register
@@ -13,7 +13,7 @@ download
 
 ### Helpers
 
-```docs
+```@docs
 unpack
 ```
 
