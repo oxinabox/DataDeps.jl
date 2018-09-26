@@ -100,6 +100,9 @@ DataDeps.jl tries to have very sensible defaults.
     - Note that it remains your responsibility to understand and read any terms of the data use (this is remains true even if you don't turn on this bypass)    
     - This is provided for scripting (in particular CI) use
     - If the `CI` environment variable is set to true, `DATADEPS_ALWAYS_ACCEPT`  **must be set** to true or false. This is to prevent hanging in CI.
+ - `DATADEP_PROGRESS_UPDATE_PERIOD` -- how often (in seconds) to print the progress to the log for the download
+	- This is used by the default `fetch_method` and when implementing custom methods it is good to respect it.
+	- default: `5` (seconds) usually; `Inf` (i.e. no updates) if `DATADEPS_ALWAYS_ACCEPT` is set.
  - `DATADEPS_LOAD_PATH` -- The list of paths to be prepended to the standard loadpath to save and load data from
     - By default this is empty, but it can be a colon separated list (like most unix path variables). [For more details see above](#The-Load-Path)
  - `DATADEPS_NO_STANDARD_LOAD_PATH` if this is set to `true` (default `false`), then the aforementioned list of standard loadpath files is not included
