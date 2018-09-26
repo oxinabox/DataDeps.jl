@@ -133,7 +133,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Usage for end-users",
     "title": "Configuration",
     "category": "section",
-    "text": "Currently configuration is done via Enviroment Variables. It is likely to stay that way, as they are also easy to setup in CI tools. You can set these in the .juliarc file using the ENV dictionary if you don\'t want to mess up your .profile. However, most people shouldn\'t need to. DataDeps.jl tries to have very sensible defaults.DATADEPS_ALWAYS_ACCEPT – bypasses the confirmation before downloading data. Set to true (or similar string)\ndefault false\nNote that it remains your responsibility to understand and read any terms of the data use (this is remains true even if you don\'t turn on this bypass)    \nThis is provided for scripting (in particular CI) use\nIf the CI environment variable is set to true, DATADEPS_ALWAYS_ACCEPT  must be set to true or false. This is to prevent hanging in CI.\nDATADEPS_LOAD_PATH – The list of paths to be prepended to the standard loadpath to save and load data from\nBy default this is empty, but it can be a colon separated list (like most unix path variables). For more details see above\nDATADEPS_NO_STANDARD_LOAD_PATH if this is set to true (default false), then the aforementioned list of standard loadpath files is not included\nDATADEPS_DISABLE_DOWNLOAD – causes any action that would result in the download being triggered to throw an exception.\nuseful e.g. if you are in an environment with metered data, where your datasets should have already been downloaded earlier, and if there were not you want to respond to the situation rather than let DataDeps download them for you.\ndefault false\nDATADEPS_DISABLE_ERROR_CLEANUP – By default DataDeps.jl will cleanup the directory the datadep was being downloaded to if there is an error during the resolution (In any of the fetch, checksum, or post_fetch). For debugging purposes you may wish to disable this cleanup step so you can interrogate the files by hand."
+    "text": "Currently configuration is done via Enviroment Variables. It is likely to stay that way, as they are also easy to setup in CI tools. You can set these in the .juliarc file using the ENV dictionary if you don\'t want to mess up your .profile. However, most people shouldn\'t need to. DataDeps.jl tries to have very sensible defaults.DATADEPS_ALWAYS_ACCEPT – bypasses the confirmation before downloading data. Set to true (or similar string)\ndefault false\nNote that it remains your responsibility to understand and read any terms of the data use (this is remains true even if you don\'t turn on this bypass)    \nThis is provided for scripting (in particular CI) use\nIf the CI environment variable is set to true, DATADEPS_ALWAYS_ACCEPT  must be set to true or false. This is to prevent hanging in CI.\nDATADEP_PROGRESS_UPDATE_PERIOD – how often (in seconds) to print the progress to the log for the download- This is used by the default `fetch_method` and when implementing custom methods it is good to respect it.\n- default: `5` (seconds) usually; `Inf` (i.e. no updates) if `DATADEPS_ALWAYS_ACCEPT` is set.DATADEPS_LOAD_PATH – The list of paths to be prepended to the standard loadpath to save and load data from\nBy default this is empty, but it can be a colon separated list (like most unix path variables). For more details see above\nDATADEPS_NO_STANDARD_LOAD_PATH if this is set to true (default false), then the aforementioned list of standard loadpath files is not included\nDATADEPS_DISABLE_DOWNLOAD – causes any action that would result in the download being triggered to throw an exception.\nuseful e.g. if you are in an environment with metered data, where your datasets should have already been downloaded earlier, and if there were not you want to respond to the situation rather than let DataDeps download them for you.\ndefault false\nDATADEPS_DISABLE_ERROR_CLEANUP – By default DataDeps.jl will cleanup the directory the datadep was being downloaded to if there is an error during the resolution (In any of the fetch, checksum, or post_fetch). For debugging purposes you may wish to disable this cleanup step so you can interrogate the files by hand."
 },
 
 {
@@ -485,15 +485,7 @@ var documenterSearchIndex = {"docs": [
     "page": "API Reference",
     "title": "DataDeps.fetch_http",
     "category": "method",
-    "text": "fetch_http(remotepath, localdir)\n\nPass in a HTTP[/S] URL  and a directory to save it to, and it downloads that file, returing the local path. This is using the HTTP protocol\'s method of defining filenames in headers, if that information is present.\n\n\n\n\n\n"
-},
-
-{
-    "location": "z40-apiref.html#DataDeps.get_filename-Tuple{Any}",
-    "page": "API Reference",
-    "title": "DataDeps.get_filename",
-    "category": "method",
-    "text": "get_filename(remotepath)\n\nGiven a remotepath (URL) returns the filename that it should be saved to locally.\n\n\n\n\n\n"
+    "text": "fetch_http(remotepath, localdir; update_period=5)\n\nPass in a HTTP[/S] URL  and a directory to save it to, and it downloads that file, returing the local path. This is using the HTTP protocol\'s method of defining filenames in headers, if that information is present. Returns the localpath that it was donwloaded to.\n\nupdate_period controls how often to print the download progress to the log. It is expressed in seconds. It is printed at @info level in the log. By default it is once per second, though this depends on configuration\n\n\n\n\n\n"
 },
 
 {
@@ -553,11 +545,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "z40-apiref.html#DataDeps.process_header_filename-Tuple{RegexMatch}",
+    "location": "z40-apiref.html#DataDeps.progress_update_period-Tuple{}",
     "page": "API Reference",
-    "title": "DataDeps.process_header_filename",
+    "title": "DataDeps.progress_update_period",
     "category": "method",
-    "text": "process_header_filename(raw)\n\nDeal with some of the weird and varied ways filenames can be given. Not full coverage, but getting the common cases.\n\nReturn nothing if input is nothing\n\n\n\n\n\n"
+    "text": "progress_update_period()\n\nReturns the period between updated being logged on the progress. This is used by the default fetch_method and is generally a good idea to use it in any custom fetch method, if possible\n\n\n\n\n\n"
 },
 
 {
@@ -625,14 +617,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "z40-apiref.html#DataDeps.safer_joinpath-Tuple{Any,Vararg{Any,N} where N}",
-    "page": "API Reference",
-    "title": "DataDeps.safer_joinpath",
-    "category": "method",
-    "text": "safer_joinpath(basepart, parts...)\n\nA variation on joinpath, that is more resistant to directory traveral attack The parts to be joined (excluding the basepart), are not allowed to contain .., or begin with a /. If they do then this throws an DomainError.\n\n\n\n\n\n"
-},
-
-{
     "location": "z40-apiref.html#DataDeps.splitpath-Tuple{AbstractString}",
     "page": "API Reference",
     "title": "DataDeps.splitpath",
@@ -654,14 +638,6 @@ var documenterSearchIndex = {"docs": [
     "title": "DataDeps.try_determine_package_datadeps_dir",
     "category": "method",
     "text": "try_determine_package_datadeps_dir(filepath)\n\nTakes a path to a file. If that path is in a package\'s folder, Then this returns a path to the deps/data dir for that package (as a Nullable). Which may or may not exist. If not in a package returns null\n\n\n\n\n\n"
-},
-
-{
-    "location": "z40-apiref.html#DataDeps.try_get_filename-Tuple{Any}",
-    "page": "API Reference",
-    "title": "DataDeps.try_get_filename",
-    "category": "method",
-    "text": "try_get_filename(url)\n\nUses as HEAD request, to attempt to retrieve the filename from the HTTP headers. Returns a string or nothing if it failes\n\n\n\n\n\n"
 },
 
 {
