@@ -4,7 +4,6 @@ tests = [
     "util",
     "locations",
     "main",
-    "fetch_helpers"
 ]
 
 for filename in tests
