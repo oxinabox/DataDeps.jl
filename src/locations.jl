@@ -5,7 +5,7 @@ const standard_loadpath = joinpath.([
     Base.DEPOT_PATH; homedir(); # Common all systems
 
     @static if Sys.iswindows()
-        vcat(get.(ENV,
+        vcat(get.(Ref(ENV),
            ["APPDATA", "LOCALAPPDATA",
             "ProgramData", "ALLUSERSPROFILE", # Probably the same, on all systems where both exist
             "PUBLIC", "USERPROFILE"], # Home Dirs ("USERPROFILE" is probably the same as homedir()
