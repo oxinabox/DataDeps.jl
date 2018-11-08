@@ -1,7 +1,7 @@
 using Base.Test
 using DataDeps
 
-ENV["DATADEPS_ALWAY_ACCEPT"]=true
+ENV["DATADEPS_ALWAYS_ACCEPT"]=true
 
 @testset "Pi" begin
     register(DataDep(
