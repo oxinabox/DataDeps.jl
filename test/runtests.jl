@@ -4,6 +4,7 @@ tests = [
     "util",
     "locations",
     "main",
+    "preflight"
 ]
 
 for filename in tests
