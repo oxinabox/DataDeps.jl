@@ -16,9 +16,9 @@ using ExpectationStubs
             )
         )
 
-
-        @test preflight("TestFailChecksumPreFlight",  "DummyFileFail.txt") == false
-        @test @used dummyhash("DummyFileFail.txt")
+        local_filepath = @__FILE__ # Need some real file to test on
+        @test preflight("TestFailChecksumPreFlight",  local_filepath) == false
+        @test @used dummyhash(@__FILE__)
     end
 
     @testset "pass" begin
@@ -34,14 +34,15 @@ using ExpectationStubs
             )
         )
 
-        @test preflight("TestPassChecksumPreFlight",  "DummyFilePass.txt") == true
-        @test @used dummyhash("DummyFilePass.txt")
+        local_filepath = @__FILE__ # Need some real file to test on
+        @test preflight("TestPassChecksumPreFlight",  local_filepath) == true
+        @test @used dummyhash(@__FILE__)
     end
 end
 
 
 
-@testset "Checksum" begin
+@testset "PostFetch" begin
     @testset "fail" begin
         register(
             DataDep(
@@ -53,9 +54,8 @@ end
             )
         )
 
-
-        @test preflight("TestFailPostFetchPreFlight",  "DummyFileFail.txt") == false
-        
+        local_filepath = @__FILE__ # Need some real file to test on
+        @test preflight("TestFailPostFetchPreFlight",  local_filepath) == false
     end
 
     @testset "pass" begin
@@ -72,8 +72,9 @@ end
             )
         )
 
-        @test preflight("TestPassPostFetchPreFlight",  "DummyFilePass.txt") == true
-        @test !(@used dummy_postfetch("DummyFilePass.txt")) # should not run on file given, but on a copy.
+        local_filepath = @__FILE__ # Need some real file to test on
+        @test preflight("TestPassPostFetchPreFlight",  local_filepath) == true
+        @test !(@used dummy_postfetch(@__FILE__)) # should not run on file given, but on a copy.
         @test @used dummy_postfetch(::Any) # should run on some file
     end
 end

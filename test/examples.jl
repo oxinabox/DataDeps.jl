@@ -153,7 +153,7 @@ end
         [(SHA.sha1, "785118991cd7d7ee7d8bf75ea58b6fae969ac185"),
          (SHA.sha3_224, "01b53f5b69d0b169070219b4391c623d84ab17d4cea8c8895cbf951d")];
 
-         post_fetch_method = file->run(`unzip $file`)
+         post_fetch_method = unpack
     ))
 
     data, header = readdlm(datadep"UCI Banking/bank.csv", ';', header=true)
