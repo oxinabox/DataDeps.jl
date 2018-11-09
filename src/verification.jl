@@ -22,9 +22,10 @@ function run_checksum((hasher, expected_hash)::Tuple{<:Any, <:AbstractString}, p
     
     if actual_hash != expected_hash
         @warn "Checksum did not match" expected_hash actual_hash path
+        return false
+    else
+        return true
     end
-
-    return matched
 end
 
 
