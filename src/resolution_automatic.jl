@@ -140,7 +140,6 @@ Ensures the checksum passes, and handles the dialog with use user when it fails.
 """
 function checksum_pass(hash, fetched_path)
     if !run_checksum(hash, fetched_path)
-        @warn("Hash failed", fetched_path)
         reply = input_choice("Do you wish to Abort, Retry download or Ignore", 'a','r','i')
         if reply=='a'
             abort("Hash Failed, user elected not to retry")

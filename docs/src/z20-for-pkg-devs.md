@@ -115,14 +115,14 @@ register(DataDep(
 ### Optional Fields
  - *checksum* this is very flexible, it is used to check the files downloaded correctly
     - By far the most common use is to just provide a SHA256 sum as a hex-string for the files
-    - If not provided, then a warning message with the  SHA256 sum is displayed. This is to help package devs workout the sum for there files, without using an external tool.
+    - If not provided, then a warning message with the  SHA256 sum is displayed. This is to help package devs workout the sum for there files, without using an external tool. You can also calculate it using [Preupload Checking](@ref).
     - If you want to use a different hashing algorithm, then you can provide a tuple `(hashfun, targethex)`
         - `hashfun` should be a function which takes an IOStream, and returns a `Vector{UInt8}`.
 	      - Such as any of the functions from [SHA.jl](https://github.com/staticfloat/SHA.jl), eg `sha3_384`, `sha1_512`
 	      - or `md5` from [MD5.jl](https://github.com/oxinabox/MD5.jl)
   - If you want to use a different hashing algorithm, but don't know the sum, you can provide just the `hashfun` and a warning message will be displayed, giving the correct tuple of `(hashfun, targethex)` that should be added to the registration block.
 	- If you don't want to provide a checksum,  because your data can change pass in the type `Any` which will suppress the warning messages. (But see above warnings about "what if my data is dynamic")
-    - Can take a vector of checksums, being one for each file, or a single checksum in which case the per file hashes are `xor`ed to get the target hash. (See [Recursive Structure](@ref) below)
+    - Can take a vector of checksums, being one for each file, or a single checksum in which case the per file hashes are `xor`ed to get the target hash. (See [Recursive Structure](@ref))
 
 
  -  `fetch_method=http_download` a function to run to download the files.
@@ -141,7 +141,8 @@ register(DataDep(
     - It should be noted that it `post_fetch_method` runs from within the data directory
        - which means operations that just write to the current working directory (like `rm` or `mv` or ```run(`SOMECMD`))``` just work.
        - You can call `cwd()` to get the the data directory for your own functions. (Or `dirname(local_filepath)`)
-    - Can take a vector of methods, being one for each file, or a single method, in which case that ame method is applied to all of the files. (See [Recursive Structure](@ref) below)
+    - Can take a vector of methods, being one for each file, or a single method, in which case that ame method is applied to all of the files. (See [Recursive Structure](@ref))
+    - You can check this as part of [Preupload Checking](@ref).
 
 
 ### Recursive Structure
@@ -208,3 +209,69 @@ It is fully documented in its docstring.
 
 
 
+## Preupload Checking
+
+Preupload checking exists to help package developers check their DataDeps on local files before they upload them.
+It checks the **checksum** is filled in and matchs, and that the `post_fetch_method` can be run without throwing any exceptions.
+
+For example, if I wished to check the UCI banking data, from a local file called `bank.zip`,
+with the registration as below:
+
+```
+register(
+    DataDep(
+        "UCI Banking",
+        """
+        Dataset: Bank Marketing Data Set
+        Authors: S. Moro, P. Cortez and P. Rita.
+        Website: https://archive.ics.uci.edu/ml/datasets/bank+marketing
+        This dataset is public available for research. The details are described in [Moro et al., 2014].
+        Please include this citation if you plan to use this database:
+        [Moro et al., 2014] S. Moro, P. Cortez and P. Rita. A Data-Driven Approach to Predict the Success of Bank Telemarketing. Decision Support Systems, Elsevier, 62:22-31, June 2014
+        """,
+        [
+        "https://archive.ics.uci.edu/ml/machine-learning-databases/00222/bank.zip",
+        "https://archive.ics.uci.edu/ml/machine-learning-databases/00222/bank-additional.zip"
+        ]
+		#NOTE: I am not providing a checksum here
+		;
+        post_fetch_method = unpack
+    )
+);
+```
+
+then we would do so by calling `preupload_check`, passing in the DataDep name, and the local file.
+
+
+```
+julia> preupload_check("UCI Banking", "./bank.zip")
+┌ Warning: Checksum not provided, add to the Datadep Registration the following hash line
+│   hash = "\"99d7e8eb12401ed278b793984423915411ea8df099e1795f9fefe254f513fe5e\""
+└ @ DataDeps D:\White\Documents\GitHub\DataDeps.jl\src\verification.jl:44
+
+7-Zip [64] 16.04 : Copyright (c) 1999-2016 Igor Pavlov : 2016-10-04
+
+Scanning the drive for archives:
+1 file, 579043 bytes (566 KiB)
+
+Extracting archive: C:\Users\White\AppData\Local\Temp\jl_72FA.tmp\bank.zip
+--
+Path = C:\Users\White\AppData\Local\Temp\jl_72FA.tmp\bank.zip
+Type = zip
+Physical Size = 579043
+
+Everything is Ok
+
+Files: 3
+Size:       5075686
+Compressed: 579043
+true
+```
+
+Notice that it has issued a *warning* that the checksum was not provided,
+and has output the hash that needs to be added to the registration block.
+But it has not issued any warnings about the `unpack`.
+The `fetch_method` is never invoked.
+
+It is good to use preupload checking before you upload files.
+It can make debugging easier.

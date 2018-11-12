@@ -17,9 +17,15 @@ If path (the second parameter) is a Vector,
 then unless checksum is also a Vector,
 the result is the xor of the all the file checksums.
 """
-function run_checksum(hash::Tuple{<:Any, <:AbstractString}, path)
-    hasher, target = hash
-    hexchecksum(hasher, path) == target
+function run_checksum((hasher, expected_hash)::Tuple{<:Any, <:AbstractString}, path)
+    actual_hash = hexchecksum(hasher, path)
+    
+    if actual_hash != expected_hash
+        @warn "Checksum did not match" expected_hash actual_hash path
+        return false
+    else
+        return true
+    end
 end
 
 
