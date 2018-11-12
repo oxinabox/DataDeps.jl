@@ -9,7 +9,7 @@ using ExpectationStubs
     
         register(
             DataDep(
-                "TestFailChecksumPreFlight",
+                "TestFailChecksumPreupload",
                 "dummy message",
                 "http://example.void",
                 (dummyhash, "0000")
@@ -17,7 +17,7 @@ using ExpectationStubs
         )
 
         local_filepath = @__FILE__ # Need some real file to test on
-        @test preflight("TestFailChecksumPreFlight",  local_filepath) == false
+        @test preupload_check("TestFailChecksumPreupload",  local_filepath) == false
         @test @used dummyhash(@__FILE__)
     end
 
@@ -27,7 +27,7 @@ using ExpectationStubs
 
         register(
             DataDep(
-                "TestPassChecksumPreFlight",
+                "TestPassChecksumPreupload",
                 "dummy message",
                 "http://example.void",
                 (dummyhash, "1234")
@@ -35,7 +35,7 @@ using ExpectationStubs
         )
 
         local_filepath = @__FILE__ # Need some real file to test on
-        @test preflight("TestPassChecksumPreFlight",  local_filepath) == true
+        @test preupload_check("TestPassChecksumPreupload",  local_filepath) == true
         @test @used dummyhash(@__FILE__)
     end
 end
@@ -46,7 +46,7 @@ end
     @testset "fail" begin
         register(
             DataDep(
-                "TestFailPostFetchPreFlight",
+                "TestFailPostFetchPreupload",
                 "dummy message",
                 "http://example.void",
                 Any;
@@ -55,7 +55,7 @@ end
         )
 
         local_filepath = @__FILE__ # Need some real file to test on
-        @test preflight("TestFailPostFetchPreFlight",  local_filepath) == false
+        @test preupload_check("TestFailPostFetchPreupload",  local_filepath) == false
     end
 
     @testset "pass" begin
@@ -64,7 +64,7 @@ end
 
         register(
             DataDep(
-                "TestPassPostFetchPreFlight",
+                "TestPassPostFetchPreupload",
                 "dummy message",
                 "http://example.void",
                 Any,
@@ -73,7 +73,7 @@ end
         )
 
         local_filepath = @__FILE__ # Need some real file to test on
-        @test preflight("TestPassPostFetchPreFlight",  local_filepath) == true
+        @test preupload_check("TestPassPostFetchPreupload",  local_filepath) == true
         @test !(@used dummy_postfetch(@__FILE__)) # should not run on file given, but on a copy.
         @test @used dummy_postfetch(::Any) # should run on some file
     end

@@ -6,7 +6,7 @@ using Reexport
 @reexport using SHA
 
 export DataDep, ManualDataDep
-export register, resolve, @datadep_str, preflight
+export register, resolve, @datadep_str, preupload_check
 export unpack
 
 include("errors.jl")
@@ -23,7 +23,7 @@ include("resolution.jl")
 include("resolution_automatic.jl")
 include("resolution_manual.jl")
 
-include("preflight.jl")
+include("preupload.jl")
 
 include("fetch_helpers.jl")
 include("post_fetch_helpers.jl")
