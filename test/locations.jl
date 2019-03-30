@@ -1,5 +1,5 @@
 using Test
-using DataDeps: try_determine_load_path, determine_save_path, try_determine_package_datadeps_dir
+using DataDeps: try_determine_load_path, determine_save_path, try_determine_package_datadeps_dir, NoValidPathError
 
 
 @testset "package data deps dir" begin
@@ -10,5 +10,11 @@ using DataDeps: try_determine_load_path, determine_save_path, try_determine_pack
         @test try_determine_package_datadeps_dir(fn) == nothing
     end
 
-end
+    mktemp() do fn, fh
+        ENV["DATADEPS_LOAD_PATH"] = ""
+        ENV["DATADEPS_NO_STANDARD_LOAD_PATH"] = false
+        @test try_determine_package_datadeps_dir(fn) == nothing
+        @test_throws NoValidPathError determine_save_path("test")
+    end
 
+end
