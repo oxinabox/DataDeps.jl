@@ -208,18 +208,15 @@ end
 end
 
 
-@testset "FastText gzipped" begin
-	register(DataDep("FastText fr",
+@testset "gzipped source code" begin
+	register(DataDep("DataDeps Source v0.5.0",
 		"""
-		Dataset: 300 dimentional FastText Word Embeddings, for French trained on Wikipedia and the CommonCrawl
-		Website: https://fasttext.cc/docs/en/crawl-vectors.html
-		Author:  Grave et. al. (Facebook)
-		License: CC-SA 3.0
-		Citation: E. Grave*, P. Bojanowski*, P. Gupta, A. Joulin, T. Mikolov, Learning Word Vectors for 157 Languages
-		""",
-		"https://s3-us-west-1.amazonaws.com/fasttext-vectors/word-vectors-v2/cc.fr.300.vec.gz",
-    	"ab0dca4ef2a8a38d97ca119b491c701c57e17178cfc2f032f3de973e86fe87aa",
-		post_fetch_method=DataDeps.unpack
+		This is the source code of DataDeps.jl v0.5.0
+        This test checked we can unpack gzipped tarballs.
+        """,
+		"https://github.com/oxinabox/DataDeps.jl/archive/v0.5.0.tar.gz",
+		"cd1fc3e58b4272ec559d1c5bcda5e4f0339647dab709baa2d507a73f3a89168d";
+        post_fetch_method=DataDeps.unpack
 	));
-    @test length(readdir(datadep"FastText fr")) == 1
+    @test length(readdir(datadep"DataDeps Source v0.5.0")) == 2
 end

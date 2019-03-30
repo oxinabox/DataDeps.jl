@@ -1,12 +1,12 @@
 ## Documentation: http://docs.travis-ci.com/user/languages/julia/
 language: julia
-env:
-  - DOCUMENTER_DEBUG: true
 os:
   - linux
   - osx
 julia:
   - 0.7
+  - 1.0
+  - 1.1
   - nightly
 notifications:
   email: false
@@ -18,18 +18,6 @@ matrix:
     - julia: nightly
 
 
-
-## uncomment and modify the following lines to manually install system packages
-#addons:
-#  apt: # apt-get for linux
-#    packages:
-#    - gfortran
-#before_script: # homebrew for mac
-#  - if [ $TRAVIS_OS_NAME = osx ]; then brew install gcc; fi
-
-## uncomment the following lines to override the default test script
-#script:
-#  - julia -e 'Pkg.clone(pwd()); Pkg.build("DataDeps"); Pkg.test("DataDeps"; coverage=true)'
 after_success:
   # push coverage results to Coveralls
   - julia -e 'cd(Pkg.dir("DataDeps")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())'
