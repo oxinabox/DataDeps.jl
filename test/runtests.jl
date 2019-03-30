@@ -1,5 +1,7 @@
 using Test
 
+@info "Notice: These tests check paths some of which are supposed to throw warnings. Others of which are not. Some attention should be paid when reading the output."
+
 tests = [
     "util",
     "locations",

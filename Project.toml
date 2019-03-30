@@ -1,8 +1,7 @@
-authors = ["oxinabox <oxinabox@ucc.asn.au>"]
 name = "DataDeps"
 uuid = "9ca5147a-7bb5-11e8-2d1a-6b423858166c"
+authors = ["oxinabox <oxinabox@ucc.asn.au>"]
 version = "0.6.0"
-
 
 [deps]
 HTTP = "cd3eb016-35fb-5094-929b-558a96fad6f3"
@@ -14,9 +13,9 @@ ExpectationStubs = "0.2.0"
 HTTP = "0.7.0"
 
 [extras]
-Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
-ExpectationStubs = "cd0106a6-6d98-567f-99b2-156dd1635c57"
 DelimitedFiles = "8bb1440f-4735-579b-a4ab-409b98df4dab"
+ExpectationStubs = "cd0106a6-6d98-567f-99b2-156dd1635c57"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
 test = ["Test", "ExpectationStubs", "DelimitedFiles"]
