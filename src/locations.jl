@@ -109,8 +109,10 @@ Determines the location to save a datadep with the given name to.
 """
 function determine_save_path(name, rel=nothing)::String
     cands = preferred_paths(rel; use_package_dir=false) #TODO Consider removing `rel` argument, it is not used
-    path_ind = findfirst(can_read_file, cands)
-    if path_ind === nothing
+    path_ind = findfirst(cands) do path
+        0 == first(uv_access(path, W_OK))
+    end
+    if path_ind ===
         throw(NoValidPathError("No possible save path"))
     end
     return joinpath(cands[path_ind], name)
