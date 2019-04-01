@@ -113,7 +113,7 @@ function determine_save_path(name, rel=nothing)::String
         0 == first(uv_access(path, W_OK))
     end
     if path_ind === nothing
-        @error "No writable path exists to save the data, make sure there exists as writable path in your DataDeps Load Path" ENV["DATADEPS_LOAD_PATH"]
+        @error "No writable path exists to save the data, make sure there exists as writable path in your DataDeps Load Path\nSee http://white.ucc.asn.au/DataDeps.jl/stable/z10-for-end-users.html#The-Load-Path-1" ENV["DATADEPS_LOAD_PATH"]
         throw(NoValidPathError("No possible save path"))
     end
     return joinpath(cands[path_ind], name)
