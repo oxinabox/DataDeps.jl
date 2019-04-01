@@ -112,7 +112,7 @@ function determine_save_path(name, rel=nothing)::String
     path_ind = findfirst(cands) do path
         0 == first(uv_access(path, W_OK))
     end
-    if path_ind ===
+    if path_ind === nothing
         throw(NoValidPathError("No possible save path"))
     end
     return joinpath(cands[path_ind], name)

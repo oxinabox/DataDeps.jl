@@ -10,10 +10,7 @@ using DataDeps: try_determine_load_path, determine_save_path, try_determine_pack
         @test try_determine_package_datadeps_dir(fn) == nothing
     end
 
-    mktemp() do fn, fh
-        ENV["DATADEPS_LOAD_PATH"] = ""
-        ENV["DATADEPS_NO_STANDARD_LOAD_PATH"] = false
-        @test try_determine_package_datadeps_dir(fn) == nothing
+    withenv("DATADEPS_LOAD_PATH" => "", "DATADEPS_NO_STANDARD_LOAD_PATH" => true) do
         @test_throws NoValidPathError determine_save_path("test")
     end
 
