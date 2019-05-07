@@ -83,7 +83,7 @@ This is done in a declaritie manner.
 
 A DataDeps registration is a block of code declaring a dependency.
 You should put it somewhere that it will be executed before any other code in your script that depends on that data.
-In most cases it is best to put it inside the  [modules's `__init__()` function](https://docs.julialang.org/en/stable/manual/modules/#Module-initialization-and-precompilation-1).
+In most cases it is best to put it inside the  [modules's `__init__()` function](https://docs.julialang.org/en/latest/manual/modules/#Module-initialization-and-precompilation-1).
 
 
 To do the actual registration one just  calls `register(::AbstractDataDep)`.
