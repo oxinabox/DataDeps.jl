@@ -191,6 +191,14 @@ It attempts to use webscraping and such to workout what should be in the registr
 You can then edit the generated code to make it suitable for your use.
 (E.g. remove excessive information in the message)
 
+### Removing data
+
+Sometimes you don't need the data anymore.
+You can remove files from within Julia using the `rm` command.
+If you had registered a `DataDep` called `MyDataName`, then you can remove it with
+```
+rm(datadep"MyDataName"; recursive=true)
+```
 
 ## Assuming direct control and customization
 The hierachy of methods for acquiring a datadep is:
