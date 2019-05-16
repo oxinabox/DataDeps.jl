@@ -47,6 +47,21 @@ env_list(key, default=String[]) = haskey(ENV, key) ? split(ENV[key], ":") : defa
 # User input stuff
 
 """
+    better_readline(stream = stdin)
+A version of `readline` that does not immediately return an empty string if the stream is closed.
+It will attempt to reopen the stream and if that fails then throw an error.
+"""
+function better_readline(stream = stdin)
+    if !isopen(stream)
+        Base.reseteof(stream)
+        isopen(stream) || throw(Base.IOError("Could not open stream.", -1))
+    end
+
+    return readline(stream)
+end
+
+
+"""
     bool_input
 
 Prompted the user for a yes or no.
@@ -64,7 +79,7 @@ function input_choice(prompt, options::Vararg{Char})::Char
     while(true)
         println(prompt)
         println("["*join(options, '/')*"]")
-        response = readline()
+        response = better_readline()
         length(response)==0 && continue
         reply = lowercase(first(response))
         for opt in lowercase.(options)
