@@ -87,6 +87,14 @@ If the file is not in the first folder it finds you will be presented with the r
 from which the easiest option is to select to delete the folder and retry,
 since that will result in it checking the second folder (as the first one does not exist).
 
+## Removing data
+
+Sometimes you don't need the data anymore.
+You can remove files from within Julia using the `rm` command.
+If you had registered a `DataDep` called `MyDataName`, then you can remove it with
+```
+rm(datadep"MyDataName"; recursive=true)
+```
 
 ## Configuration
 Currently configuration is done via Enviroment Variables.
