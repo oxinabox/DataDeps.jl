@@ -5,6 +5,7 @@ using ExpectationStubs
 
 # HACK: todo, work out how ExpectationStubs should be changed to make this make sense
 Base.open(stub::Stub, t::Any, ::AbstractString) = stub(t)
+path_current = @__DIR__
 
 withenv("DATADEPS_ALWAYS_ACCEPT"=>"true") do
     @testset "automatic download" begin
@@ -12,8 +13,8 @@ withenv("DATADEPS_ALWAYS_ACCEPT"=>"true") do
         @expect(dummyhash(::Any) = [0x12, 0x34])
 
         @stub dummydown
-        @expect(dummydown("http://www.example.com/eg.zip", ::String) = joinpath(@__DIR__, "eg.zip"))
-            # HACK: this gives a directory, because we can't trivially mock out the cd
+        @expect(dummydown("http://www.example.com/eg.zip", ::String) = joinpath(path_current, "eg.zip"))
+        # HACK: this gives a directory, because we can't trivially mock out the cd
 
         register(DataDep( "Test1",
          "A dummy message",
@@ -23,7 +24,7 @@ withenv("DATADEPS_ALWAYS_ACCEPT"=>"true") do
         ))
 
         @test endswith(datadep"Test1", "Test1") || endswith(datadep"Test1", "Test1/") ||  endswith(datadep"Test1", "Test1\\")
-        
+
         @test all_expectations_used(dummyhash)
         @test all_expectations_used(dummydown)
 
@@ -39,31 +40,31 @@ withenv("DATADEPS_ALWAYS_ACCEPT"=>"true") do
 
     @testset "Ensure when errors occur the datadep will still retrydownloading" begin
         @testset "error in checksum" begin
+            dummy_file_path = @__FILE__
             @stub dummydown
-            @expect dummydown(::Any, ::Any) = @__FILE__ # give path to an actual file so `open` works
-            
+            @expect dummydown(::Any, ::Any) = dummy_file_path # give path to an actual file so `open` works
 
             register(DataDep("TestErrorChecksum", "dummy message", "http://example.void",
                              (error, "1234"); # this will throw an error
                              fetch_method=dummydown))
             @test_throws ErrorException datadep"TestErrorChecksum"
             @test @usecount(dummydown(::Any, ::Any)) == 1
-            
+
             @test_throws ErrorException datadep"TestErrorChecksum"
             @test @usecount(dummydown(::Any, ::Any)) == 2 # it should have tried to download again
         end
 
         @testset "error in post fetch" begin
             @stub dummydown
-            @expect dummydown(::Any, ::Any) = joinpath(@__DIR__, "eg.zip")
-            
+            @expect dummydown(::Any, ::Any) = joinpath(path_current, "eg.zip")
+
             register(DataDep("TestErrorPostFetch", "dummy message", "http://example.void", Any,
                              fetch_method=dummydown,
                              post_fetch_method = error
                             ))
             @test_throws ErrorException datadep"TestErrorPostFetch"
             @test @usecount(dummydown(::Any, ::Any)) == 1
-            
+
             @test_throws ErrorException datadep"TestErrorPostFetch"
             @test @usecount(dummydown(::Any, ::Any)) == 2 # it should have tried to download again
         end
@@ -81,7 +82,7 @@ withenv("DATADEPS_ALWAYS_ACCEPT"=>"true") do
                             ))
             @test_throws ErrorException datadep"TestErrorFetch"
             @test use_count == 1
-            
+
             @test_throws ErrorException datadep"TestErrorFetch"
             @test use_count == 2 # it should have tried to download again
         end
@@ -101,6 +102,6 @@ end
                          fetch_method=dummydown))
         @test_throws DataDeps.DisabledError datadep"TestErrorInCI"
         @test @usecount(dummydown(::Any, ::Any)) == 0
-        
+
     end
 end
