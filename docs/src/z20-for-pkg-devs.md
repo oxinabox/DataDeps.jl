@@ -192,7 +192,6 @@ It attempts to use webscraping and such to workout what should be in the registr
 You can then edit the generated code to make it suitable for your use.
 (E.g. remove excessive information in the message)
 
-
 ## Assuming direct control and customization
 The hierachy of methods for acquiring a datadep is:
 
