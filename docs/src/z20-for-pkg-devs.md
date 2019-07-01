@@ -65,14 +65,14 @@ So the data will not be sourced via DataDeps.jl
 If you want the data to be installed when the package is first loaded,
 just put the datadep string `datadep"Name"` anywhere it will immediately run.
 For example, in the `__init__` function immediately after the registration block.
+(Do not put it at global scope as otherwise it will run before `__init__` and thus error.
+
 
 If you want it to be installed at `Pkg.build` time.
-The best thing to do is to put your data dep registration block in a file (eg `src/dataregistrations.jl`),
-and then `include` it into `deps/build.jl` followed by putting in the datadep string somewhere at global scope.
-(Including would be done by `include(pathjoin(@__DIR__,"..","src","dataregistrations.jl"`).
-One would also `include` that registrations file into the `__init__` function in the  main source of the package as well.
-
-
+This is theoretically possible, but not advised, using `deps/build.jl`.
+Note: that user IO is not possibly during `Pkg.build`, so the prompt to accept the download will not be shown.
+You thus must have `ENV["DATADEPS_ALWAYS_ACCEPT"]="true"` set, or it will fail.
+If you do do this, you will need to ensure the registration code is specified in the package as well, so that DataDeps.jl can local the files downloaded at build-time.
 
 
 
@@ -84,6 +84,7 @@ This is done in a declaritie manner.
 A DataDeps registration is a block of code declaring a dependency.
 You should put it somewhere that it will be executed before any other code in your script that depends on that data.
 In most cases it is best to put it inside the  [modules's `__init__()` function](https://docs.julialang.org/en/latest/manual/modules/#Module-initialization-and-precompilation-1).
+Note that `include` works weirdly when called inside a function, so if you want to put the registration block in another file that you `include`, you are best off either defininte `__init__` in that file, or defining a function (e.g `init_data()`) which will be called by `__init__`.
 
 
 To do the actual registration one just  calls `register(::AbstractDataDep)`.
