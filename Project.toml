@@ -10,7 +10,7 @@ SHA = "ea8e919c-243c-51af-8825-aaa63cd721ce"
 
 [compat]
 ExpectationStubs = "0.2.0"
-HTTP = ">= 0.8.5"
+HTTP = "0.8.5"
 julia = "0.7, 1"
 
 [extras]
