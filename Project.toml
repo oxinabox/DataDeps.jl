@@ -1,7 +1,7 @@
 name = "DataDeps"
 uuid = "124859b0-ceae-595e-8997-d05f6a7a8dfe"
 authors = ["Lyndon White <oxinabox@ucc.asn.au>"]
-version = "0.6.4"
+version = "0.6.5"
 
 [deps]
 HTTP = "cd3eb016-35fb-5094-929b-558a96fad6f3"
@@ -10,7 +10,7 @@ SHA = "ea8e919c-243c-51af-8825-aaa63cd721ce"
 
 [compat]
 ExpectationStubs = "0.2.0"
-HTTP = "0.7.0, 0.8"
+HTTP = "0.8.5"
 julia = "0.7, 1"
 
 [extras]

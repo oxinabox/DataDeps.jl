@@ -9,12 +9,17 @@ This is used by the default `fetch_method` and is generally a good idea
 to use it in any custom fetch method, if possible
 """
 function progress_update_period()
-    envvar = get(ENV, "DATADEP_PROGRESS_UPDATE_PERIOD") do
-        if haskey(ENV, "DATADEP_ALWAYS_ACCEPT")
+    envvar = get(ENV, "DATADEPS_PROGRESS_UPDATE_PERIOD") do
+        if haskey(ENV, "DATADEPS_ALWAYS_ACCEPT")
             # Running in a script, probably want minimal updates
             "Inf"
         else # default
-            "5" # seconds
+            if haskey(ENV, "DATADEP_PROGRESS_UPDATE_PERIOD")
+                @warn "\"DATADEP_PROGRESS_UPDATE_PERIOD\" is deprecated, use \"DATADEPS_PROGRESS_UPDATE_PERIOD\" instead."
+                get(ENV, "DATADEP_PROGRESS_UPDATE_PERIOD", "5")
+            else
+                "5" # seconds
+            end
         end
     end
     parse(Float32, envvar) 
