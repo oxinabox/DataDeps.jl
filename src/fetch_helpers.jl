@@ -14,18 +14,11 @@ function progress_update_period()
             # Running in a script, probably want minimal updates
             "Inf"
         else # default
-            if haskey(ENV, "DATADEP_PROGRESS_UPDATE_PERIOD")
-                @warn "\"DATADEP_PROGRESS_UPDATE_PERIOD\" is deprecated, use \"DATADEPS_PROGRESS_UPDATE_PERIOD\" instead."
-                get(ENV, "DATADEP_PROGRESS_UPDATE_PERIOD", "5")
-            else
-                "5" # seconds
-            end
+            "5" # seconds
         end
     end
-    parse(Float32, envvar) 
+    parse(Float32, envvar)
 end
-
-
 
 
 """
