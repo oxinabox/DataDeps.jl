@@ -156,14 +156,10 @@ end
 """
     accept_terms(datadep, localpath, remotepath, i_accept_the_terms_of_use)
 
-Ensurses the user accepts the terms of use; otherwise errors out.
+Ensures the user accepts the terms of use; otherwise errors out.
 """
 function accept_terms(datadep::DataDep, localpath, remotepath, ::Nothing)
-   if haskey(ENV, "DATADEPS_ALWAY_ACCEPT")
-       @warn("Environment variable \$DATADEPS_ALWAY_ACCEPT is deprecated. " *
-            "Please use \$DATADEPS_ALWAYS_ACCEPT instead.")
-   end
-    if !(env_bool("DATADEPS_ALWAYS_ACCEPT") || env_bool("DATADEPS_ALWAY_ACCEPT"))
+    if !env_bool("DATADEPS_ALWAYS_ACCEPT")
         response = check_if_accept_terms(datadep, localpath, remotepath)
         accept_terms(datadep, localpath, remotepath, response)
     else
@@ -172,7 +168,7 @@ function accept_terms(datadep::DataDep, localpath, remotepath, ::Nothing)
 end
 function accept_terms(datadep::DataDep, localpath, remotepath, i_accept_the_terms_of_use::Bool)
     if !i_accept_the_terms_of_use
-        abort("User declined to download $(datadep.name). Can not proceed without the data.")
+        abort("User declined to download $(datadep.name). Cannot proceed without the data.")
     end
     true
 end
@@ -180,6 +176,6 @@ end
 function check_if_accept_terms(datadep::DataDep, localpath, remotepath)
     println("This program has requested access to the data dependency $(datadep.name).")
     println("which is not currently installed. It can be installed automatically, and you will not see this message again.")
-    println("\n",datadep.extra_message,"\n\n")
+    println("\n", datadep.extra_message, "\n\n")
     input_bool("Do you want to download the dataset from $remotepath to \"$localpath\"?")
 end

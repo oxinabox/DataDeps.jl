@@ -34,7 +34,7 @@ DataDep(
     remote_path::Union{String,Vector{String}...},
     [checksum::Union{String,Vector{String}...},]; # Optional, if not provided will generate
     # keyword args (Optional):
-    fetch_method=fetch_http # (remote_filepath, local_directory)->local_filepath
+    fetch_method=fetch_default # (remote_filepath, local_directory)->local_filepath
     post_fetch_method=identity # (local_filepath)->Any
 )
 ```
@@ -62,13 +62,13 @@ DataDep(
     - Can take a vector of checksums, being one for each file, or a single checksum in which case the per file hashes are `xor`ed to get the target hash. (See [Recursive Structure](Recursive Structure) below)
 
 
- -  `fetch_method=fetch_http` a function to run to download the files.
+ -  `fetch_method=fetch_default` a function to run to download the files.
     - Function should take 2 parameters (remotepath, local_directory), and must return a local filepath
     - It is responsible for determining what the local filename should be
     - Change this to change the transfer protocol, for example to use an auth'ed connection.
-    - Default `fetch_http` is a wrapper around `Base.download` which invokes commandline download tools.
+    - Default `fetch_default` which fully supports HTTP, and has fallbacks to support any type which overloads `Base.basename` and `Base.download` (see [`fetch_base`](@ref))
     - Can take a vector of methods, being one for each file, or a single method, in which case that method is used to download all of them. (See [Recursive Structure](Recursive Structure) below)
-    - Very few people will need to override this if they are just downloading public HTTP files. 
+    - Very few people will need to override this if they are just downloading public HTTP files.
 
  - `post_fetch_method` a function to run after the files have download
     - Should take the local filepath as its first and only argument. Can return anything.
@@ -83,7 +83,7 @@ DataDep(
 function DataDep(name::String,
                  message::String,
                  remotepath, hash=nothing;
-                 fetch_method=fetch_http,
+                 fetch_method=fetch_default,
                  post_fetch_method=identity)
 
     DataDep(name, remotepath, hash, fetch_method, post_fetch_method, message)
