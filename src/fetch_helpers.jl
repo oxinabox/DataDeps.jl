@@ -29,10 +29,10 @@ See also [`fetch_base`](@ref) and [`fetch_http`](@ref).
 """
 function fetch_default(remotepath, localdir)
     if remotepath isa AbstractString && occursin(r"^https?://", remotepath)
-        # It is HTTP, use good HTTP method
+        # It is HTTP, use good HTTP method, that gets filename by HTTP rules
         return fetch_http(remotepath, localdir)
     else
-        # More generic fallback.
+        # More generic fallback, hopefully `Base.basename`
         return fetch_base(remotepath, localdir)
     end
 end
