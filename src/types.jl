@@ -66,9 +66,9 @@ DataDep(
     - Function should take 2 parameters (remotepath, local_directory), and must return a local filepath
     - It is responsible for determining what the local filename should be
     - Change this to change the transfer protocol, for example to use an auth'ed connection.
-    - Default `fetch_default` which fully supports HTTP, and has fallbacks (see [`fetch_base`](@ref))
+    - Default `fetch_default` which fully supports HTTP, and has fallbacks to support any type which overloads `Base.basename` and `Base.download` (see [`fetch_base`](@ref))
     - Can take a vector of methods, being one for each file, or a single method, in which case that method is used to download all of them. (See [Recursive Structure](Recursive Structure) below)
-    - Very few people will need to override this if they are just downloading public HTTP files. 
+    - Very few people will need to override this if they are just downloading public HTTP files.
 
  - `post_fetch_method` a function to run after the files have download
     - Should take the local filepath as its first and only argument. Can return anything.
