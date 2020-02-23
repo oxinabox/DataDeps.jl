@@ -5,7 +5,7 @@ AppVeyor Master: [![Build status](https://ci.appveyor.com/api/projects/status/kp
 
 
 [![](https://img.shields.io/badge/docs-stable-blue.svg)](https://oxinabox.github.io/DataDeps.jl/stable)
-[![](https://img.shields.io/badge/docs-latest-blue.svg)](https://oxinabox.github.io/DataDeps.jl/latest)
+[![](https://img.shields.io/badge/docs-dev-blue.svg)](https://oxinabox.github.io/DataDeps.jl/dev)
 
 Please see the detailed documentation linked above.
 
