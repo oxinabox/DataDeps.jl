@@ -13,10 +13,18 @@ notifications:
 git:
   depth: 99999999
 
-matrix:
+jobs:
   allow_failures:
     - julia: nightly
-
+  include:
+    - stage: "Documentation"
+      julia: 1.0
+      os: linux
+      script:
+        - julia --project=docs/ -e 'using Pkg; Pkg.develop(PackageSpec(path=pwd()));
+                                               Pkg.instantiate()'
+        - julia --project=docs/ docs/make.jl
+      after_success: skip
 
 after_success:
   # push coverage results to Coveralls
@@ -24,13 +32,4 @@ after_success:
   # push coverage results to Codecov
   - julia -e 'cd(Pkg.dir("DataDeps")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
 
-jobs:
-  include:
-    - stage: "Documentation"
-      julia: 0.7
-      os: linux
-      script:
-        - julia --project=docs/ -e 'using Pkg; Pkg.instantiate();
-                                    Pkg.add(PackageSpec(path=pwd()))'
-        - julia --project=docs/ docs/make.jl
-      after_success: skip
+

@@ -1,7 +1,7 @@
 # DataDeps.jl Documentation
 
 ## What is DataDeps?
-DataDeps is a package for simplifying the management of data in your julia application.
+DataDeps is a package for simplifying the management of data in your Julia application.
 In particular it is designed to simplify the process of getting static files from some server into the local machine,
 and making programs know where that data is.
 
