@@ -51,7 +51,7 @@ DataDep(
 #### Optional Fields
  - *checksum* this is very flexible, it is used to check the files downloaded correctly
     - By far the most common use is to just provide a SHA256 sum as a hex-string for the files
-    - If not provided, then a warning message with the  SHA256 sum is displayed. This is to help package devs workout the sum for there files, without using an external tool.
+    - If not provided, then a warning message with the  SHA256 sum is displayed. This is to help package devs work out the sum for their files without using an external tool.
     - If you want to use a different hashing algorithm, then you can provide a tuple `(hashfun, targethex)`
         - `hashfun` should be a function which takes an IOStream, and returns a `Vector{UInt8}`.
 	      - Such as any of the functions from [SHA.jl](https://github.com/staticfloat/SHA.jl), eg `sha3_384`, `sha1_512`
