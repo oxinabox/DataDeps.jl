@@ -199,7 +199,7 @@ The hierachy of methods for acquiring a datadep is:
 `datadep"name/path"` ▶ `resolve("name/path", @__FILE__)` ▶ `resolve(::AbstractDataDep, "name", @__FILE__)` ▶ `download(::DataDep)`
 
 One can make use of this at various levels to override the default generally sane behavior.
-Most of the time you shouldn't have to -- the normal point of customization is in setting the `post_fetch_method`, and occasionally `fetch_method` or  `hash=(hashmethod, key)`.
+Most of the time you shouldn't have to -- the normal point of customization is in setting the `post_fetch_method`, and occasionally `fetch_method`.
 
 
 ## `download` for low-level programmatic resolution.
