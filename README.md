@@ -29,5 +29,6 @@ Some of these add some additional abstraction or niceness for users on top of th
   - [DataDepsGenerators.jl](https://github.com/oxinabox/DataDepsGenerators.jl)
   - JuliaCon 2018 [Slides](https://figshare.com/articles/JuliaCon2018_DataDeps_jl_pdf/6949145), and [Video](https://youtu.be/kSlQpzccRaI)
  
- #### Paper Preprint
- [White, L.; Togneri, R.; Liu, W. & Bennamoun, M. DataDeps.jl: Repeatable Data Setup for Replicable Data Science ArXiv e-prints, 2018](https://arxiv.org/abs/1808.01091)
+ #### Paper
+
+[White, L., Togneri, R., Liu, W., & Bennamoun, M. (2019). DataDeps. jl: Repeatable Data Setup for Reproducible Data Science. Journal of Open Research Software, 7(1).]()
