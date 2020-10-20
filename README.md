@@ -23,7 +23,7 @@ Some of these add some additional abstraction or niceness for users on top of th
 
 ## Links:
 
-  - [ANN: thread on Discourse](https://discourse.julialang.org/t/ann-datadeps-jl-bindeps-for-data/8457/15)
+  - [ANN: thread on Discourse](https://discourse.julialang.org/t/ann-datadeps-jl-bindeps-for-data/8457)
   - [MLOSS](http://mloss.org/software/view/705/)
   - [Release Blog Post](http://white.ucc.asn.au/2018/01/18/DataDeps.jl-Repeatabled-Data-Setup-for-Repeatable-Science.html)
   - [DataDepsGenerators.jl](https://github.com/oxinabox/DataDepsGenerators.jl)
@@ -31,4 +31,4 @@ Some of these add some additional abstraction or niceness for users on top of th
  
  #### Paper
 
-[White, L., Togneri, R., Liu, W., & Bennamoun, M. (2019). DataDeps. jl: Repeatable Data Setup for Reproducible Data Science. Journal of Open Research Software, 7(1).]()
+[White, L., Togneri, R., Liu, W., & Bennamoun, M. (2019). DataDeps. jl: Repeatable Data Setup for Reproducible Data Science. Journal of Open Research Software, 7(1).](http://doi.org/10.5334/jors.244)
