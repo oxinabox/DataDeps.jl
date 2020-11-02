@@ -105,7 +105,7 @@ function run_fetch(fetch_method, remotepaths::AbstractVector, localdir)
 end
 
 function run_fetch(fetch_methods::AbstractVector, remotepaths::AbstractVector, localdir)
-    asyncmap((meth, rp)->run_fetch(meth, rp, localdir),  fetch_method, remotepaths)
+    asyncmap((meth, rp)->run_fetch(meth, rp, localdir),  fetch_methods, remotepaths)
 end
 
 
