@@ -2,6 +2,7 @@
 module DataDeps
 
 using HTTP
+using p7zip_jll
 using Reexport
 @reexport using SHA
 
