@@ -1,5 +1,3 @@
-using p7zip_jll
-
 function unpack_cmd(file,directory,extension,secondary_extension)
     if ((extension == ".Z" || extension == ".gz" || extension == ".xz" || extension == ".bz2") && secondary_extension == ".tar") || extension == ".tgz" || extension == ".tbz" || extension == ".zip" || extension== ".gz" || extension == ".7z" || extension == ".tar" || (extension == ".exe" && secondary_extension == ".7z")
         output_dir = first(splitext(file))
