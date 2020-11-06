@@ -1,11 +1,13 @@
+# This file is a part of DataDeps.jl. License is MIT.
+
 function unpack_cmd(file,directory,extension,secondary_extension)
-    if ((extension == ".Z" || extension == ".gz" || extension == ".xz" || extension == ".bz2") && secondary_extension == ".tar") || extension == ".tgz" || extension == ".tbz" || extension == ".zip" || extension== ".gz" || extension == ".7z" || extension == ".tar" || (extension == ".exe" && secondary_extension == ".7z")
-        output_dir = first(splitext(file))
-        p7zip() do p7zip_executable_path
+    output_dir = first(splitext(file))
+    p7zip() do p7zip_executable_path
+        try
             run(`$p7zip_executable_path e $file -o$output_dir`)
+        catch err
+            throw(ArgumentError("failed to extract specified file. Please check if the path is correct, if yes, either the file has an unsupported extension or corrupt."))
         end
-    else
-        throw(ArgumentError("I don't know how to unpack $file"))
     end
 end
 
