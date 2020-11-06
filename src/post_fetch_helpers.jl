@@ -11,7 +11,18 @@ function unpack(f; keep_originals=false)
 
     p7zip() do p7zip_executable_path
         try
-            run(`$p7zip_executable_path e $file -o$directory`)
+            if secondary_extension == ""
+                run(`$p7zip_executable_path e $file -o$directory`)
+            else
+                intermediate_file = directory
+                directory = first(splitext(intermediate_file))
+                # 7z x creates intermediate compressed file
+                run(`$p7zip_executable_path x $file`)
+                # 7z e extracts the intermediate file and places content in a directory
+                run(`$p7zip_executable_path e $intermediate_file -o$directory`)
+                # once this process is successful intermediate file is deleted
+                rm(intermediate_file)
+            end
         catch err
             throw(ArgumentError("failed to extract specified file. Please check if the path is correct, if yes, either the file has an unsupported extension or corrupt."))
         end
