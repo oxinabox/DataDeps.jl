@@ -12,14 +12,15 @@ function unpack(f; keep_originals=false)
     p7zip() do p7zip_executable_path
         try
             if secondary_extension == ""
-                run(`$p7zip_executable_path e $file -o$directory`)
+                run(`$p7zip_executable_path e $file -o$directory -y`)
             else
-                intermediate_file = directory
+                intermediate_dir, intermediate_file = first(splitdir(file)), directory
                 directory = first(splitext(intermediate_file))
+
                 # 7z x creates intermediate compressed file
-                run(`$p7zip_executable_path x $file`)
+                run(`$p7zip_executable_path x $file -o$intermediate_dir -y`)
                 # 7z e extracts the intermediate file and places content in a directory
-                run(`$p7zip_executable_path e $intermediate_file -o$directory`)
+                run(`$p7zip_executable_path e $intermediate_file -o$directory -y`)
                 # once this process is successful intermediate file is deleted
                 rm(intermediate_file)
             end
