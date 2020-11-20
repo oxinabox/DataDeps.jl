@@ -18,27 +18,6 @@ ENV["DATADEPS_ALWAYS_ACCEPT"] = true
 
 end
 
-@testset "Primes" begin
-    register(DataDep(
-     "Primes",
-     "These are the first 65 thousand primes. Still faster to calculate locally.",
-     "http://staffhome.ecm.uwa.edu.au/~00061811/pub/primes.txt",
-
-     "d6524d63a5cf5e5955568cc96b72b3f39258af4f0f79c61cbc01d8853e587f1b"
-     #Important: this is a hash I didn't calculate, so is a test that our checksum methods actually align with the normal values.
-    ))
-
-    data = readdlm(datadep"Primes/primes.txt", ',')
-    primes = data[4:end, 2] #skip fist 3
-
-    #If these really are prime then will not have factors
-    @test !any(isinteger.(primes./2))
-    @test !any(isinteger.(primes./3))
-    @test !any(isinteger.(primes./5))
-
-end
-
-
 @testset "TrumpTweets" begin
     # This tests demostrates how the `post_fetch_method` can be used to synthesize new files
 
