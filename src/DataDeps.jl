@@ -1,14 +1,28 @@
 # This file is a part of DataDeps.jl. License is MIT.
 module DataDeps
 
+if VERSION < v"1.3"
+    # Load in `deps.jl`, complaining if it does not exist
+    const depsjl_path = joinpath(@__DIR__, "..", "deps", "deps.jl")
+    if !isfile(depsjl_path)
+        error("DataDeps not installed properly, run `] build DataDeps`, restart Julia and try again")
+    end
+    include(depsjl_path)
+else
+    using p7zip_jll
+end
+
 using HTTP
-using p7zip_jll
 using Reexport
 @reexport using SHA
 
 export DataDep, ManualDataDep
 export register, resolve, @datadep_str, preupload_check
 export unpack
+
+function __init__()
+    isdefined(@__MODULE__, :check_deps) && check_deps()
+end
 
 include("errors.jl")
 include("types.jl")
