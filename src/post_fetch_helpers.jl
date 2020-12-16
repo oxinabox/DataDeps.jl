@@ -1,5 +1,18 @@
 # This file is a part of DataDeps.jl. License is MIT.
 
+function unpack_cmd(file,directory,extension,secondary_extension)
+    p7zip() do exe7z
+        if ((extension == ".Z" || extension == ".gz" || extension == ".xz" || extension == ".bz2") &&
+                secondary_extension == ".tar") || extension == ".tgz" || extension == ".tbz"
+            return pipeline(`$exe7z x $file -y -so`, `$exe7z x -si -y -ttar -o$directory`)
+        elseif (extension == ".zip" || extension== ".gz" || extension == ".7z" || extension == ".tar" ||
+                (extension == ".exe" && secondary_extension == ".7z"))
+            return `$exe7z x $file -y -o$directory`
+        end
+        throw(ArgumentError("Unsupported archive extension: $file"))
+    end
+end
+
 """
     unpack(f; keep_originals=false)
 
@@ -7,37 +20,7 @@ Extracts the content of an archive in the current directory;
 deleting the original archive, unless the `keep_originals` flag is set.
 """
 function unpack(f; keep_originals=false)
-    file = f # /home/hello/xyz.zip  |   /home/hello/xyz.tar.gz
-    directory = first(splitext(f)) # /home/hello/xyz  |   /home/hello/xyz.tar
-    extension = last(splitext(f)) # .zip    |   .gz
-    secondary_extension = last(splitext(first(splitext(f)))) #  ""  |   .tar
-    # p7zip() returns the path of 7z exectuable
-    p7zip() do p7zip_executable_path
-        try
-            if secondary_extension == ""
-                # for files with a single compression like .zip, .rar, etc.
-                run(`$p7zip_executable_path e $file -o$directory -y`)
-            else
-                # files with secondary extension like .tar.gz, 
-                # first extract .tar.gz to .tar in the directory where .tar.gz was present
-                # this .tar is the intermediate file 
-                # splitext("/home/filename.tar.gz") returns "/home/filename.tar" which is filename of our intermediate file
-                intermediate_dir, intermediate_file = first(splitdir(file)), directory
-                # directory in which data is to be extracted is split again
-                # "/home/filename.tar" is converted to "/home/filename"
-                directory = first(splitext(intermediate_file))
-                # check out 7z docs for more information
-                # 7z x creates intermediate compressed file
-                run(`$p7zip_executable_path x $file -o$intermediate_dir -y`)
-                # 7z e extracts the intermediate file and places content in a directory
-                run(`$p7zip_executable_path e $intermediate_file -o$directory -y`)
-                # once this process is successful intermediate file is deleted
-                rm(intermediate_file)
-            end
-        catch err
-            @warn "failed to extract specified file. Please check if the path is correct, if yes, either the file has an unsupported extension or corrupt."
-            rethrow(err)
-        end
-    end
+    run(unpack_cmd(f, pwd(), last(splitext(f)), last(splitext(first(splitext(f))))))
+    rm("pax_global_header"; force=true)  # Non-compliant tarball extractors dump out this file. It is meaningless (google it's filename for more)
     !keep_originals && rm(f)
 end
