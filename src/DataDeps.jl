@@ -8,6 +8,9 @@ if VERSION < v"1.3"
         error("DataDeps not installed properly, run `] build DataDeps`, restart Julia and try again")
     end
     include(depsjl_path)
+
+    # Emulate `p7zip_jll` behaviour
+    p7zip(f) = f(p7zip_exe)
 else
     using p7zip_jll
 end
