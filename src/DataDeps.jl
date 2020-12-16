@@ -23,10 +23,6 @@ export DataDep, ManualDataDep
 export register, resolve, @datadep_str, preupload_check
 export unpack
 
-function __init__()
-    isdefined(@__MODULE__, :check_deps) && check_deps()
-end
-
 include("errors.jl")
 include("types.jl")
 
