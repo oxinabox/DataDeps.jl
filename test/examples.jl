@@ -152,13 +152,13 @@ end
     register(DataDep(
         "UCI Adult",
         """
-    	Dataset: Adult Data Set UCI ML Repository
-    	Website: https://archive.ics.uci.edu/ml/datasets/Adult
-    	Abstract : Predict whether income exceeds \$50K/yr based on census data.  Also known as "Census Income" dataset.
+        Dataset: Adult Data Set UCI ML Repository
+        Website: https://archive.ics.uci.edu/ml/datasets/Adult
+        Abstract : Predict whether income exceeds \$50K/yr based on census data.  Also known as "Census Income" dataset.
 
-    	If you make use of this data it is requested that you cite:
-    	- Lichman, M. (2013). UCI Machine Learning Repository [http://archive.ics.uci.edu/ml]. Irvine, CA: University of California, School of Information and Computer Science.
-    	""",
+        If you make use of this data it is requested that you cite:
+        - Lichman, M. (2013). UCI Machine Learning Repository [http://archive.ics.uci.edu/ml]. Irvine, CA: University of California, School of Information and Computer Science.
+        """,
         [
             [
                 "https://archive.ics.uci.edu/ml/datasets/../machine-learning-databases/adult/adult.data",
@@ -188,14 +188,14 @@ end
 
 
 @testset "gzipped source code" begin
-	register(DataDep("DataDeps Source v0.5.0",
-		"""
-		This is the source code of DataDeps.jl v0.5.0
+    register(DataDep("DataDeps Source v0.5.0",
+        """
+        This is the source code of DataDeps.jl v0.5.0
         This test checked we can unpack gzipped tarballs.
         """,
-		"https://github.com/oxinabox/DataDeps.jl/archive/v0.5.0.tar.gz",
-		"cd1fc3e58b4272ec559d1c5bcda5e4f0339647dab709baa2d507a73f3a89168d";
+        "https://github.com/oxinabox/DataDeps.jl/archive/v0.5.0.tar.gz",
+        "cd1fc3e58b4272ec559d1c5bcda5e4f0339647dab709baa2d507a73f3a89168d";
         post_fetch_method=DataDeps.unpack
-	));
+    ));
     @test length(readdir(datadep"DataDeps Source v0.5.0")) == 2
 end
