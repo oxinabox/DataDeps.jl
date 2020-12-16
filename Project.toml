@@ -1,7 +1,7 @@
 name = "DataDeps"
 uuid = "124859b0-ceae-595e-8997-d05f6a7a8dfe"
 authors = ["Lyndon White <oxinabox@ucc.asn.au>"]
-version = "0.7.4"
+version = "0.7.5"
 
 [deps]
 BinaryProvider = "b99e7846-7c00-51b0-8f62-c81ae34c0232"
