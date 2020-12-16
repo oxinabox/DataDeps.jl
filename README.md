@@ -1,11 +1,8 @@
 # DataDeps
-Travis CI Master: [![Build Status](https://travis-ci.org/oxinabox/DataDeps.jl.svg?branch=master)](https://travis-ci.org/oxinabox/DataDeps.jl)
-AppVeyor Master: [![Build status](https://ci.appveyor.com/api/projects/status/kpi2pgfnvx6yp9n4/branch/master?svg=true)](https://ci.appveyor.com/project/oxinabox/datadeps-jl-ld1pa/branch/master)
 
-
-
-[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://oxinabox.github.io/DataDeps.jl/stable)
-[![](https://img.shields.io/badge/docs-dev-blue.svg)](https://oxinabox.github.io/DataDeps.jl/dev)
+[![CI](https://github.com/oxinabox/DataDeps.jl/workflows/CI/badge.svg)](https://github.com/oxinabox/DataDeps.jl/actions?query=workflow%3ACI)
+[![Stable Documentation](https://img.shields.io/badge/docs-stable-blue.svg)](https://oxinabox.github.io/DataDeps.jl/stable)
+[![Dev Documentation](https://img.shields.io/badge/docs-dev-blue.svg)](https://oxinabox.github.io/DataDeps.jl/dev)
 
 Please see the detailed documentation linked above.
 
