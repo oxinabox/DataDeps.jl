@@ -2,14 +2,12 @@
 
 function unpack_cmd(file,directory,extension,secondary_extension)
     p7zip() do exe7z
-        if ((extension == ".Z" || extension == ".gz" || extension == ".xz" || extension == ".bz2") &&
-                secondary_extension == ".tar") || extension == ".tgz" || extension == ".tbz"
+        if secondary_extension == ".tar" || extension == ".tgz" || extension == ".tbz"
+            # special handling for compressed tarballs
             return pipeline(`$exe7z x $file -y -so`, `$exe7z x -si -y -ttar -o$directory`)
-        elseif (extension == ".zip" || extension== ".gz" || extension == ".7z" || extension == ".tar" ||
-                (extension == ".exe" && secondary_extension == ".7z"))
+        else
             return `$exe7z x $file -y -o$directory`
         end
-        throw(ArgumentError("Unsupported archive extension: $file"))
     end
 end
 
