@@ -67,7 +67,7 @@ Pass in a HTTP[/S] URL  and a directory to save it to,
 and it downloads that file, returing the local path.
 This is using the HTTP protocol's method of defining filenames in headers,
 if that information is present.
-Returns the localpath that it was donwloaded to.
+Returns the localpath that it was downloaded to.
 
 
 `update_period` controls how often to print the download progress to the log.
