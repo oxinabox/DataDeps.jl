@@ -6,7 +6,7 @@ using ExpectationStubs
     @testset "fail" begin
         @stub dummyhash
         @expect(dummyhash(::Any) = [0x12, 0x34])
-    
+
         register(
             DataDep(
                 "TestFailChecksumPreupload",

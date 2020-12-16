@@ -115,7 +115,7 @@ function determine_save_path(name, rel=nothing)::String
     if path_ind === nothing
             @error """
             No writable path exists to save the data. Make sure there exists as writable path in your DataDeps Load Path.
-            See http://white.ucc.asn.au/DataDeps.jl/stable/z10-for-end-users.html#The-Load-Path-1
+            See https://www.oxinabox.net/DataDeps.jl/stable/z10-for-end-users/#The-Load-Path-1
             The current load path contains:
             """ cands
         throw(NoValidPathError("No writable path exists to save the data."))
