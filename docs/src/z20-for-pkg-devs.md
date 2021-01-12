@@ -78,7 +78,7 @@ If you do do this, you will need to ensure the registration code is specified in
 
 ## Registering a DataDep
 When we say registering a DataDep we do not mean a centralised universal shared registry.
-Registring simply means defining the specifics of the DataDep in your code.
+Registering simply means defining the specifics of the DataDep in your code.
 This is done in a declaritive manner.
 
 A DataDeps registration is a block of code declaring a dependency.
