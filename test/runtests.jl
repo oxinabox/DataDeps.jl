@@ -9,6 +9,7 @@ using Test
         "main",
         "preupload",
         "fetch_helpers",
+        "post_fetch_helpers",
     ]
     @testset "tests" begin
         for filename in tests

@@ -4,9 +4,9 @@ function unpack_cmd(file,directory,extension,secondary_extension)
     p7zip() do exe7z
         if secondary_extension == ".tar" || extension == ".tgz" || extension == ".tbz"
             # special handling for compressed tarballs
-            return pipeline(`$exe7z x $file -y -so`, `$exe7z x -si -y -ttar -o$directory`)
+            return pipeline(`$exe7z x $file -y -so`, `$exe7z x -si -y -ttar -o$directory -bso0 -bsp0`)
         else
-            return `$exe7z x $file -y -o$directory`
+            return `$exe7z x $file -y -o$directory -bso0 -bsp0`
         end
     end
 end
