@@ -1,0 +1,11 @@
+data_config_version=1
+
+[[datasets]]
+name="Pi"
+uuid="76e82d27-3914-4472-abb6-38d476023211"
+
+    [datasets.storage]
+    driver="DataDeps"
+    sha256="1f08958df70c30bbf3f7205ad5f9b2b9430e3378b4e4e6300063bd9fbd83d6e3"
+    localdir="~/.julia/datadeps/Pi"
+    remote_path=["https://www.angio.net/pi/digits/10000.txt"]
