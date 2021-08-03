@@ -30,6 +30,7 @@ end
     end
 
     @testset "sad case" begin
-        @test_throws Exception unpack("assets/non-existent.zip")
+        # depending on Julia version may be ErrorException or ProcessFailedException
+        @test_throws Union{ErrorException,ProcessFailedException} unpack("assets/non-existent.zip")
     end
 end
