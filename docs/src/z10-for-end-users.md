@@ -6,7 +6,7 @@ They should just forget about the data their package needs.
 Moving data is a great idea.
 DataDeps.jl is in favour of moving data.
 When data is automatically downloaded it will almost always go to the same location:
-the first (existant, writable) directory on your `DATADEPS_LOAD_PATH`.
+the first (existent, writable) directory on your `DATADEPS_LOAD_PATH`.
 Which by-default is `~/.julia/datadeps/`.
 (If you delete this, it will go to another location).
 But you can move them from there to anywhere in the `DATADEPS_LOAD_PATH`. (See below)
@@ -71,7 +71,7 @@ C:\Users\Public\datadeps
 
 ### Having multiple copies of the same DataDir
 You probably don't want to have multiple copies of a DataDir with the same name.
-DataDeps.jl will try to handle it as gracefuly as it can.
+DataDeps.jl will try to handle it as gracefully as it can.
 But having different `DataDep`s under the same name, is probably going to lead to packages loading the wrong one.
 Except if they are (both) located in their packages `deps/data` folder.
 
@@ -97,7 +97,7 @@ rm(datadep"MyDataName"; recursive=true)
 ```
 
 ## Configuration
-Currently configuration is done via Enviroment Variables.
+Currently configuration is done via Environment Variables.
 It is likely to stay that way, as they are also easy to setup in CI tools.
 You can set these in the [`startup.jl`](https://docs.julialang.org/en/v1/manual/getting-started/)
 file using the `ENV` dictionary if you don't want to mess up your `.profile`.
@@ -106,7 +106,7 @@ DataDeps.jl tries to have very sensible defaults.
 
  - `DATADEPS_ALWAYS_ACCEPT` -- bypasses the confirmation before downloading data. Set to `true` (or similar string)
     - default: `false`
-    - Note that it remains your responsibility to understand and read any terms of the data use (this is remains true even if you don't turn on this bypass)    
+    - Note that it remains your responsibility to understand and read any terms of the data use (this is remains true even if you don't turn on this bypass)
     - This is provided for scripting (in particular CI) use
     - If the `CI` environment variable is set to true, `DATADEPS_ALWAYS_ACCEPT`  **must be set** to true or false. This is to prevent hanging in CI.
  - `DATADEPS_PROGRESS_UPDATE_PERIOD` -- how often (in seconds) to print the progress to the log for the download

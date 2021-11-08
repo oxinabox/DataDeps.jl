@@ -17,9 +17,9 @@ The short version is:
 4. For CI purposes set the `DATADEPS_ALWAYS_ACCEPT` environment variable.
 
 ### Where can I store my data online?
-Where ever you want, so long as it gives an Open HTTP(/s) link to download it. ** 
+Where ever you want, so long as it gives an Open HTTP(/s) link to download it. **
 
- - I use an OwnCloud instance hosted by our national research infastructure.
+ - I use an OwnCloud instance hosted by our national research infrastructure.
  - Research data hosting like FigShare are a good idea.
  - You can just stick it on your website hosting if you are operating a website.
  - I'd like to hear if anyone has tested GoogleDrive or DropBox etc.
@@ -28,7 +28,7 @@ Where ever you want, so long as it gives an Open HTTP(/s) link to download it. *
 **(In other protocols and auth can be supported by using a different `fetch_method`)
 
 
-#### Why not store the data in Git?
+### Why not store the data in Git?
 Git is good for files that meet 3 requirements:
 
  - Plain text (not binary)
@@ -47,11 +47,11 @@ The main use case is downloading large datasets for machine learning, and corpor
 In this case the data is not even normally yours to begin with.
 It lives on some website somewhere.
 You don't want to copy and redistribute it;
-and depending on liscensing you may not even be allowed to.
+and depending on licensing you may not even be allowed to.
 
-#### But my data is dynamic
+### But my data is dynamic
 Well how dynamic?
-If you are willing to tag a new relase of your package each time the data changes, then maybe this is no worry, but maybe it is.
+If you are willing to tag a new release of your package each time the data changes, then maybe this is no worry, but maybe it is.
 
 But the real question is, is DataDeps.jl really suitable for managing your data properly in the first place.
 DataDeps.jl does not provide for versioning of data -- you can't force users to download new copies of your data using DataDeps.
@@ -78,11 +78,11 @@ Alternatives that I am aware of are:
 
  - [RemoteFiles.jl](https://github.com/helgee/RemoteFiles.jl): keeps local files up to date with remotes. In someways it is the opposite of DataDeps.jl (which means it is actually very similar in many ways).
  - [BinaryProvider.jl](https://github.com/JuliaPackaging/BinaryProvider.jl) downloads binaries intended as part of a build chain. I'm pretty sure you can trick it into downloading data.
- - [`Base.download`](https://docs.julialang.org/en/stable/stdlib/file/#Base.download) if your situtation is really simple just sticking a `download` into the `deps/build.jl` file might do you just fine.
+ - [`Base.download`](https://docs.julialang.org/en/stable/stdlib/file/#Base.download) if your situation is really simple just sticking a `download` into the `deps/build.jl` file might do you just fine.
 
  Outside of julia's ecosystem is
 
   - [Python: Quilt](https://github.com/quiltdata/quilt). Quilt uses a centralised data store, and allows the user to download the data as Python packages containing it in serialised from. It *might* be possible to use PyCall.jl to use this from julia.
   - [R: suppdata](https://github.com/ropensci/suppdata), features extra stuff relating to published datasets (See also DataDepsGenerators.jl), it *might* be possible to use RCall.jl to use this from julia.
   - [Node/Commandline: Datproject](https://datproject.org/) I'm not too familiar with this, it is a bit of an ecosystem of its own. I think using it from the commandline might satisfy many people's needs. Or automating it with shell calls in `build.jl`.
-  
+
