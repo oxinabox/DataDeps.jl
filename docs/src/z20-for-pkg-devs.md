@@ -123,7 +123,7 @@ register(DataDep(
       Such as any of the functions from [SHA.jl](https://github.com/staticfloat/SHA.jl), eg `sha3_384`, `sha1_512`
       or `md5` from [MD5.jl](https://github.com/oxinabox/MD5.jl)
     - If you want to use a different hashing algorithm, but don't know the sum, you can provide just the `hashfun` and a warning message will be displayed, giving the correct tuple of `(hashfun, targethex)` that should be added to the registration block.
-    - If you don't want to provide a checksum,  because your data can change pass in the type `Any` which will suppress the warning messages. (But see above warnings about "what if my data is dynamic").
+    - If you don't want to provide a checksum,  because your data can change pass in the type `Any` which will suppress the warning messages. (See above warnings about [But my data is dynamic](@ref)).
     - Can take a vector of checksums, being one for each file, or a single checksum in which case the per file hashes are `xor`ed to get the target hash. (See [Recursive Structure](@ref) below).
 
 
