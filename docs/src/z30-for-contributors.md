@@ -17,5 +17,5 @@ The code for `ManualDataDep` is a good place to start looking to see how that is
 You can also encapsulate an `DataDep` as one of the elements of your new type.
 
 If you do this you might like to contribute the type back up to this repository, so others can use it also.
-Particularly, if it is something that generalises beyond your specific usecase.
+Particularly, if it is something that generalises beyond your specific use case.
 

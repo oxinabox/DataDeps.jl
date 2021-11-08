@@ -1,7 +1,7 @@
 # Usage for developers (including researchers)
 
 ## Examples
- - [The aformentioned blog post](http://white.ucc.asn.au/2018/01/18/DataDeps.jl-Repeatabled-Data-Setup-for-Repeatable-Science.html)
+ - [The aforementioned blog post](http://white.ucc.asn.au/2018/01/18/DataDeps.jl-Repeatabled-Data-Setup-for-Repeatable-Science.html)
  - [Examples in the test code](https://github.com/oxinabox/DataDeps.jl/blob/master/test/examples.jl)
  - [Manual examples from the test code](https://github.com/oxinabox/DataDeps.jl/blob/master/test/examples_manual.jl)
 
@@ -22,13 +22,13 @@ For any registered DataDep (see below), `datadep"Name"`, returns a path to a fol
 If when that string macro is evaluated no such folder exists, then DataDeps will swing into action and coordinate the acquisition of the data into a folder, then return the path that now contains the data.
 
 You can also use `datadep"Name/subfolder/file.txt"` (and similar) to get a path to the file at  `subfolder/file.txt` within the data directory for `Name`.
-Just like when using the plain `datadep"Name"` this will if required downloadload the whole datadep (**not** just the file).
+Just like when using the plain `datadep"Name"` this will if required download the whole datadep (**not** just the file).
 However, it will also engage additional features to verify that that file exists (and is readable),
 and if not will attempt to help the user resolve the situation.
 This is useful if files may have been deleted by mistake, or if a `ManualDataDep` might have been incorrectly installed.
 
 
-#### Advanced: Programtic resolution
+#### Advanced: Programmatic resolution
 If your datadep name (or path) is in a variable (called `namepath` say)  you can use
 
 ```
@@ -55,9 +55,9 @@ data_folder = training_mode ? datadep"SecurityFootage" : "/srv/webcam/today"
 The data will not be downloaded if `training_mode==false`, because the referred to folder is never required.
 Of-course if the data was already downloaded, then it wouldn't be downloaded again either way.
 
-Another example of a particularly nice way of doing this is to use the datadep string as the default value for a function paramater
+Another example of a particularly nice way of doing this is to use the datadep string as the default value for a function parameter
 `function predict(path=datadep"SecurityFootage")`.
-If the user passses a value when they call `predict` then the datadep string will never be evaluated.
+If the user passes a value when they call `predict` then the datadep string will never be evaluated.
 So the data will not be sourced via DataDeps.jl
 
 
@@ -79,19 +79,19 @@ If you do do this, you will need to ensure the registration code is specified in
 ## Registering a DataDep
 When we say registering a DataDep we do not mean a centralised universal shared registry.
 Registering simply means defining the specifics of the DataDep in your code.
-This is done in a declaritive manner.
+This is done in a declarative manner.
 
 A DataDeps registration is a block of code declaring a dependency.
 You should put it somewhere that it will be executed before any other code in your script that depends on that data.
-In most cases it is best to put it inside the  [modules's `__init__()` function](https://docs.julialang.org/en/latest/manual/modules/#Module-initialization-and-precompilation-1).
-Note that `include` works weirdly when called inside a function, so if you want to put the registration block in another file that you `include`, you are best off either defininte `__init__` in that file, or defining a function (e.g `init_data()`) which will be called by `__init__`.
+In most cases it is best to put it inside the  [module's `__init__()` function](https://docs.julialang.org/en/latest/manual/modules/#Module-initialization-and-precompilation-1).
+Note that `include` works weirdly when called inside a function, so if you want to put the registration block in another file that you `include`, you are best off either defining `__init__` in that file, or defining a function (e.g `init_data()`) which will be called by `__init__`.
 
 
 To do the actual registration one just  calls `register(::AbstractDataDep)`.
 The rest of this section is basically about the constructors for the `DataDep` type.
 It is pretty flexible. Best is to see the examples above.
 
-The basic Registration block looks like: (Type parameters are shown below are a simplifaction)
+The basic Registration block looks like: (Type parameters are shown below are a simplification)
 ```
 register(DataDep(
     name::String,
@@ -107,7 +107,7 @@ register(DataDep(
 ### Required Fields
 
  - `name`: the name used to refer to this datadep
-    - Coresponds to a folder name where the datatep will be stored.
+    - Corresponds to a folder name where the datatep will be stored.
     - It can have spaces or any other character that is allowed in a Windows filestring (which is a strict subset of the restriction for unix filenames).
  - `message`: a message displayed to the user for they are asked if they want to download it
     - This is normally used to give a link to the original source of the data, a paper to be cited etc.
@@ -178,8 +178,8 @@ The unzip will be applied to both elements in the child array (i.e. the second e
 
 ### ManualDataDep
 ManualDataDeps are datadeps that have to be managed by some means outside of DataDeps.jl,
-but DataDeps.jl will still provide the convient `datadep"MyData"` string macro for finding them.
-As mentions above, if you put the data in your git repo for your package under `deps/data/NAME` then it will be managed by julia package manager.
+but DataDeps.jl will still provide the convenient `datadep"MyData"` string macro for finding them.
+As mentioned above, if you put the data in your git repo for your package under `deps/data/NAME` then it will be managed by julia package manager.
 
 A manual DataDep registration is just like a normal `DataDep` registration,
 except that only a `name` and `message` are provided.
@@ -195,7 +195,7 @@ You can then edit the generated code to make it suitable for your use.
 (E.g. remove excessive information in the message).
 
 ## Assuming direct control and customization
-The hierachy of methods for acquiring a datadep is:
+The hierarchy of methods for acquiring a datadep is:
 
 `datadep"name/path"` ▶ `resolve("name/path", @__FILE__)` ▶ `resolve(::AbstractDataDep, "name", @__FILE__)` ▶ `download(::DataDep)`
 
@@ -214,7 +214,7 @@ It is fully documented in its docstring.
 ## Preupload Checking
 
 Preupload checking exists to help package developers check their DataDeps on local files before they upload them.
-It checks the **checksum** is filled in and matchs, and that the `post_fetch_method` can be run without throwing any exceptions.
+It checks the **checksum** is filled in and matches, and that the `post_fetch_method` can be run without throwing any exceptions.
 
 For example, if I wished to check the UCI banking data, from a local file called `bank.zip`,
 with the registration as below:
@@ -242,7 +242,7 @@ register(
 );
 ```
 
-then we would do so by calling `preupload_check`, passing in the DataDep name, and the local file.
+Then we would do so by calling `preupload_check`, passing in the DataDep name, and the local file.
 
 
 ```
