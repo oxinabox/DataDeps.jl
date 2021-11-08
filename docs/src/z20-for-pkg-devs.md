@@ -28,7 +28,7 @@ and if not will attempt to help the user resolve the situation.
 This is useful if files may have been deleted by mistake, or if a `ManualDataDep` might have been incorrectly installed.
 
 
-#### Advanced: Programtic resolution 
+#### Advanced: Programtic resolution
 If your datadep name (or path) is in a variable (called `namepath` say)  you can use
 
 ```
@@ -50,7 +50,7 @@ For example, say some webcam security system can be run in training mode, in whi
 or in deployment mode, in which case the data should be read from the webcam's folder:
 
 ```
-data_folder = training_mode ? datadep"SecurityFootage" : "/srv/webcam/today"       
+data_folder = training_mode ? datadep"SecurityFootage" : "/srv/webcam/today"
 ```
 The data will not be downloaded if `training_mode==false`, because the referred to folder is never required.
 Of-course if the data was already downloaded, then it wouldn't be downloaded again either way.
@@ -134,8 +134,8 @@ register(DataDep(
     - Overloading this lets you change things about how the download is done -- the transport protocol.
     - The default is suitable for HTTP[/S], without auth. Modifying it can add authentication or an entirely different protocol (e.g. git, google drive etc).
     - This function is also responsible to work out what the local file should be called (as this is protocol dependent).
-	
-	
+
+
  - `post_fetch_method`: a function to run after the files have been downloaded
     - Should take the local filepath as its first and only argument. Can return anything.
     - Default is to do nothing.
