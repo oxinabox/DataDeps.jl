@@ -28,7 +28,7 @@ Where ever you want, so long as it gives an Open HTTP(/s) link to download it. *
 **(In other protocols and auth can be supported by using a different `fetch_method`)
 
 
-#### Why not store the data in Git?
+### Why not store the data in Git?
 Git is good for files that meet 3 requirements:
 
  - Plain text (not binary)
@@ -49,7 +49,7 @@ It lives on some website somewhere.
 You don't want to copy and redistribute it;
 and depending on licensing you may not even be allowed to.
 
-#### But my data is dynamic
+### But my data is dynamic
 Well how dynamic?
 If you are willing to tag a new release of your package each time the data changes, then maybe this is no worry, but maybe it is.
 
