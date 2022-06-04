@@ -8,7 +8,7 @@ Please see the detailed documentation linked above.
 
 
 ## Software using DataDeps.jl
-It might help to look at DataDeps.jl is being used to understand how it maybe used for your project.
+It might help to look at how DataDeps.jl is being used to understand how it maybe used for your project.
 Some of these add some additional abstraction or niceness for users on top of the DataDeps.jl core functionality.
 
  - [WordNet.jl](https://github.com/JuliaText/WordNet.jl)
