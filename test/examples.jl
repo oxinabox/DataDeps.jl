@@ -197,5 +197,5 @@ end
         "cd1fc3e58b4272ec559d1c5bcda5e4f0339647dab709baa2d507a73f3a89168d";
         post_fetch_method=DataDeps.unpack
     ));
-    @test length(readdir(datadep"DataDeps Source v0.5.0")) == 2
+    @test readdir(datadep"DataDeps Source v0.5.0") == ["DataDeps.jl-0.5.0"]
 end
