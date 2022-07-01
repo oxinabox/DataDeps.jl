@@ -77,5 +77,5 @@ By default it is once per second, though this depends on configuration
 """
 function fetch_http(remotepath, localdir; update_period=progress_update_period())
     @assert(isdir(localdir))
-    return HTTP.download(remotepath, localdir; update_period=update_period)
+    return HTTP.download(remotepath, localdir; update_period=update_period, decompress=false)
 end
