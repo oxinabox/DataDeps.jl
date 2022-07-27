@@ -42,4 +42,12 @@ include("preupload.jl")
 include("fetch_helpers.jl")
 include("post_fetch_helpers.jl")
 
+# Extension
+using DataSets
+include("datasets_storage_driver.jl")
+
+function __init__()
+    DataSets.add_storage_driver("DataDeps"=>DataDep_storage_driver)
+end
+
 end # module
