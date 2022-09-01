@@ -1,10 +1,9 @@
 name = "DataDeps"
 uuid = "124859b0-ceae-595e-8997-d05f6a7a8dfe"
 authors = ["Frames White <oxinabox@ucc.asn.au>"]
-version = "0.7.9"
+version = "0.7.10"
 
 [deps]
-BinaryProvider = "b99e7846-7c00-51b0-8f62-c81ae34c0232"
 HTTP = "cd3eb016-35fb-5094-929b-558a96fad6f3"
 Libdl = "8f399da3-3557-5675-b5ff-fb832c97cbdb"
 Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
@@ -12,11 +11,10 @@ SHA = "ea8e919c-243c-51af-8825-aaa63cd721ce"
 p7zip_jll = "3f19e933-33d8-53b3-aaab-bd5110c3b7a0"
 
 [compat]
-BinaryProvider = "0.5"
 ExpectationStubs = "0.2"
 HTTP = "1"
 Reexport = "0.2, 1.0"
-julia = "1"
+julia = "1.6"
 p7zip_jll = "16.2.0, 17"
 
 [extras]
