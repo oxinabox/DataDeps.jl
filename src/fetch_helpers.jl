@@ -44,7 +44,7 @@ end
 Download from `remote_path` to `local_dir`, via `Base` mechanisms.
 The download is performed using `Base.download`
 and `Base.basename(remote_path)` is used to determine the filename.
-This is very limitted in the case of HTTP as the filename is not always encoded in the URL.
+This is very limited in the case of HTTP as the filename is not always encoded in the URL.
 But it does work for simple paths like `"http://myserver/files/data.csv"`.
 In general for those cases prefer `http_download`.
 
@@ -64,7 +64,7 @@ end
     fetch_http(remotepath, localdir; update_period=5)
 
 Pass in a HTTP[/S] URL  and a directory to save it to,
-and it downloads that file, returing the local path.
+and it downloads that file, returning the local path.
 This is using the HTTP protocol's method of defining filenames in headers,
 if that information is present.
 Returns the localpath that it was downloaded to.

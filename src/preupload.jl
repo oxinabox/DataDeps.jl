@@ -16,7 +16,7 @@ Similarly, if the `post_fetch_method` throws an exception, a warning will be dis
 
 Returns: true or false, depending on if the checks were all good, or not.
 
-Arguements:
+Arguments:
 
  - `datadep`: Either an instance of a DataDep type, or the name of a registered DataDep as a AbstractString
  - `local_filepath`: a filepath or (recursive) list of filepaths.
@@ -40,7 +40,7 @@ end
     postfetch_check(post_fetch_method, local_path)
 
 Executes the post_fetch_method on the given local path,
-in a temportary directory.
+in a temporary directory.
 Returns true if there are no exceptions.
 Performs in (async) parallel if multiple paths are given
 """

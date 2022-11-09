@@ -20,7 +20,7 @@ mkpath(first(standard_loadpath))
 
 
 ########################################################################################################################
-## Package reletive path determining
+## Package relative path determining
 
 """
     try_determine_package_datadeps_dir(filepath)
@@ -126,7 +126,7 @@ end
 """
     try_determine_load_path(name)
 
-Trys to find a local path to the datadep with the given name.
+Tries to find a local path to the datadep with the given name.
 If it fails then it returns nothing.
 """
 function try_determine_load_path(name::String, rel)

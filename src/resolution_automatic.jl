@@ -20,7 +20,7 @@ Otherwise will do nothing.
 """
 function ensure_download_permitted()
     if env_bool("DATADEPS_DISABLE_DOWNLOAD")
-        throw(DisabledError("DATADEPS_DISABLE_DOWNLOAD enviroment variable set."))
+        throw(DisabledError("DATADEPS_DISABLE_DOWNLOAD environment variable set."))
     end
     if env_bool("CI") && !haskey(ENV, "DATADEPS_ALWAYS_ACCEPT")
         throw(DisabledError("DataDeps download disabled, as we appear to be in a CI environment, " *
@@ -42,9 +42,9 @@ end
         i_accept_the_terms_of_use=nothing)
 
 A method to download a datadep.
-Normally, you do not have to download a data dependancy manually.
+Normally, you do not have to download a data dependency manually.
 If you simply cause the string macro `datadep"DepName"`,
-to be exectuted it will be downloaded if not already present.
+to be executed it will be downloaded if not already present.
 
 Invoking this `download` method manually is normally for purposes of debugging,
 As such it include a number of parameters that most people will not want to use.
@@ -52,8 +52,8 @@ As such it include a number of parameters that most people will not want to use.
  - `localdir`: this is the local directory to save to.
  - `remotepath`: the remote path to fetch the data from, use this e.g. if you can't access the normal path where the data should be, but have an alternative.
  - `skip_checksum`: setting this to true causes the checksum to not be checked. Use this if the data has changed since the checksum was set in the registry, or for some reason you want to download different data.
- - `i_accept_the_terms_of_use`: use this to bypass the I agree to terms screen. Useful if you are scripting the whole process, or using annother system to get confirmation of acceptance.
-     - For automation perposes you can set the enviroment variable `DATADEPS_ALWAYS_ACCEPT`
+ - `i_accept_the_terms_of_use`: use this to bypass the I agree to terms screen. Useful if you are scripting the whole process, or using another system to get confirmation of acceptance.
+     - For automation perposes you can set the environment variable `DATADEPS_ALWAYS_ACCEPT`
      - If not set, and if `DATADEPS_ALWAYS_ACCEPT` is not set, then the user will be prompted.
      - Strictly speaking these are not always terms of use, it just refers to the message and permission to download.
 

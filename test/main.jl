@@ -33,7 +33,7 @@ withenv("DATADEPS_ALWAYS_ACCEPT"=>"true") do
 
     @testset "sanity check the macro's behaviour with variables" begin
         var = "foo/bar"
-        macroexpand(@__MODULE__, :(@datadep_str var)) # this line would throw an error if the varibles were being handle wrong
+        macroexpand(@__MODULE__, :(@datadep_str var)) # this line would throw an error if the variables were being handle wrong
         @test true
     end
 
