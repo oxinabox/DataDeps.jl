@@ -1,6 +1,6 @@
 The DataDeps.jl package is licensed under the MIT "Expat" License:
 
-> Copyright (c) 2017: Lyndon White (@oxinabox)
+> Copyright (c) 2017: Frames White (@oxinabox)
 > Copyright (c) 2012: Keno Fischer and other contributors (BinDeps.jl)
 >
 > Permission is hereby granted, free of charge, to any person obtaining a copy
