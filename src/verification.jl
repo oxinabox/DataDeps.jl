@@ -8,9 +8,9 @@
     run_checksum(checksum, path)
 
 THis runs the checksum on the files at the fetched_path.
-And returns true or false base on if the checksum matchs.
+And returns true or false base on if the checksum matches.
 (always true if no target sum given)
-It is kinda flexible and accepts different kinds of behavour
+It is kinda flexible and accepts different kinds of behaviour
 to give different kinds of results.
 
 If path (the second parameter) is a Vector,

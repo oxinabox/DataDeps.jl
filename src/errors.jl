@@ -7,7 +7,7 @@ struct NoValidPathError <: Exception
 end
 
 """
-For when a users has selected to abourt
+For when a users has selected to abort
 """
 struct UserAbortError <: Exception
     msg::String

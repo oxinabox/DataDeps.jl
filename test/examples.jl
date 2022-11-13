@@ -19,7 +19,7 @@ ENV["DATADEPS_ALWAYS_ACCEPT"] = true
 end
 
 @testset "TrumpTweets" begin
-    # This tests demostrates how the `post_fetch_method` can be used to synthesize new files
+    # This tests demonstrates how the `post_fetch_method` can be used to synthesize new files
 
     register(DataDep("TrumpTweets",
     """
@@ -72,7 +72,7 @@ end
             Y. LeCun, L. Bottou, Y. Bengio, and P. Haffner.
             "Gradient-based learning applied to document recognition."
             Proceedings of the IEEE, 86(11):2278-2324, November 1998
-        The files are available for download at the offical
+        The files are available for download at the official
         website linked above. We can download these files for you
         if you wish, but that doesn't free you from the burden of
         using the data responsibly and respect copyright. The
@@ -96,7 +96,7 @@ end
             Y. LeCun, L. Bottou, Y. Bengio, and P. Haffner.
             "Gradient-based learning applied to document recognition."
             Proceedings of the IEEE, 86(11):2278-2324, November 1998
-        The files are available for download at the offical
+        The files are available for download at the official
         website linked above. We can download these files for you
         if you wish, but that doesn't free you from the burden of
         using the data responsibly and respect copyright. The

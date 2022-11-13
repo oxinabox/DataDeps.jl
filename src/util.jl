@@ -24,19 +24,19 @@ function splitpath(path::AbstractString)
 end
 
 ########################################
-# Enviroment variable stuff
+# Environment variable stuff
 
 """
     env_bool(key)
 
-Checks for an enviroment variable and fuzzy converts it to a bool
+Checks for an environment variable and fuzzy converts it to a bool
 """
 env_bool(key, default=false) = haskey(ENV, key) ? lowercase(ENV[key]) ∉ ["0","","false", "no"] : default
 
 """
     env_list(key)
 
-Checks for an enviroment variable and converts it to a list of strings, sperated with a colon
+Checks for an environment variable and converts it to a list of strings, sperated with a colon
 """
 env_list(key, default=String[]) = haskey(ENV, key) ? split(ENV[key], ":") : default
 

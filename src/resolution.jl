@@ -17,7 +17,7 @@ end
     resolve(datadep, inner_filepath, calling_filepath)
 
 Returns a path to the folder containing the datadep.
-Even if that means downloading the dependancy and putting it in there.
+Even if that means downloading the dependency and putting it in there.
 
      - `inner_filepath` is the path to the file within the data dir
      - `calling_filepath` is a path to the file where this is being invoked from
@@ -58,7 +58,7 @@ end
     resolve("name/path", @__FILE__)
 
 Is the function that lives directly behind the `datadep"name/path"` macro.
-If you are working the the names of the datadeps programatically,
+If you are working the the names of the datadeps programmatically,
 and don't want to download them by mistake;
 it can be easier to work with this function.
 
