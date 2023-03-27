@@ -1,7 +1,7 @@
 name = "DataDeps"
 uuid = "124859b0-ceae-595e-8997-d05f6a7a8dfe"
 authors = ["Frames White <oxinabox@ucc.asn.au>"]
-version = "0.7.10"
+version = "0.7.11"
 
 [deps]
 HTTP = "cd3eb016-35fb-5094-929b-558a96fad6f3"
