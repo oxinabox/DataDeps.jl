@@ -29,4 +29,12 @@ include("preupload.jl")
 include("fetch_helpers.jl")
 include("post_fetch_helpers.jl")
 
+
+function _precompile_()
+    ccall(:jl_generating_output, Cint, ()) == 1 || return nothing
+    Base.precompile(Tuple{typeof(resolve), DataDep, String, String})   # time: 0.007738324
+end
+
+_precompile_()
+
 end # module
