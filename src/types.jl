@@ -15,12 +15,12 @@ struct ManualDataDep <: AbstractDataDep
     message::String
 end
 
-struct DataDep{H, R, F, P} <: AbstractDataDep
+struct DataDep <: AbstractDataDep
     name::String
-    remotepath::R
-    hash::H
-    fetch_method::F
-    post_fetch_method::P
+    remotepath
+    hash
+    fetch_method
+    post_fetch_method
     extra_message::String
 end
 
