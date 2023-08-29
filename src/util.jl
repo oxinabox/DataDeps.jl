@@ -79,6 +79,7 @@ function input_choice(prompt, options::Vararg{Char})::Char
     for _ in 1:100
         println(prompt)
         println("["*join(options, '/')*"]")
+        flush(stdout)  # Ensure prompt has printed before we read input
         response = better_readline()
         length(response)==0 && continue
         reply = lowercase(first(response))
