@@ -20,7 +20,7 @@ if VERSION > v"1.6.0-0"
     # However, Pkg's built-in garbage collection, i.e. Pkg.gc(), is only aware of
     # scratchspaces for Julia 1.6 and above so use the more user accessible DEPOT/datadeps location
     # for visibility to the user for space management
-    pushfirst!(standard_loadpath, @get_scratch!("datadeps"))
+    pushfirst!(standard_loadpath, datadeps_scratch_dir)
 else
     pushfirst!(standard_loadpath, joinpath(Base.DEPOT_PATH, "datadeps"))
 end

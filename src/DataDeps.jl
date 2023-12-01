@@ -30,6 +30,12 @@ include("preupload.jl")
 include("fetch_helpers.jl")
 include("post_fetch_helpers.jl")
 
+# populated by __init__()
+datadeps_scratch_dir = ""
+
+function __init__()
+    global datadeps_scratch_dir =  @get_scratch!("datadeps")
+end
 
 function _precompile_()
     ccall(:jl_generating_output, Cint, ()) == 1 || return nothing
