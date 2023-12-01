@@ -4,6 +4,7 @@ using p7zip_jll
 
 using HTTP
 using Reexport
+using Scratch
 @reexport using SHA
 
 export DataDep, ManualDataDep
