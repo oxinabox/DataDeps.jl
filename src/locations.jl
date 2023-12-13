@@ -15,15 +15,7 @@ const standard_loadpath = joinpath.([
          "/usr/share", "/usr/local/share"] # Unix Filestructure
     end], "datadeps")
 
-if VERSION > v"1.6.0-0"
-    # Scratch.jl works correctly with Julia 1.0 and above.
-    # However, Pkg's built-in garbage collection, i.e. Pkg.gc(), is only aware of
-    # scratchspaces for Julia 1.6 and above so use the more user accessible DEPOT/datadeps location
-    # for visibility to the user for space management
-    pushfirst!(standard_loadpath, datadeps_scratch_dir)
-else
-    pushfirst!(standard_loadpath, joinpath(Base.DEPOT_PATH, "datadeps"))
-end
+pushfirst!(standard_loadpath, joinpath(Base.DEPOT_PATH, "datadeps"))
 
 # ensure at least something in the loadpath exists when instaleld
 mkpath(first(standard_loadpath))
