@@ -15,7 +15,8 @@ const standard_loadpath = joinpath.([
          "/usr/share", "/usr/local/share"] # Unix Filestructure
     end], "datadeps")
 
-pushfirst!(standard_loadpath, joinpath(Base.DEPOT_PATH, "datadeps"))
+# NOTE: the scratchspace is pushed to the front during __init__()
+
 
 # ensure at least something in the loadpath exists when instaleld
 mkpath(first(standard_loadpath))

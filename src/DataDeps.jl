@@ -35,6 +35,7 @@ datadeps_scratch_dir = ""
 
 function __init__()
     global datadeps_scratch_dir =  @get_scratch!("datadeps")
+    pushfirst!(standard_loadpath, datadeps_scratch_dir)
 end
 
 function _precompile_()
