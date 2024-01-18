@@ -25,6 +25,7 @@ using Test
 
     @testset "examples" for fn in examples
         @testset "$fn" begin
+            curdir = pwd()
             tempdir = mktempdir()
             try
                 @info("sending all datadeps to $tempdir")
@@ -43,7 +44,7 @@ using Test
             finally
                 try
                     @info("removing $tempdir")
-                    cd(@__DIR__)  # Ensure not currently in directory being deleted
+                    cd(curdir)  # Ensure not currently in directory being deleted
                     rm(tempdir, recursive=true, force=true)
                 catch err
                     @warn("Something went wrong with removing $tempdir")
