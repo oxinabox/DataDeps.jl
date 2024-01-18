@@ -29,7 +29,8 @@ using Test
             try
                 @info("sending all datadeps to $tempdir")
                 withenv("DATADEPS_LOAD_PATH"=>tempdir,
-                        "DATADEPS_NO_STANDARD_LOADPATH"=>true) do
+                        "DATADEPS_NO_STANDARD_LOADPATH"=>true,
+                        "DATADEPS_ALWAYS_ACCEPT" => true) do
                     @testset "download and use" begin
                         include(fn)
                     end

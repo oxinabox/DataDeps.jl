@@ -2,8 +2,6 @@ using Test
 using DataDeps
 using DelimitedFiles
 
-ENV["DATADEPS_ALWAYS_ACCEPT"] = true
-
 @testset "Pi" begin
     register(DataDep(
      "Pi",
