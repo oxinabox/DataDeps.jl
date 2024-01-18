@@ -29,7 +29,7 @@ end
 
     Used under Creative Commons Attribution 4.0 International License.
     """,
-    "https://raw.githack.com/fivethirtyeight/data/master/trump-twitter/realDonaldTrump_poll_tweets.csv",
+    "https://rawcdn.githack.com/fivethirtyeight/data/f8c2c4beab87e21fe05d5559d0db2a1051c28abe/trump-twitter/realDonaldTrump_poll_tweets.csv",
     "5a63b6cb2503a20517b5d41bd73e821ffbfdddd5cdc1977a547f1c925790bb15",
     post_fetch_method = function(in_fn) # Multiline anon function.
         out_fn = "nonmentions_"*basename(in_fn)
