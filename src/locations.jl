@@ -2,7 +2,7 @@
 ## Core path determining stuff
 
 const standard_loadpath = joinpath.([
-    Base.DEPOT_PATH; homedir(); # Common all systems
+    homedir(); # Common all systems
 
     @static if Sys.iswindows()
         vcat(get.(Ref(ENV),
@@ -14,6 +14,9 @@ const standard_loadpath = joinpath.([
         ["/scratch", "/staging", # HPC common folders
          "/usr/share", "/usr/local/share"] # Unix Filestructure
     end], "datadeps")
+
+# NOTE: the scratchspace is pushed to the front during __init__()
+
 
 # ensure at least something in the loadpath exists when instaleld
 mkpath(first(standard_loadpath))

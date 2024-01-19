@@ -7,8 +7,8 @@ Moving data is a great idea.
 DataDeps.jl is in favour of moving data.
 When data is automatically downloaded it will almost always go to the same location:
 the first (existent, writable) directory on your `DATADEPS_LOAD_PATH`.
-Which by-default is `~/.julia/datadeps/`.
-(If you delete this, it will go to another location).
+Which by-default is DataDeps's scratch space under `~/.julia/scratchspaces/124859b0-ceae-595e-8997-d05f6a7a8dfe/datadeps`,
+such that `Pkg.gc()` can automatically delete data if DataDeps is uninstalled.
 But you can move them from there to anywhere in the `DATADEPS_LOAD_PATH`. (See below)
 
 If you have a large chunk of data that everyone in your lab is using (e.g. a 1TB video corpora),
@@ -47,7 +47,7 @@ You can (and should when desired) move things around between any folder in the l
 For the user **oxinabox**
 
 ```bash
-/home/wheel/oxinabox/.julia/datadeps
+/home/wheel/oxinabox/.julia/scratchspaces/124859b0-ceae-595e-8997-d05f6a7a8dfe/datadeps
 /home/wheel/oxinabox/datadeps
 /scratch/datadeps
 /staging/datadeps
