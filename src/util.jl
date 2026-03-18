@@ -34,6 +34,14 @@ Checks for an environment variable and fuzzy converts it to a bool
 env_bool(key, default=false) = haskey(ENV, key) ? lowercase(ENV[key]) ∉ ["0","","false", "no"] : default
 
 """
+    max_input_retries()
+
+Returns the maximum number of retries for interactive input prompts.
+Controlled by `DATADEPS_MAX_INPUT_RETRIES` environment variable; defaults to 10.
+"""
+max_input_retries() = parse(Int, get(ENV, "DATADEPS_MAX_INPUT_RETRIES", "10"))
+
+"""
     env_list(key)
 
 Checks for an environment variable and converts it to a list of strings, sperated with a colon
@@ -76,7 +84,8 @@ end
 Prompted the user for one of a list of options
 """
 function input_choice(prompt, options::Vararg{Char})::Char
-    for _ in 1:100
+    retries = max_input_retries()
+    for _ in 1:retries
         println(prompt)
         println("["*join(options, '/')*"]")
         response = better_readline()
@@ -87,7 +96,7 @@ function input_choice(prompt, options::Vararg{Char})::Char
         end
     end
     error(
-        "Either user provided invalid input 100 times; or something has" *
+        "Either user provided invalid input $retries times; or something has " *
         "gone wrong with the IO reading. Please comment on: \n\t" *
         "https://github.com/oxinabox/DataDeps.jl/issues/104"
     )
