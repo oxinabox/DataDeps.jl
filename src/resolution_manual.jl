@@ -9,6 +9,9 @@ function handle_missing(datadep::ManualDataDep, calling_filepath)::String
           join(localpaths,", \n", ",\nor "))
     @info("by following the instructions:")
     @info(datadep.message)
+    if should_abort_on_error()
+        abort("DATADEPS_ABORT_ON_ERROR is set. ManualDataDep $(datadep.name) requires manual installation.")
+    end
     while true
         reply = input_choice("Once installed please enter 'y' reattempt loading, or 'a' to abort", 'y','a')
         if reply=='a'

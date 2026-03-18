@@ -34,6 +34,15 @@ Checks for an environment variable and fuzzy converts it to a bool
 env_bool(key, default=false) = haskey(ENV, key) ? lowercase(ENV[key]) ∉ ["0","","false", "no"] : default
 
 """
+    should_abort_on_error()
+
+Returns true if interactive prompts should be replaced by automatic aborts.
+Controlled by `DATADEPS_ABORT_ON_ERROR` environment variable;
+defaults to the value of the `CI` environment variable.
+"""
+should_abort_on_error() = env_bool("DATADEPS_ABORT_ON_ERROR", env_bool("CI"))
+
+"""
     env_list(key)
 
 Checks for an environment variable and converts it to a list of strings, sperated with a colon
