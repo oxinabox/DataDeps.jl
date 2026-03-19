@@ -76,7 +76,7 @@ end
 Prompted the user for one of a list of options
 """
 function input_choice(prompt, options::Vararg{Char})::Char
-    for _ in 1:100
+    for _ in 1:10
         println(prompt)
         println("["*join(options, '/')*"]")
         response = better_readline()
@@ -87,7 +87,7 @@ function input_choice(prompt, options::Vararg{Char})::Char
         end
     end
     error(
-        "Either user provided invalid input 100 times; or something has" *
+        "Either user provided invalid input 10 times; or something has " *
         "gone wrong with the IO reading. Please comment on: \n\t" *
         "https://github.com/oxinabox/DataDeps.jl/issues/104"
     )
