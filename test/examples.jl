@@ -58,6 +58,10 @@ end
 
 
 
+# MNIST testset commented out: http://yann.lecun.com/exdb/mnist/ now 404s.
+# See https://github.com/oxinabox/DataDeps.jl/pull/180#issuecomment-4079940087
+# TODO: replace URL with a working mirror and re-enable this testset.
+#=
 @testset "MNIST" begin
 
     register(DataDep(
@@ -108,6 +112,7 @@ end
 read(datadep"MNIST"*"/train-labels-idx1-ubyte.gz")
     @test read(datadep"MNIST"*"/train-labels-idx1-ubyte.gz") == read(datadep"MNIST train"*"/train-labels-idx1-ubyte.gz")
 end
+=#
 
 
 
