@@ -15,6 +15,7 @@ Some of these add some additional abstraction or niceness for users on top of th
  - [MLDatasets.jl](https://github.com/JuliaML/MLDatasets.jl/)
  - [CorpusLoaders.jl](https://github.com/JuliaText/CorpusLoaders.jl)
  - [Embeddings.jl](https://github.com/JuliaText/Embeddings.jl)
+ - [MORWiki.jl](https://github.com/mpimd-csc/MORWiki.jl)
 
 (Feel free to submit a PR adding a link your Package, or research script here.)
 
