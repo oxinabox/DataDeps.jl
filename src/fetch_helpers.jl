@@ -21,6 +21,23 @@ function progress_update_period()
 end
 
 """
+    download_rate_limit()
+
+Returns the maximum number of parallel downloads.
+Returns `0` if no rate limit is set (unlimited, defaults to asyncmap's behavior).
+
+Controlled by the `DATADEPS_DOWNLOAD_RATE_LIMIT` environment variable,
+which should be a positive integer. For example, `"2"` would limit to 2
+concurrent downloads.
+"""
+function download_rate_limit()::Int
+    if !haskey(ENV, "DATADEPS_DOWNLOAD_RATE_LIMIT")
+        return 0
+    end
+    return parse(Int, ENV["DATADEPS_DOWNLOAD_RATE_LIMIT"])
+end
+
+"""
     fetch_default(remote_path, local_path)
 
 The default fetch method.

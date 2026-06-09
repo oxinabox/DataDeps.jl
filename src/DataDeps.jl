@@ -10,6 +10,7 @@ using Scratch
 export DataDep, ManualDataDep
 export register, resolve, @datadep_str, preupload_check
 export unpack
+export download_rate_limit
 
 include("errors.jl")
 include("types.jl")

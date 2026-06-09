@@ -1,5 +1,5 @@
 using Test
-using DataDeps: fetch_default, fetch_base, fetch_http
+using DataDeps: fetch_default, fetch_base, fetch_http, download_rate_limit
 
 @testset "easy https url" begin
     url = "https://www.angio.net/pi/digits/10000.txt"
@@ -16,4 +16,16 @@ using DataDeps: fetch_default, fetch_base, fetch_http
             @test stat(localpath).size == 10_001
         end
     end
+end
+
+@testset "download_rate_limit config" begin
+    @test download_rate_limit() == 0
+
+    @test withenv("DATADEPS_DOWNLOAD_RATE_LIMIT" => "2") do
+        download_rate_limit()
+    end == 2
+
+    @test withenv("DATADEPS_DOWNLOAD_RATE_LIMIT" => "5") do
+        download_rate_limit()
+    end == 5
 end
