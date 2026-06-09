@@ -81,7 +81,37 @@ function fetch_http(remotepath, localdir; update_period=progress_update_period()
     local downloaded_bytes = 0
     local total_bytes = 0
     local last_update_time = time()
-    local filename = Downloads.url_filename(remotepath)
+
+    # copy from Downloads 1.7
+    function url_unescape(str::Union{String, SubString{String}})
+        try return sprint(sizehint = ncodeunits(str)) do io
+                i = 1
+                while i ≤ ncodeunits(str)
+                    c, i = iterate(str, i)
+                    if c == '%'
+                        hi, i = hex_digit(str, i)
+                        lo, i = hex_digit(str, i)
+                        x = hi*0x10 + lo
+                        write(io, x)
+                    else
+                        print(io, c)
+                    end
+                end
+            end
+        catch err
+            err isa BadEncoding && return
+            rethrow()
+        end
+    end
+
+    # copy from Downloads 1.7
+    function url_filename(url::AbstractString)
+        m = match(r"^[a-z][a-z+._-]*://[^#?]*/([^/#?]+)(?:[#?]|$)"i, url)
+        m === nothing && return
+        url_unescape(m[1])
+    end
+
+    filename = url_filename(remotepath)
 
     # Progress callback with throttling based on update_period
     progress_callback = function(total, now)
