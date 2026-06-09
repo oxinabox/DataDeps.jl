@@ -59,6 +59,8 @@ function fetch_base(remote_path, local_dir)
     return string(localpath)
 end
 
+struct BadEncoding <: Exception end
+
 
 """
     fetch_http(remotepath, localdir; update_period=5)
@@ -83,6 +85,17 @@ function fetch_http(remotepath, localdir; update_period=progress_update_period()
     local last_update_time = time()
 
     # copy from Downloads 1.7
+
+    function hex_digit(str::AbstractString, i::Int)::Tuple{UInt8,Int}
+        if i ≤ ncodeunits(str)
+            d, i = iterate(str, i)
+            '0' ≤ d ≤ '9' && return d - '0', i
+            'a' ≤ d ≤ 'f' && return d - 'a' + 10, i
+            'A' ≤ d ≤ 'F' && return d - 'A' + 10, i
+        end
+        throw(BadEncoding())
+    end
+
     function url_unescape(str::Union{String, SubString{String}})
         try return sprint(sizehint = ncodeunits(str)) do io
                 i = 1
@@ -160,14 +173,20 @@ function fetch_http(remotepath, localdir; update_period=progress_update_period()
             
             # 3. Fallback strategy
             if isempty(filename)
-                # Take only the base URL part BEFORE the '?' query parameters
-                url_without_params = split(url, '?')[1]
-                
-                # Extract the final element after the last slash
-                filename = String(split(url_without_params, '/')[end])
-                
-                if isempty(filename)
-                    filename = "unknown_file"
+                # Try url_filename which handles percent-encoding
+                filename_decoded = url_filename(url)
+                if filename_decoded !== nothing
+                    filename = filename_decoded
+                else
+                    # Last resort: Take only the base URL part BEFORE the '?' query parameters
+                    url_without_params = split(url, '?')[1]
+
+                    # Extract the final element after the last slash
+                    filename = String(split(url_without_params, '/')[end])
+
+                    if isempty(filename)
+                        filename = "unknown_file"
+                    end
                 end
             end
             
@@ -194,6 +213,11 @@ function fetch_http(remotepath, localdir; update_period=progress_update_period()
             # peek_filename found a reasonable name, use it
             filename = peeked
         end
+    end
+
+    # Fallback: if filename is still nothing, use tempfile basename
+    if filename === nothing
+        filename = tempfile_basename
     end
 
     # Move to the target directory
