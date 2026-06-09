@@ -140,12 +140,61 @@ function fetch_http(remotepath, localdir; update_period=progress_update_period()
         end
     end
 
+    function peek_filename(url::AbstractString)
+        try
+            # 1. Send a HEAD request
+            response = Downloads.request(url, method="HEAD")
+            
+            filename = ""
+            
+            # 2. Extract and inspect the headers Vector
+            for (key, val) in response.headers
+                if lowercase(key) == "content-disposition"
+                    matched = match(r"filename=\s*\"?([^\";]+)\"?", val)
+                    if matched !== nothing
+                        filename = String(matched.captures[1])
+                        break
+                    end
+                end
+            end
+            
+            # 3. Fallback strategy
+            if isempty(filename)
+                # Take only the base URL part BEFORE the '?' query parameters
+                url_without_params = split(url, '?')[1]
+                
+                # Extract the final element after the last slash
+                filename = String(split(url_without_params, '/')[end])
+                
+                if isempty(filename)
+                    filename = "unknown_file"
+                end
+            end
+            
+            return filename
+            
+        catch e
+            @warn "HEAD request failed or was rejected by server. Error: $e"
+            return ""
+        end
+    end
+    
     # Download to temporary location first
     # Downloads.download without output path uses Content-Disposition or URL basename
     tempfile = Downloads.download(remotepath; progress = progress_callback)
 
-    # Get the filename that was determined by Downloads
-    filename = basename(tempfile)
+    # Determine the final filename
+    # If Downloads couldn't determine a good filename (tempfile starts with jl_),
+    # try to get it from Content-Disposition header via peek_filename
+    tempfile_basename = basename(tempfile)
+    if startswith(tempfile_basename, "jl_")
+        # Downloads used a generated temp name - try to get better filename
+        peeked = peek_filename(remotepath)
+        if !isempty(peeked) && !startswith(peeked, "jl_")
+            # peek_filename found a reasonable name, use it
+            filename = peeked
+        end
+    end
 
     # Move to the target directory
     localpath = joinpath(localdir, filename)
