@@ -129,7 +129,7 @@ register(DataDep(
 
  -  `fetch_method=fetch_default`: a function to run to download the files
     - Function should take 2 parameters `(remote_filepath, local_directorypath)`, and can must return the local filepath to the file downloaded.
-    - Default (`fetch_default`) can correctly handle strings containing HTTP[S] URLs, or any `remote_path` type which overloads `Base.basename` and `Base.download`, e.g. [`AWSS3.S3Path`](https://github.com/JuliaCloud/AWSS3.jl/).
+    - Default (`fetch_default`) can correctly handle strings containing HTTP[S] URLs, or any `remote_path` type which overloads `Base.basename` and `Downloads.download`, e.g. [`AWSS3.S3Path`](https://github.com/JuliaCloud/AWSS3.jl/).
     - Can take a vector of methods, being one for each file, or a single method, in which case that method is used to download all of them. (See [Recursive Structure](@ref) below).
     - Overloading this lets you change things about how the download is done -- the transport protocol.
     - The default is suitable for HTTP[/S], without auth. Modifying it can add authentication or an entirely different protocol (e.g. git, google drive etc).
@@ -206,7 +206,7 @@ Most of the time you shouldn't have to -- the normal point of customization is i
 ## `download` for low-level programmatic resolution.
 For more hardcore devs customising the user experience,
 and people needing to do debugging you may assume (nearly) full control over the download operation
-by directly invoking the method `Base.download(::DataDep, localpath; kwargs...)`.
+by directly invoking the method `Downloads.download(::DataDep, localpath; kwargs...)`.
 It is fully documented in its docstring.
 
 

@@ -78,7 +78,7 @@ Alternatives that I am aware of are:
 
  - [RemoteFiles.jl](https://github.com/helgee/RemoteFiles.jl): keeps local files up to date with remotes. In someways it is the opposite of DataDeps.jl (which means it is actually very similar in many ways).
  - [BinaryProvider.jl](https://github.com/JuliaPackaging/BinaryProvider.jl) downloads binaries intended as part of a build chain. I'm pretty sure you can trick it into downloading data.
- - [`Base.download`](https://docs.julialang.org/en/stable/stdlib/file/#Base.download) if your situation is really simple just sticking a `download` into the `deps/build.jl` file might do you just fine.
+ - [`Downloads.download`](https://docs.julialang.org/en/v1/stdlib/Downloads/#Downloads.download) if your situation is really simple just sticking a `download` into the `deps/build.jl` file might do you just fine.
 
  Outside of julia's ecosystem is
 

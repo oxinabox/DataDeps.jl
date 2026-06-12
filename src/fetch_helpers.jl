@@ -52,6 +52,11 @@ The more important feature is that this works for anything that has overloaded
 `Base.basename` and `Downloads.download`, e.g. [`AWSS3.S3Path`](https://github.com/JuliaCloud/AWSS3.jl).
 While this doesn't work for all transport mechanisms (so some datadeps will still a custom `fetch_method`),
 it works for many.
+
+!!! note "Breaking change"
+    As of DataDeps v0.8, this function uses `Downloads.download` from the stdlib instead of
+    `Base.download`. Custom types that previously overloaded `Base.download` must now overload
+    `Downloads.download` to work with DataDeps.jl.
 """
 function fetch_base(remote_path, local_dir)
     localpath = joinpath(local_dir, basename(remote_path))
@@ -106,9 +111,13 @@ function fetch_http(remotepath, localdir; update_period=progress_update_period()
         current_time = time()
 
         if !isinf(update_period) && (current_time - last_update_time) >= update_period
-            pct_str = total > 0 ? " ($(round(100 * now / total; digits=1))%)" : ""
             name_str = filename_hint !== nothing ? " $filename_hint:" : ":"
-            @info "Downloading$name_str $(now) / $(total) bytes$pct_str"
+            if total > 0
+                pct_str = " ($(round(100 * now / total; digits=1))%)"
+                @info "Downloading$name_str $(now) / $(total) bytes$pct_str"
+            else
+                @info "Downloading$name_str $(now) bytes"
+            end
             last_update_time = current_time
         end
     end
@@ -125,8 +134,11 @@ function fetch_http(remotepath, localdir; update_period=progress_update_period()
 
     # Final progress log
     if !isinf(update_period)
-        pct_str = total_bytes > 0 ? " (complete)" : ""
-        @info "Downloaded $filename: $(downloaded_bytes) / $(total_bytes) bytes$pct_str"
+        if total_bytes > 0
+            @info "Downloaded $filename: $(downloaded_bytes) / $(total_bytes) bytes (complete)"
+        else
+            @info "Downloaded $filename: $(downloaded_bytes) bytes"
+        end
     end
 
     return string(localpath)
