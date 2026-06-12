@@ -7,7 +7,7 @@ This function is called when the datadep is missing.
 """
 function handle_missing(datadep::DataDep, calling_filepath)::String
     save_dir = determine_save_path(datadep.name, calling_filepath)
-    download(datadep, save_dir)
+    Downloads.download(datadep, save_dir)
     save_dir
 end
 
