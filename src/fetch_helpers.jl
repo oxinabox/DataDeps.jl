@@ -59,8 +59,22 @@ function fetch_base(remote_path, local_dir)
     return string(localpath)
 end
 
-struct BadEncoding <: Exception end
+# Compatibility shim for Downloads < v1.7 (Julia 1.10 LTS)
+@static if !isdefined(Downloads, :url_filename)
+    include("fetch_helpers_compat.jl")
+else
+    using Downloads: url_filename
 
+    """
+        determine_filename(url, tempfile_path)
+
+    Determine the best filename for a download.
+    In Downloads v1.7+, Downloads.download already handles Content-Disposition properly
+    """
+    function determine_filename(url::AbstractString, tempfile_path::AbstractString)
+        return basename(tempfile_path)
+    end
+end
 
 """
     fetch_http(remotepath, localdir; update_period=5)
@@ -80,157 +94,39 @@ By default it is once per second, though this depends on configuration
 function fetch_http(remotepath, localdir; update_period=progress_update_period())
     @assert(isdir(localdir))
 
-    local downloaded_bytes = 0
-    local total_bytes = 0
-    local last_update_time = time()
+    downloaded_bytes = 0
+    total_bytes = 0
+    last_update_time = time()
+    filename_hint = url_filename(remotepath)
 
-    # copy from Downloads 1.7
-
-    function hex_digit(str::AbstractString, i::Int)::Tuple{UInt8,Int}
-        if i ≤ ncodeunits(str)
-            d, i = iterate(str, i)
-            '0' ≤ d ≤ '9' && return d - '0', i
-            'a' ≤ d ≤ 'f' && return d - 'a' + 10, i
-            'A' ≤ d ≤ 'F' && return d - 'A' + 10, i
-        end
-        throw(BadEncoding())
-    end
-
-    function url_unescape(str::Union{String, SubString{String}})
-        try return sprint(sizehint = ncodeunits(str)) do io
-                i = 1
-                while i ≤ ncodeunits(str)
-                    c, i = iterate(str, i)
-                    if c == '%'
-                        hi, i = hex_digit(str, i)
-                        lo, i = hex_digit(str, i)
-                        x = hi*0x10 + lo
-                        write(io, x)
-                    else
-                        print(io, c)
-                    end
-                end
-            end
-        catch err
-            err isa BadEncoding && return
-            rethrow()
-        end
-    end
-
-    # copy from Downloads 1.7
-    function url_filename(url::AbstractString)
-        m = match(r"^[a-z][a-z+._-]*://[^#?]*/([^/#?]+)(?:[#?]|$)"i, url)
-        m === nothing && return
-        url_unescape(m[1])
-    end
-
-    filename = url_filename(remotepath)
-
-    # Progress callback with throttling based on update_period
+    # Progress callback with throttling
     progress_callback = function(total, now)
-        total_bytes = total
         downloaded_bytes = now
-
+        total_bytes = total
         current_time = time()
+
         if !isinf(update_period) && (current_time - last_update_time) >= update_period
-            if filename === nothing
-                # Don't have filename yet
-                if total > 0
-                    progress_pct = round(100 * now / total; digits=1)
-                    @info "Downloading: $(now) / $(total) bytes ($(progress_pct)%)"
-                else
-                    @info "Downloading: $(now) bytes"
-                end
-            else
-                if total > 0
-                    progress_pct = round(100 * now / total; digits=1)
-                    @info "Downloading $filename: $(now) / $(total) bytes ($(progress_pct)%)"
-                else
-                    @info "Downloading $filename: $(now) bytes"
-                end
-            end
+            pct_str = total > 0 ? " ($(round(100 * now / total; digits=1))%)" : ""
+            name_str = filename_hint !== nothing ? " $filename_hint:" : ":"
+            @info "Downloading$name_str $(now) / $(total) bytes$pct_str"
             last_update_time = current_time
         end
     end
 
-    function peek_filename(url::AbstractString)
-        try
-            # 1. Send a HEAD request
-            response = Downloads.request(url, method="HEAD")
-            
-            filename = ""
-            
-            # 2. Extract and inspect the headers Vector
-            for (key, val) in response.headers
-                if lowercase(key) == "content-disposition"
-                    matched = match(r"filename=\s*\"?([^\";]+)\"?", val)
-                    if matched !== nothing
-                        filename = String(matched.captures[1])
-                        break
-                    end
-                end
-            end
-            
-            # 3. Fallback strategy
-            if isempty(filename)
-                # Try url_filename which handles percent-encoding
-                filename_decoded = url_filename(url)
-                if filename_decoded !== nothing
-                    filename = filename_decoded
-                else
-                    # Last resort: Take only the base URL part BEFORE the '?' query parameters
-                    url_without_params = split(url, '?')[1]
-
-                    # Extract the final element after the last slash
-                    filename = String(split(url_without_params, '/')[end])
-
-                    if isempty(filename)
-                        filename = "unknown_file"
-                    end
-                end
-            end
-            
-            return filename
-            
-        catch e
-            @warn "HEAD request failed or was rejected by server. Error: $e"
-            return ""
-        end
-    end
-    
-    # Download to temporary location first
-    # Downloads.download without output path uses Content-Disposition or URL basename
+    # Download to temporary location
     tempfile = Downloads.download(remotepath; progress = progress_callback)
 
-    # Determine the final filename
-    # If Downloads couldn't determine a good filename (tempfile starts with jl_),
-    # try to get it from Content-Disposition header via peek_filename
-    tempfile_basename = basename(tempfile)
-    if startswith(tempfile_basename, "jl_")
-        # Downloads used a generated temp name - try to get better filename
-        peeked = peek_filename(remotepath)
-        if !isempty(peeked) && !startswith(peeked, "jl_")
-            # peek_filename found a reasonable name, use it
-            filename = peeked
-        end
-    end
+    # Determine final filename
+    filename = determine_filename(remotepath, tempfile)
 
-    # Fallback: if filename is still nothing, use tempfile basename
-    if filename === nothing
-        filename = tempfile_basename
-    end
-
-    # Move to the target directory
+    # Move to target directory
     localpath = joinpath(localdir, filename)
     mv(tempfile, localpath; force=true)
 
     # Final progress log
     if !isinf(update_period)
-        if total_bytes > 0
-            @info "Downloaded $filename: $(downloaded_bytes) / $(total_bytes) bytes (complete)"
-        else
-            @info "Downloaded $filename: $(downloaded_bytes) bytes (complete)"
-        end
+        pct_str = total_bytes > 0 ? " (complete)" : ""
+        @info "Downloaded $filename: $(downloaded_bytes) / $(total_bytes) bytes$pct_str"
     end
 
     return string(localpath)
