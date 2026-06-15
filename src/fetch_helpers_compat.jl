@@ -1,6 +1,9 @@
 # This file is a part of DataDeps.jl. License is MIT.
 
 # Compatibility shim for Downloads v1.6 (Julia 1.10 LTS)
+# Implements filename handling backported from Downloads.jl v1.7+
+
+## Getting file names from URLs and Responses
 
 struct BadEncoding <: Exception end
 
@@ -35,11 +38,59 @@ function url_unescape(str::Union{String, SubString{String}})
     end
 end
 
+# Special names on Windows: CON PRN AUX NUL COM1-9 LPT1-9
+# we spell out uppercase/lowercase because of locales
+# these are dangerous with or without an extension
+const WIN_SPECIAL_NAMES = r"^(
+    [Cc][Oo][Nn] |
+    [Pp][Rr][Nn] |
+    [Aa][Uu][Xx] |
+    [Nn][Uu][Ll] |
+    [Cc][Oo][Mm][1-9] |
+    [Ll][Pp][Tt][1-9]
+)(\.|$)"x
+
+"""
+    is_safe_filename(name)
+
+Check if a filename is safe to use (backported from Downloads.jl v1.7+).
+Prevents path traversal, Windows special names, control characters, etc.
+"""
+function is_safe_filename(name::AbstractString)
+    isvalid(name) || return false
+    '/' in name && return false
+    name in ("", ".", "..") && return false
+    any(iscntrl, name) && return false
+    if Sys.iswindows()
+        name[end] ∈ ". " && return false
+        any(in("\"*:<>?\\|"), name) && return false
+        contains(name, WIN_SPECIAL_NAMES) && return false
+    end
+    return true
+end
+
+is_safe_filename(::Nothing) = false
+
+"""
+    url_filename(url)
+
+Extract and validate filename from URL (backported from Downloads.jl v1.7+).
+Returns `nothing` if no valid filename can be extracted or if unsafe.
+"""
+function url_filename(url::AbstractString)
+    m = match(r"^[a-z][a-z+._-]*://[^#?]*/([^/#?]+)(?:[#?]|$)"i, url)
+    if m !== nothing
+        name = url_unescape(m[1])
+        is_safe_filename(name) && return name
+    end
+    return nothing
+end
+
 """
     try_content_disposition(url)
 
 Try to get filename from Content-Disposition header via HEAD request.
-Returns `nothing` if unsuccessful.
+Returns `nothing` if unsuccessful or if filename is unsafe.
 Note: Only needed for Downloads < v1.7; newer versions handle this automatically.
 """
 function try_content_disposition(url::AbstractString)
@@ -47,8 +98,12 @@ function try_content_disposition(url::AbstractString)
         response = Downloads.request(url, method="HEAD")
         for (key, val) in response.headers
             if lowercase(key) == "content-disposition"
+                # Simple regex extraction (Downloads 1.7 has more sophisticated parsing)
                 m = match(r"filename=\s*\"?([^\";]+)\"?", val)
-                m !== nothing && return String(m.captures[1])
+                if m !== nothing
+                    filename = String(m.captures[1])
+                    is_safe_filename(filename) && return filename
+                end
             end
         end
     catch
@@ -58,15 +113,15 @@ function try_content_disposition(url::AbstractString)
 end
 
 """
-    determine_filename(url, tempfile_path)
+    resolve_filename(url, tempfile_path)
 
-Determine the best filename for a download using multiple strategies:
+Resolve the best filename for a download using multiple strategies:
 1. Content-Disposition header (via HEAD request, Downloads 1.6 fallback)
-2. URL filename extraction (handles percent-encoding)
+2. URL filename extraction (handles percent-encoding and safety checks)
 3. Temporary filename from Downloads.download
-4. Fallback to URL path component
+4. Fallback to safe default
 """
-function determine_filename(url::AbstractString, tempfile_path::AbstractString)
+function resolve_filename(url::AbstractString, tempfile_path::AbstractString)
     tempfile_basename = basename(tempfile_path)
 
     # If Downloads generated a temp name (jl_*), try to find a better name
@@ -75,29 +130,21 @@ function determine_filename(url::AbstractString, tempfile_path::AbstractString)
         filename = try_content_disposition(url)
         filename !== nothing && return filename
 
-        # Try extracting and decoding from URL (inlined url_filename logic)
-        m = match(r"^[a-z][a-z+._-]*://[^#?]*/([^/#?]+)(?:[#?]|$)"i, url)
-        if m !== nothing
-            filename = url_unescape(m[1])
-            filename !== nothing && return filename
-        end
+        # Try extracting and decoding from URL with safety checks
+        filename = url_filename(url)
+        filename !== nothing && return filename
 
         # Fallback to simple URL parsing (without decoding)
         url_without_params = split(url, '?')[1]
         path_component = split(url_without_params, '/')[end]
-        !isempty(path_component) && return path_component
+        if !isempty(path_component) && is_safe_filename(path_component)
+            return path_component
+        end
 
-        return "unknown_file"
+        return "download"  # Safe default
     end
 
-    # Downloads already found a good filename
-    return tempfile_basename
-end
-
-# url_filename for progress hints in fetch_http
-# Extracts and decodes the filename from URL
-function url_filename(url::AbstractString)
-    m = match(r"^[a-z][a-z+._-]*://[^#?]*/([^/#?]+)(?:[#?]|$)"i, url)
-    m === nothing && return
-    url_unescape(m[1])
+    # Downloads already found a filename, but verify it's safe
+    is_safe_filename(tempfile_basename) && return tempfile_basename
+    return "download"  # Safe default if unsafe
 end
