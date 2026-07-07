@@ -101,11 +101,13 @@ function run_fetch(fetch_method, remotepath, localdir)
 end
 
 function run_fetch(fetch_method, remotepaths::AbstractVector, localdir)
-    asyncmap(rp->run_fetch(fetch_method, rp, localdir),  remotepaths)
+    ntasks = download_rate_limit()
+    asyncmap(rp->run_fetch(fetch_method, rp, localdir), remotepaths; ntasks=ntasks)
 end
 
 function run_fetch(fetch_methods::AbstractVector, remotepaths::AbstractVector, localdir)
-    asyncmap((meth, rp)->run_fetch(meth, rp, localdir),  fetch_methods, remotepaths)
+    ntasks = download_rate_limit()
+    asyncmap((meth, rp)->run_fetch(meth, rp, localdir), fetch_methods, remotepaths; ntasks=ntasks)
 end
 
 
