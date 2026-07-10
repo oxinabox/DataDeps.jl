@@ -69,7 +69,7 @@ end
             # Find "Downloading" progress messages
             downloading_msgs = filter(msg -> startswith(msg, "Downloading"), logs)
             # Should have at least one progress update during download
-            @test length(downloading_msgs) > 0 && contains(downloading_msgs[end], "/")
+            @test !isempty(downloading_msgs) && contains(downloading_msgs[end], "/")
 
             # Find the final "Downloaded" message
             downloaded_msgs = filter(msg -> startswith(msg, "Downloaded"), logs)
