@@ -2,7 +2,7 @@
 module DataDeps
 using p7zip_jll
 
-using HTTP
+import Downloads
 using Reexport
 using Scratch
 @reexport using SHA
