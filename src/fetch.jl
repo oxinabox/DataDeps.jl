@@ -21,6 +21,22 @@ function progress_update_period()
 end
 
 """
+    default_progress_callback(total, now, filename_hint=nothing)
+
+Default progress logger used by [`fetch`](@ref) when no custom callback is
+provided and `update_period` is finite.
+"""
+function default_progress_callback(total, now, filename_hint=nothing)
+    name_str = filename_hint !== nothing ? " $filename_hint:" : ":"
+    if total > 0
+        pct_str = " ($(round(100 * now / total; digits=1))%)"
+        @info "Downloading$name_str $(now) / $(total) bytes$pct_str"
+    else
+        @info "Downloading$name_str $(now) bytes"
+    end
+end
+
+"""
     fetch(remote_path, local_dir;
           progress_callback=nothing,
           update_period=progress_update_period())
@@ -38,8 +54,11 @@ a path where `basename()` gives the correct filename.
 # Arguments
 - `remote_path`: URL string or custom path object supporting `Downloads.download`
 - `local_dir`: Target directory for the downloaded file
-- `progress_callback`: Optional user callback `(total_bytes, downloaded_bytes) -> nothing`
-- `update_period`: Seconds between progress log updates (Inf disables logging)
+- `progress_callback`: Optional callback `(total_bytes, downloaded_bytes, filename_hint) -> nothing`
+    called on each throttled update. If omitted and `update_period` is finite,
+    [`default_progress_callback`](@ref) is used.
+- `update_period`: Seconds between progress updates. `Inf` disables progress
+    callback invocation and progress logging.
 
 # Custom Types
 To support custom download sources, implement:
@@ -59,7 +78,9 @@ end
 fetch("https://example.com/data.csv", "/tmp")
 
 # With custom progress callback
-fetch(url, "/tmp"; progress_callback = (total, now) -> println("\$now/\$total"))
+fetch(url, "/tmp";
+    update_period=1,
+    progress_callback = (total, now, name) -> println("\$name \$now/\$total"))
 
 # Without progress logging
 fetch(url, "/tmp"; update_period=Inf)
@@ -80,25 +101,18 @@ function fetch(remote_path, local_dir;
         # Hint for logging (best effort, may be nothing)
         filename_hint = remote_path isa AbstractString ? url_filename(remote_path) : nothing
 
+        progress_callback === nothing && (progress_callback = default_progress_callback)
+        
         progress = function(total, now)
             downloaded_bytes = now
             total_bytes = total
             current_time = time()
-
+            
             # Throttled logging
             if !isinf(update_period) && (current_time - last_update_time) >= update_period
-                name_str = filename_hint !== nothing ? " $filename_hint:" : ":"
-                if total > 0
-                    pct_str = " ($(round(100 * now / total; digits=1))%)"
-                    @info "Downloading$name_str $(now) / $(total) bytes$pct_str"
-                else
-                    @info "Downloading$name_str $(now) bytes"
-                end
+                progress_callback(total_bytes, downloaded_bytes, filename_hint)
                 last_update_time = current_time
             end
-
-            # User callback
-            progress_callback !== nothing && progress_callback(total, now)
         end
     end
 
@@ -108,7 +122,7 @@ function fetch(remote_path, local_dir;
     tempfile = if progress === nothing
         Downloads.download(remote_path)
     else
-        Downloads.download(remote_path; progress=progress)
+        Downloads.download(remote_path; progress)
     end
 
     # Extract filename from the downloaded path
@@ -137,49 +151,9 @@ function fetch(remote_path, local_dir;
 end
 
 
-"""
-    fetch_default(remote_path, local_path; kwargs...)
-
-The default fetch method.
-Downloads with progress logging enabled by default.
-
-!!! note
-    This is a compatibility wrapper around [`fetch`](@ref).
-    New code should use `fetch` directly.
-
-See also [`fetch`](@ref), [`fetch_base`](@ref), and [`fetch_http`](@ref).
-"""
-fetch_default(remotepath, localdir; kwargs...) = fetch(remotepath, localdir; kwargs...)
-
-
-"""
-  fetch_base(remote_path, local_dir)
-
-Download from `remote_path` to `local_dir`, via stdlib Downloads, without progress logging.
-
-This is equivalent to `fetch(remote_path, local_dir; update_period=Inf)`.
-
-The download is performed using `Downloads.download` and the filename is determined
-from the downloaded file's basename. For HTTP URLs, this properly handles
-Content-Disposition headers and percent-encoded filenames.
-
-For custom types, implement `Downloads.download(::YourType)` to return a path
-where `basename()` gives the correct filename.
-
-!!! note "Breaking change"
-    As of DataDeps v0.8, this function uses `Downloads.download` from the stdlib instead of
-    `Base.download`. Custom types must implement `Downloads.download(::YourType)` and ensure
-    the returned path has the correct basename.
-
-!!! note
-    This is a compatibility wrapper around [`fetch`](@ref).
-    New code should use `fetch` directly.
-"""
-fetch_base(remote_path, local_dir) = fetch(remote_path, local_dir; update_period=Inf)
-
 # Compatibility shim for Downloads < v1.7 (Julia 1.10 LTS)
 @static if !isdefined(Downloads, :url_filename)
-    include("fetch_helpers_compat.jl")
+    include("fetch_compat.jl")
 else
     using Downloads: url_filename
 
@@ -194,23 +168,4 @@ else
     end
 end
 
-"""
-    fetch_http(remotepath, localdir; update_period=progress_update_period())
 
-Download from an HTTP[/S] URL to a directory, with progress logging.
-
-This is equivalent to `fetch(remotepath, localdir; update_period=update_period)`.
-
-The filename is determined from Content-Disposition headers if present, otherwise
-from the URL (with percent-encoding handled correctly).
-
-`update_period` controls how often to print the download progress to the log.
-It is expressed in seconds. It is printed at `@info` level in the log.
-By default it is once per second, though this depends on configuration.
-
-!!! note
-    This is a compatibility wrapper around [`fetch`](@ref).
-    New code should use `fetch` directly.
-"""
-fetch_http(remotepath, localdir; update_period=progress_update_period()) =
-    fetch(remotepath, localdir; update_period=update_period)

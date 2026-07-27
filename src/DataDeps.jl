@@ -27,7 +27,7 @@ include("resolution_manual.jl")
 
 include("preupload.jl")
 
-include("fetch_helpers.jl")
+include("fetch.jl")
 include("post_fetch_helpers.jl")
 
 # populated by __init__()

@@ -8,7 +8,7 @@ using Test
         "locations",
         "main",
         "preupload",
-        "fetch_helpers",
+        "fetch",
         "non_interactive",
     ]
     @testset "tests" begin

@@ -104,14 +104,14 @@ end
         end
     end
 
-    @testset "fetch with custom progress callback" begin
+    @testset "fetch with custom progress callback (throttled)" begin
         mktempdir() do localdir
             callback_calls = []
             localpath = withenv("DATADEPS_ALWAYS_ACCEPT" => true,
-                               "DATADEPS_PROGRESS_UPDATE_PERIOD" => "Inf") do
+                               "DATADEPS_PROGRESS_UPDATE_PERIOD" => "0") do
                 fetch(url, localdir;
-                      update_period=Inf,
-                      progress_callback=(total, now) -> push!(callback_calls, (total, now)))
+                      update_period=0,
+                      progress_callback=(total, now, filename_hint) -> push!(callback_calls, (total, now, filename_hint)))
             end
 
             @test isfile(localpath)
@@ -123,6 +123,23 @@ end
             @test maximum(downloaded_bytes) >= 10_000
             # Check that downloads are monotonically increasing
             @test issorted(downloaded_bytes)
+
+            # For URL inputs, filename_hint should eventually resolve to a name.
+            @test any(call -> call[3] !== nothing, callback_calls)
+        end
+    end
+
+    @testset "fetch callback disabled when update_period is Inf" begin
+        mktempdir() do localdir
+            callback_calls = []
+            localpath = withenv("DATADEPS_ALWAYS_ACCEPT" => true) do
+                fetch(url, localdir;
+                      update_period=Inf,
+                      progress_callback=(total, now, filename_hint) -> push!(callback_calls, (total, now, filename_hint)))
+            end
+
+            @test isfile(localpath)
+            @test isempty(callback_calls)
         end
     end
 
