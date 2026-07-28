@@ -7,13 +7,15 @@
 Please see the detailed documentation linked above.
 
 ## Breaking Changes (1.0)
+
 DataDeps 1.0 includes breaking changes in the download/fetch API.
 Downloading has been refactored to always use `Downloads.download()`. This removes the dependency on HTTP.jl, which is comparatively large and has had recent breaking changes.
-
 
 - `fetch_base` and `fetch_http` were removed.
 - `fetch_default` was removed.
 - The default `fetch_method` is now `fetch`.
+
+These are not quite the same but are similar enough for most use cases.
 
 ### Migration Guide
 
@@ -22,30 +24,19 @@ If your code used one of the removed fetch wrappers:
 - Replace `fetch_default(remote, dir)` with `fetch(remote, dir)`.
 - Replace `fetch_base(remote, dir)` with `fetch(remote, dir; update_period=Inf)`.
 - Replace `fetch_http(remote, dir; update_period=...)` with `fetch(remote, dir; update_period=...)`.
+- Overload `Downloads.download(::YourType)` instead of `Base.download(::YourType)`.
 
-If you provide a custom `fetch_method` in `DataDep(...)`:
+### New Progress Callback Semantics
 
-- Keep the `(remote_path, local_dir) -> local_path` contract.
-- Breaking change: for custom `remote_path` types, overload `Downloads.download(::YourType)` instead of overloading `Base.download(::YourType)`.
-- Your `Downloads.download(::YourType)` method must return a local file path (or move to one) whose basename is the final filename DataDeps should use.
+The built-in `fetch` method now supports a keyword `progress_callback` additional to `update_period`.
 
-### Progress Callback Semantics
-
-The built-in `fetch` method now supports a configurable progress callback API.
-
-- `progress_callback` takes three arguments:
-  `(total_bytes, downloaded_bytes, filename_hint)`.
-- Progress callback invocation is throttled by `update_period`.
-- `update_period=Inf` disables progress callbacks and progress logging.
+- `progress_callback` takes a function with three arguments:
+  `(total_bytes, downloaded_bytes, filename_hint) -> <... function core ...>`.
 - If `progress_callback` is not provided and `update_period` is finite,
-  a default logging callback is used.
-
-### Existing Environment Variable
-
-- `DATADEPS_PROGRESS_UPDATE_PERIOD` still controls the progress update interval used by the default fetch behavior.
-
+  a default logging callback is used, which replaces the previous logging from HTTP.jl
 
 ## Software using DataDeps.jl
+
 It might help to look at how DataDeps.jl is being used to understand how it may be used in your project.
 Some of these add some additional abstraction or niceness for users on top of the DataDeps.jl core functionality.
 
@@ -65,6 +56,6 @@ Some of these add some additional abstraction or niceness for users on top of th
   - [DataDepsGenerators.jl](https://github.com/oxinabox/DataDepsGenerators.jl)
   - JuliaCon 2018 [Slides](https://figshare.com/articles/JuliaCon2018_DataDeps_jl_pdf/6949145), and [Video](https://youtu.be/kSlQpzccRaI)
  
- #### Paper
+#### Paper
 
 [White, L., Togneri, R., Liu, W., & Bennamoun, M. (2019). DataDeps. jl: Repeatable Data Setup for Reproducible Data Science. Journal of Open Research Software, 7(1).](http://doi.org/10.5334/jors.244)
