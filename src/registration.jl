@@ -12,6 +12,9 @@ this makes `datadep"Name"` work.
 function register(datadep::AbstractDataDep)
     name = datadep.name
     if haskey(registry, name)
+        if isequal(datadep, registry[name])
+            return registry
+        end
         @warn("Over-writing registration of the datadep", name)
     end
     if !is_valid_name(name)
