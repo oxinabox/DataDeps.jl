@@ -7,7 +7,7 @@ This function is called when the datadep is missing.
 """
 function handle_missing(datadep::DataDep, calling_filepath)::String
     save_dir = determine_save_path(datadep.name, calling_filepath)
-    download(datadep, save_dir)
+    Downloads.download(datadep, save_dir)
     save_dir
 end
 
@@ -34,7 +34,7 @@ function ensure_download_permitted()
 end
 
 """
-    Base.download(
+    Downloads.download(
         datadep::DataDep,
         localdir;
         remotepath=datadep.remotepath,
@@ -60,7 +60,7 @@ As such it include a number of parameters that most people will not want to use.
  If you need more control than this, then your best bet is to construct a new DataDep object, based on the original,
  and then invoke download on that.
 """
-function Base.download(
+function Downloads.download(
     datadep::DataDep,
     localdir;
     remotepath=datadep.remotepath,
