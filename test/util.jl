@@ -33,18 +33,21 @@ using DataDeps: split_load_path
         @test split_load_path("/a:", false) == ["/a", ""]
     end
 
-    @testset "Windows: split at colons, except drive letter colons" begin
+    @testset "Windows: semicolon separated" begin
         @test split_load_path(raw"C:\Users\me\data", true) == [raw"C:\Users\me\data"]
+        @test split_load_path(raw"C:\a;D:\b", true) == [raw"C:\a", raw"D:\b"]
+        @test split_load_path("C:/a;d:/b", true) == ["C:/a", "d:/b"]
+        @test split_load_path(raw"\\server\share;C:\a", true) == [raw"\\server\share", raw"C:\a"]
+        @test split_load_path(raw"C:\a;", true) == [raw"C:\a", ""]
+        @test split_load_path("", true) == [""]  # see #89
+    end
+
+    @testset "Windows: colon separated fallback (backwards compatibility)" begin
         @test split_load_path("C:/a", true) == ["C:/a"]
         @test split_load_path(raw"C:\a:D:\b", true) == [raw"C:\a", raw"D:\b"]
-        @test split_load_path("C:/a:d:/b", true) == ["C:/a", "d:/b"]
         @test split_load_path(raw"C:\a:\b", true) == [raw"C:\a", raw"\b"]
         @test split_load_path(raw"\a:\b", true) == [raw"\a", raw"\b"]
-        @test split_load_path(raw"\\server\share:C:\a", true) == [raw"\\server\share", raw"C:\a"]
         @test split_load_path("a:b", true) == ["a", "b"]
-        @test split_load_path(raw"C:\my;data", true) == [raw"C:\my;data"]  # `;` is allowed in file names
-        @test split_load_path(raw"C:\a:", true) == [raw"C:\a", ""]
-        @test split_load_path("", true) == [""]  # see #89
     end
 
     @testset "Windows: drive letters in extended-length and device paths" begin

@@ -47,15 +47,17 @@ should_abort_on_error() = env_bool("DATADEPS_ABORT_ON_ERROR", env_bool("CI"))
 
 Splits a list of paths, like the contents of `DATADEPS_LOAD_PATH`, into its entries.
 
-The entries are separated by colons (`:`) on all systems.
-On Windows, the colon of a drive letter at the start of an entry (e.g. `C:\\` or `C:/`)
-is not treated as a separator, also after a `\\\\?\\` or `\\\\.\\` prefix.
-Windows does not allow colons in file names otherwise.
+Everywhere except Windows the entries are separated by colons (`:`).
+On Windows they are separated by semicolons (`;`), like `PATH` and `JULIA_LOAD_PATH`.
+For backwards compatibility, if there is no `;`, colons are used as separator on Windows too,
+except for the colon of a drive letter at the start of an entry (e.g. `C:\\` or `C:/`),
+also after a `\\\\?\\` or `\\\\.\\` prefix.
 
 Empty entries are kept, so `split_load_path("")` returns `[""]`.
 """
 function split_load_path(str::AbstractString, windows::Bool=Sys.iswindows())
     windows || return split(str, ':')
+    occursin(';', str) && return split(str, ';')
     entries = String[]
     start = firstindex(str)  # start of the current entry
     for i in findall(==(':'), str)
