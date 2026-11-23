@@ -43,11 +43,62 @@ defaults to the value of the `CI` environment variable.
 should_abort_on_error() = env_bool("DATADEPS_ABORT_ON_ERROR", env_bool("CI"))
 
 """
+    split_load_path(str, windows=Sys.iswindows())
+
+Splits a list of paths, like the contents of `DATADEPS_LOAD_PATH`, into its entries.
+
+The entries are separated by colons (`:`) on all systems.
+On Windows, the colon of a drive letter at the start of an entry (e.g. `C:\\` or `C:/`)
+is not treated as a separator, also after a `\\\\?\\` or `\\\\.\\` prefix.
+Windows does not allow colons in file names otherwise.
+
+Empty entries are kept, so `split_load_path("")` returns `[""]`.
+"""
+function split_load_path(str::AbstractString, windows::Bool=Sys.iswindows())
+    windows || return split(str, ':')
+    entries = String[]
+    start = firstindex(str)  # start of the current entry
+    for i in findall(==(':'), str)
+        entry = str[start:prevind(str, i)]  # the current entry, up to this colon
+        rest = str[nextind(str, i):end]     # everything after this colon
+        if is_drive_colon(entry, rest)
+            continue  # part of the path, not a separator
+        end
+        push!(entries, entry)
+        start = nextind(str, i)
+    end
+    push!(entries, str[start:end])
+    return entries
+end
+
+# Extended-length and device path prefixes, `\\?\` and `\\.\`
+const WINDOWS_PATH_PREFIXES = ("\\\\?\\", "\\\\.\\")
+
+"""
+    is_drive_colon(entry, rest)
+
+Whether a colon is the colon of a drive letter, like in `C:\\…`,
+given the `entry` before it (since the last separator) and the `rest` of the string after it.
+"""
+function is_drive_colon(entry::AbstractString, rest::AbstractString)
+    if !(startswith(rest, '\\') || startswith(rest, '/'))
+        return false  # a drive colon is followed by a path separator: `C:\` or `C:/`
+    elseif any(prefix -> startswith(entry, prefix), WINDOWS_PATH_PREFIXES)
+        return is_drive_letter(entry[5:end])  # `\\?\C:\…` or `\\.\C:\…`
+    else
+        return is_drive_letter(entry)  # `C:\…`
+    end
+end
+
+is_drive_letter(s::AbstractString) = length(s) == 1 && ('A' <= s[1] <= 'Z' || 'a' <= s[1] <= 'z')
+
+"""
     env_list(key)
 
-Checks for an environment variable and converts it to a list of strings, sperated with a colon
+Checks for an environment variable and converts it to a list of paths,
+see [`split_load_path`](@ref) for the separator.
 """
-env_list(key, default=String[]) = haskey(ENV, key) ? split(ENV[key], ":") : default
+env_list(key, default=String[]) = haskey(ENV, key) ? split_load_path(ENV[key]) : default
 
 
 
