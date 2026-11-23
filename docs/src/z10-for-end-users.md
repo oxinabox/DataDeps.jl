@@ -25,7 +25,9 @@ It has 3 sources:
      - determined from the package where the `datadep"NAME"` was used
  - the user defined load path
      - determined from the contents of the environment variable `DATADEPS_LOAD_PATH`
-     - this can be a colon separated list (Like most unix path variables)
+     - this can be a list of paths, separated like `PATH` and `JULIA_LOAD_PATH`:
+       by colons (`:`) on Unix, e.g. `/data/datadeps:/scratch/datadeps`,
+       and by semicolons (`;`) on Windows, e.g. `C:\data\datadeps;D:\datadeps`
  - the standard load path
      - depends on your system and configuration
      - normally starts with user specific locations like your home directory, and expands out to shared locations
@@ -115,7 +117,7 @@ DataDeps.jl tries to have very sensible defaults.
     - `Inf` disables progress updates.
     - default: `5` (seconds) usually; `Inf` if `DATADEPS_ALWAYS_ACCEPT` is set.
  - `DATADEPS_LOAD_PATH` -- The list of paths to be prepended to the standard load path to save and load data from
-    - By default this is empty, but it can be a colon separated list (like most unix path variables). [For more details see above.](#The-Load-Path)
+    - By default this is empty, but it can be a list of paths, separated by colons (`:`) on Unix and by semicolons (`;`) on Windows (like `PATH`). [For more details see above.](#The-Load-Path)
  - `DATADEPS_NO_STANDARD_LOAD_PATH` if this is set to `true` (default `false`), then the aforementioned list of standard load path files is not included
  - `DATADEPS_DISABLE_DOWNLOAD` -- causes any action that would result in the download being triggered to throw an exception.
    - useful e.g. if you are in an environment with metered data, where your datasets should have already been downloaded earlier, and if there were not you want to respond to the situation rather than let DataDeps.jl download them for you.
