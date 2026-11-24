@@ -43,11 +43,18 @@ defaults to the value of the `CI` environment variable.
 should_abort_on_error() = env_bool("DATADEPS_ABORT_ON_ERROR", env_bool("CI"))
 
 """
-    env_list(key)
+    env_list(key, default=String[]; windows=Sys.iswindows())
 
-Checks for an environment variable and converts it to a list of strings, sperated with a colon
+Checks for an environment variable and converts it to a list of paths.
+Everywhere except Windows the entries are separated by colons (`:`),
+on Windows by semicolons (`;`).
+Empty entries are kept, so an empty variable gives `[""]`.
 """
-env_list(key, default=String[]) = haskey(ENV, key) ? split(ENV[key], ":") : default
+function env_list(key, default=String[]; windows::Bool=Sys.iswindows())
+    haskey(ENV, key) || return default
+    # Same separators as Julia uses for JULIA_LOAD_PATH and JULIA_DEPOT_PATH
+    return split(ENV[key], windows ? ';' : ':')
+end
 
 
 

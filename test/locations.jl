@@ -16,4 +16,14 @@ using DataDeps: try_determine_load_path, determine_save_path, try_determine_pack
         @test_throws NoValidPathError determine_save_path("DummyDataDepName")
     end
 
+    if Sys.iswindows()
+        # Absolute Windows paths contain a colon after the drive letter
+        mktempdir() do dir
+            @test occursin(':', dir)
+            withenv("DATADEPS_LOAD_PATH" => dir, "DATADEPS_NO_STANDARD_LOAD_PATH" => "true") do
+                @test determine_save_path("DummyDataDepName") == joinpath(dir, "DummyDataDepName")
+            end
+        end
+    end
+
 end
