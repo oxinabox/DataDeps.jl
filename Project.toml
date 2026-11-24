@@ -1,6 +1,6 @@
 name = "DataDeps"
 uuid = "124859b0-ceae-595e-8997-d05f6a7a8dfe"
-version = "1.0.0"
+version = "1.1.0"
 authors = ["Frames Catherine White <me@oxinabox@net>"]
 
 [deps]
